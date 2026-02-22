@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Node / Next
+node_modules
+.next
+dist
+out
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+*.tsbuildinfo
