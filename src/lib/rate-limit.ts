@@ -1,10 +1,12 @@
-import { getPool } from "./pool"
-import { Lead } from "@/domain/leads/types"
-
 const LIMIT = 20
 const WINDOW_MS = 60_000
 
-const store = new Map<string, { count: number; expires: number }>()
+type Entry = {
+  count: number
+  expires: number
+}
+
+const store = new Map<string, Entry>()
 
 export function rateLimit(ip: string): boolean {
   const now = Date.now()
@@ -21,4 +23,9 @@ export function rateLimit(ip: string): boolean {
 
   entry.count++
   return true
+}
+
+// 🔹 Solo para tests
+export function __resetRateLimitStore() {
+  store.clear()
 }
