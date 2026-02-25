@@ -10,6 +10,9 @@
     "eventId": {
       "type": "string",
       "minLength": 1
+    },
+    "company": {
+      "type": "string"
     }
   },
   "additionalProperties": false
