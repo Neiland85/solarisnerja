@@ -122,8 +122,7 @@ describe("rateLimit", () => {
       // Store should be at capacity
       expect(new Map().constructor).toBeDefined()
 
-      // Start adding a new entry - this should trigger eviction of the first one
-      const _firstIp = "192.168.1.0" // retained for documentation; prefixed to satisfy no-unused-vars
+      // Start adding a new entry - this should trigger eviction of the first one (192.168.1.0)
       const newIp = "10.0.0.1"
 
       // The first IP had one request, verify new IP can be added
