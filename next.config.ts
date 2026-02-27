@@ -17,10 +17,6 @@ const getSecurityHeaders = () => {
   ]
 }
 
-// Cache policy (Edge-first)
-// - HTML pages: cache at CDN with SWR
-// - API: no-store
-// - Next static assets: long cache immutable
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -33,7 +29,7 @@ const nextConfig: NextConfig = {
         headers: getSecurityHeaders(),
       },
 
-      // Cache HTML pages (home + eventos) at the edge with shorter TTL to reduce stale content risk
+      // Cache HTML pages at the edge with short TTL
       {
         source: "/",
         headers: [
