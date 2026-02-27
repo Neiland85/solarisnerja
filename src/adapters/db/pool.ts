@@ -11,7 +11,10 @@ export function getPool(): Pool {
     }
 
     pool = new Pool({
-      connectionString
+      connectionString,
+      max: 5,
+      idleTimeoutMillis: 10_000,
+      connectionTimeoutMillis: 5_000
     })
   }
 
