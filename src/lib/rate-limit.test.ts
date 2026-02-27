@@ -123,7 +123,7 @@ describe("rateLimit", () => {
       expect(new Map().constructor).toBeDefined()
 
       // Start adding a new entry - this should trigger eviction of the first one
-      const firstIp = "192.168.1.0"
+      const _firstIp = "192.168.1.0" // retained for documentation; prefixed to satisfy no-unused-vars
       const newIp = "10.0.0.1"
 
       // The first IP had one request, verify new IP can be added

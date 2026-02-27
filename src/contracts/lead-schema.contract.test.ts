@@ -96,7 +96,7 @@ describe("contracts: lead.create.json", () => {
     const ok = validate({
       // email is intentionally omitted
       eventId: "music",
-    } as any)
+    } as Record<string, unknown>)
 
     expect(ok).toBe(false)
   })
@@ -110,7 +110,7 @@ describe("contracts: lead.create.json", () => {
     const ok = validate({
       email: "user@example.com",
       // eventId is intentionally omitted
-    } as any)
+    } as Record<string, unknown>)
 
     expect(ok).toBe(false)
   })
@@ -125,7 +125,7 @@ describe("contracts: lead.create.json", () => {
       email: "user@example.com",
       eventId: "music",
       extraField: "should not be allowed",
-    } as any)
+    } as Record<string, unknown>)
 
     expect(ok).toBe(false)
   })

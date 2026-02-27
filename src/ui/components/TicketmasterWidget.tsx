@@ -29,13 +29,12 @@ export function TicketmasterWidget({ eventId, ticketUrl }: Props) {
       setLoaded(false)
     }
 
-    containerRef.current.innerHTML = ""
-    containerRef.current.appendChild(script)
+    const node = containerRef.current
+    node.innerHTML = ""
+    node.appendChild(script)
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = ""
-      }
+      node.innerHTML = ""
     }
   }, [eventId])
 
