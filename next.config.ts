@@ -1,11 +1,5 @@
 import type { NextConfig } from "next"
 
-const securityHeaders = [
-  { key: "X-Frame-Options", value: "DENY" },
-  { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" }
-]
-
 // Static security headers (CSP is handled by middleware for per-request nonce)
 const getSecurityHeaders = () => {
   return [
@@ -23,32 +17,19 @@ const getSecurityHeaders = () => {
   ]
 }
 
-// Cache policy (Edge-first)
-// - HTML pages: cache at CDN with SWR
-// - API: no-store
-// - Next static assets: long cache immutable
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
   async headers() {
     return [
-      {
-        source: "/(.*)",
-        headers: securityHeaders
-      },
-      {
-        source: "/",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800" }
-        ]
       // Security headers for everything
       {
         source: "/(.*)",
         headers: getSecurityHeaders(),
       },
 
-      // Cache HTML pages (home + eventos) at the edge with shorter TTL to reduce stale content risk
+      // Cache HTML pages at the edge with short TTL
       {
         source: "/",
         headers: [
@@ -61,23 +42,6 @@ const nextConfig: NextConfig = {
       {
         source: "/eventos/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800" }
-        ]
-      },
-      {
-        source: "/api/:path*",
-        headers: [
-          { key: "Cache-Control", value: "no-store" }
-        ]
-      },
-      {
-        source: "/_next/static/:path*",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" }
-        ]
-      }
-    ]
-  }
           {
             key: "Cache-Control",
             value: "public, max-age=0, s-maxage=300, stale-while-revalidate=3600",
