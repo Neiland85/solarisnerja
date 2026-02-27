@@ -10,5 +10,7 @@ export default defineConfig({
     reporters: ["default"],
     passWithNoTests: false,
     isolate: true
+    include: ["src/**/*.test.ts"],
+    reporters: ["default"]
   }
 })
