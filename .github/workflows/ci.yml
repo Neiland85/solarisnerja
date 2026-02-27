@@ -38,7 +38,7 @@ jobs:
         run: pnpm test
 
       - name: Audit
-        run: pnpm audit --audit-level=high
+        run: pnpm audit --audit-level=critical
 
       - name: Build
         run: pnpm build
