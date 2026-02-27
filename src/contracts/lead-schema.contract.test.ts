@@ -13,7 +13,7 @@ describe("contracts: lead.create.json", () => {
 
     const ok = validate({
       email: "user@example.com",
-      eventId: "music"
+      eventId: "music",
     })
 
     expect(ok).toBe(true)
@@ -27,8 +27,105 @@ describe("contracts: lead.create.json", () => {
 
     const ok = validate({
       email: "not-an-email",
-      eventId: ""
+      eventId: "",
     })
+
+    expect(ok).toBe(false)
+  })
+
+  it("accepts valid payload with honeypot company field set", () => {
+    const ajv = new Ajv2020()
+    addFormats(ajv)
+
+    const validate = ajv.compile(schema)
+
+    const ok = validate({
+      email: "user@example.com",
+      eventId: "music",
+      company: "some value",
+    })
+
+    expect(ok).toBe(true)
+  })
+
+  it("rejects various invalid email formats", () => {
+    const ajv = new Ajv2020()
+    addFormats(ajv)
+
+    const validate = ajv.compile(schema)
+
+    const invalidEmails = [
+      "plainaddress",
+      "@no-local-part.com",
+      "no-at-symbol.com",
+      "user@",
+      "user@domain",
+      "user@domain..com",
+    ]
+
+    for (const email of invalidEmails) {
+      const ok = validate({
+        email,
+        eventId: "music",
+      })
+
+      expect(ok).toBe(false)
+    }
+  })
+
+  it("rejects payload with empty eventId", () => {
+    const ajv = new Ajv2020()
+    addFormats(ajv)
+
+    const validate = ajv.compile(schema)
+
+    const ok = validate({
+      email: "user@example.com",
+      eventId: "",
+    })
+
+    expect(ok).toBe(false)
+  })
+
+  it("rejects payload missing email", () => {
+    const ajv = new Ajv2020()
+    addFormats(ajv)
+
+    const validate = ajv.compile(schema)
+
+    const ok = validate({
+      // email is intentionally omitted
+      eventId: "music",
+    } as any)
+
+    expect(ok).toBe(false)
+  })
+
+  it("rejects payload missing eventId", () => {
+    const ajv = new Ajv2020()
+    addFormats(ajv)
+
+    const validate = ajv.compile(schema)
+
+    const ok = validate({
+      email: "user@example.com",
+      // eventId is intentionally omitted
+    } as any)
+
+    expect(ok).toBe(false)
+  })
+
+  it("rejects payload with additional properties", () => {
+    const ajv = new Ajv2020()
+    addFormats(ajv)
+
+    const validate = ajv.compile(schema)
+
+    const ok = validate({
+      email: "user@example.com",
+      eventId: "music",
+      extraField: "should not be allowed",
+    } as any)
 
     expect(ok).toBe(false)
   })

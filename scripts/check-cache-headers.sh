@@ -19,5 +19,5 @@ curl -sI "$BASE/api/healthz" | grep -iE "HTTP/|cache-control" || true
 echo
 
 echo "== /api/v1/leads (should be no-store) =="
-curl -sI "$BASE/api/v1/leads" | grep -iE "HTTP/|cache-control" || true
+curl -s -X POST -H "Content-Type: application/json" -d '{}' -D - -o /dev/null "$BASE/api/v1/leads" | grep -iE "HTTP/|cache-control" || true
 echo

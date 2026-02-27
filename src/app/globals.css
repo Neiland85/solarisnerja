@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
+/* =========================
+   SolarisNerja Design Tokens
+   Sunset Electronic Market
+   ========================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base */
+  --sn-bg: #0e0e11;
+  --sn-surface: #14141a;
+  --sn-surface-2: #1a1a22;
+  --sn-text: #ffffff;
+  --sn-muted: #b8b8c5;
+
+  /* Accents */
+  --sn-sunset: #ff8c42;
+  --sn-sand: #f6c667;
+  --sn-neon: #4fc3f7;
+
+  /* Borders */
+  --sn-border: rgba(255, 255, 255, 0.10);
+  --sn-border-2: rgba(255, 255, 255, 0.16);
+
+  /* Radii */
+  --sn-radius-xl: 24px;
+  --sn-radius-pill: 999px;
+
+  /* Shadows / Glows */
+  --sn-glow-sunset: 0 0 48px rgba(255, 140, 66, 0.35);
+  --sn-glow-neon: 0 0 42px rgba(79, 195, 247, 0.28);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base */
+html, body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--sn-bg);
+  color: var(--sn-text);
+}
+
+/* Subtle grain overlay (performance-friendly) */
+.sn-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Focus outlines (accessible) */
+:focus-visible {
+  outline: 2px solid rgba(246, 198, 103, 0.7);
+  outline-offset: 3px;
 }
