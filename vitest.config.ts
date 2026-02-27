@@ -5,7 +5,10 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     environment: "node",
+    globals: true,
     include: ["src/**/*.test.ts"],
-    reporters: ["default"]
-  }
+    reporters: ["default"],
+    passWithNoTests: false,
+    isolate: true,
+  },
 })
