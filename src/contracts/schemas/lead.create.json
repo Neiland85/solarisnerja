@@ -13,6 +13,8 @@
     },
     "company": {
       "type": "string"
+      "type": "string",
+      "maxLength": 200
     }
   },
   "additionalProperties": false

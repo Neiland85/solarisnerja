@@ -12,4 +12,5 @@
     "instance": { "type": "string" }
   },
   "additionalProperties": true
+  "additionalProperties": false
 }

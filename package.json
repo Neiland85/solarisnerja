@@ -8,15 +8,26 @@
     "start": "next start",
     "lint": "eslint src --ext .ts,.tsx --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.40.0",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
     "next": "16.1.6",
     "pg": "^8.18.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "minimatch@<3.1.4": "3.1.4",
+      "minimatch@>=9.0.0 <9.0.7": "9.0.7",
+      "ajv@<6.14.0": "6.14.0",
+      "serialize-javascript@<=7.0.2": "7.0.3"
+    }
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -28,6 +39,8 @@
     "eslint-config-next": "16.1.6",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.0.18"
   }
 }

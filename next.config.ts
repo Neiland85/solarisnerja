@@ -26,6 +26,23 @@ const securityHeaders = [
 // - HTML pages: cache at CDN with SWR
 // - API: no-store
 // - Next static assets: long cache immutable
+// Static security headers (CSP is handled by middleware for per-request nonce)
+const getSecurityHeaders = () => {
+  return [
+    { key: "X-Frame-Options", value: "DENY" },
+    { key: "X-Content-Type-Options", value: "nosniff" },
+    { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+    {
+      key: "Strict-Transport-Security",
+      value: "max-age=63072000; includeSubDomains; preload",
+    },
+    {
+      key: "Permissions-Policy",
+      value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    },
+  ]
+}
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -44,12 +61,29 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "Cache-Control", value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800" }
         ]
+        headers: getSecurityHeaders(),
+      },
+
+      // Cache HTML pages at the edge with short TTL
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=300, stale-while-revalidate=3600",
+          },
+        ],
       },
       {
         source: "/eventos/:path*",
         headers: [
           { key: "Cache-Control", value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800" }
         ]
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=300, stale-while-revalidate=3600",
+          },
+        ],
       },
 
       // Never cache APIs
@@ -58,6 +92,7 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "Cache-Control", value: "no-store" }
         ]
+        headers: [{ key: "Cache-Control", value: "no-store" }],
       },
 
       // Cache Next.js static assets aggressively
@@ -69,6 +104,10 @@ const nextConfig: NextConfig = {
       }
     ]
   }
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+    ]
+  },
 }
 
 export default nextConfig

@@ -25,10 +25,33 @@ if (typeof globalThis !== "undefined") {
   if (typeof interval === "object" && "unref" in interval) {
     interval.unref()
   }
+const CLEANUP_EVERY = 25
+const MAX_STORE_SIZE = 10_000
+
+const store = new Map<string, Entry>()
+let callCounter = 0
+
+// Lazy cleanup to prevent memory leak without background timers
+function cleanupExpiredEntries(now: number) {
+  for (const [key, entry] of store) {
+    if (now - entry.timestamp > WINDOW) {
+      store.delete(key)
+    }
+  }
+}
+
+function maybeCleanupExpiredEntries(now: number) {
+  callCounter++
+  if (callCounter % CLEANUP_EVERY !== 0) {
+    return
+  }
+
+  cleanupExpiredEntries(now)
 }
 
 export function rateLimit(ip: string): boolean {
   const now = Date.now()
+  maybeCleanupExpiredEntries(now)
   const entry = store.get(ip)
 
   if (!entry) {
@@ -60,4 +83,15 @@ export function rateLimit(ip: string): boolean {
 /** Exposed for testing */
 export function _resetStore() {
   store.clear()
+  callCounter = 0
+}
+
+/** Exposed for testing */
+export function _getStoreSize() {
+  return store.size
+}
+
+/** Exposed for testing */
+export function _getCleanupEvery() {
+  return CLEANUP_EVERY
 }
