@@ -5,13 +5,14 @@ import { Card } from "@/ui/components/UI"
 import { TicketmasterWidget } from "@/ui/components/TicketmasterWidget"
 
 type Props = {
-  params: {
+  params: Promise<{
     eventId: string
-  }
+  }>
 }
 
-export default function EventDetailPage({ params }: Props) {
-  const event = getEvent(params.eventId)
+export default async function EventDetailPage({ params }: Props) {
+  const { eventId } = await params
+  const event = getEvent(eventId)
 
   if (!event) {
     return notFound()
