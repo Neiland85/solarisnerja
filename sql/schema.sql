@@ -27,3 +27,20 @@ ON leads (email);
 -- Soft-delete filter for active records
 CREATE INDEX IF NOT EXISTS leads_active_idx
 ON leads (created_at) WHERE deleted_at IS NULL;
+
+-- ───────────────────────────────────────────
+-- Events (dashboard-managed)
+-- ───────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS events (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  highlight TEXT NOT NULL DEFAULT '',
+  ticket_url TEXT NOT NULL DEFAULT '',
+  active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS events_active_idx
+ON events (active, created_at DESC);
