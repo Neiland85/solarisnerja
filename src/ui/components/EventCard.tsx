@@ -1,29 +1,28 @@
-import Link from "next/link"
-import type { Event } from "@/config/events"
+interface EventCardProps {
+  event: {
+    id: string
+    title: string
+    time: string
+    description: string
+  }
+}
 
-export function EventCard({ event }: { event: Event }) {
+export default function EventCard({ event }: EventCardProps) {
   return (
-    <Link
-      href={`/eventos/${event.id}`}
-      className="group block border border-[var(--sn-border-2)] p-6 md:p-8
-        hover:bg-[var(--sn-surface)] transition-colors duration-200"
-    >
-      <div className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)]">
-        {event.highlight}
-      </div>
+    <div className="space-y-4">
 
-      <h3 className="mt-4 text-2xl md:text-3xl font-bold tracking-tight leading-tight">
+      <p className="text-xs tracking-[0.3em] uppercase opacity-60">
+        {event.time}
+      </p>
+
+      <h3 className="text-xl font-medium">
         {event.title}
       </h3>
 
-      <p className="mt-3 text-sm text-[var(--sn-muted)] leading-relaxed">
+      <p className="text-sm opacity-70 leading-relaxed">
         {event.description}
       </p>
 
-      <div className="mt-6 text-xs font-medium tracking-widest uppercase
-        group-hover:underline underline-offset-4 transition-all">
-        Ver detalles
-      </div>
-    </Link>
+    </div>
   )
 }
