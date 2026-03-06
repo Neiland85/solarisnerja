@@ -2,33 +2,20 @@
 
 /* =========================
    SolarisNerja Design Tokens
-   Sunset Electronic Market
+   Festival Editorial — Minimal
    ========================= */
 
 :root {
-  /* Base */
-  --sn-bg: #0e0e11;
-  --sn-surface: #14141a;
-  --sn-surface-2: #1a1a22;
-  --sn-text: #ffffff;
-  --sn-muted: #b8b8c5;
-
-  /* Accents */
-  --sn-sunset: #ff8c42;
-  --sn-sand: #f6c667;
-  --sn-neon: #4fc3f7;
+  /* Base — Light editorial */
+  --sn-bg: #ffffff;
+  --sn-surface: #f5f5f5;
+  --sn-surface-2: #ebebeb;
+  --sn-text: #0a0a0a;
+  --sn-muted: #717171;
 
   /* Borders */
-  --sn-border: rgba(255, 255, 255, 0.10);
-  --sn-border-2: rgba(255, 255, 255, 0.16);
-
-  /* Radii */
-  --sn-radius-xl: 24px;
-  --sn-radius-pill: 999px;
-
-  /* Shadows / Glows */
-  --sn-glow-sunset: 0 0 48px rgba(255, 140, 66, 0.35);
-  --sn-glow-neon: 0 0 42px rgba(79, 195, 247, 0.28);
+  --sn-border: rgba(0, 0, 0, 0.08);
+  --sn-border-2: rgba(0, 0, 0, 0.16);
 }
 
 /* Base */
@@ -41,18 +28,44 @@ body {
   color: var(--sn-text);
 }
 
-/* Subtle grain overlay (performance-friendly) */
-.sn-grain {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.08;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+/* Selection */
+::selection {
+  background: var(--sn-text);
+  color: var(--sn-bg);
 }
 
 /* Focus outlines (accessible) */
 :focus-visible {
-  outline: 2px solid rgba(246, 198, 103, 0.7);
+  outline: 2px solid var(--sn-text);
   outline-offset: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Solaris Logo — Wave animation ──
+   Movimiento horizontal sine lento, GPU-composited.
+   will-change solo activo en @media que soporta animaciones. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .sn-wave {
+    animation: sn-wave-drift 7s ease-in-out infinite;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sn-wave {
+    animation: none;
+  }
+}
+
+@keyframes sn-wave-drift {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
 }
