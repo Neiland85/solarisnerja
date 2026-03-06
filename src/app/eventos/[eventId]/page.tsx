@@ -1,7 +1,8 @@
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getEvent } from "@/config/events"
 import { Reveal } from "@/ui/components/Reveal"
-import { Card } from "@/ui/components/UI"
+import { ButtonPrimary } from "@/ui/components/UI"
 import { TicketmasterWidget } from "@/ui/components/TicketmasterWidget"
 
 type Props = {
@@ -19,55 +20,84 @@ export default async function EventDetailPage({ params }: Props) {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="min-h-screen">
 
-      {/* Background */}
-      <div className="absolute inset-0 bg-[color:var(--sn-bg)]" />
-      <div className="absolute -top-48 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-[color:var(--sn-sunset)]/14 blur-[180px]" />
-      <div className="sn-grain" />
+      {/* ── Header ── */}
+      <header className="px-6 md:px-12 pt-8 pb-6 flex items-center justify-between max-w-7xl mx-auto">
+        <Link href="/" className="text-sm font-bold tracking-widest uppercase">
+          Solaris Nerja
+        </Link>
+        <nav className="hidden md:flex gap-8 text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)]">
+          <Link href="/" className="hover:text-[var(--sn-text)] transition-colors">Inicio</Link>
+          <Link href="/eventos" className="hover:text-[var(--sn-text)] transition-colors">Eventos</Link>
+        </nav>
+      </header>
 
-      {/* Content */}
-      <section className="relative z-10 px-6 pt-16 pb-24 max-w-5xl mx-auto">
+      <div className="border-t border-[var(--sn-border)]" />
 
+      {/* ── Event Detail ── */}
+      <section className="px-6 md:px-12 pt-16 md:pt-24 pb-16 max-w-4xl mx-auto">
         <Reveal>
-          <div className="text-sm text-[color:var(--sn-muted)]">
-            {event.tagline}
+          <Link
+            href="/eventos"
+            className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)]
+              hover:text-[var(--sn-text)] transition-colors"
+          >
+            ← Eventos
+          </Link>
+
+          <div className="mt-8 text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)]">
+            {event.highlight}
           </div>
 
-          <h1 className="mt-3 text-4xl md:text-6xl font-bold tracking-tight">
+          <h1 className="mt-4 text-5xl md:text-7xl font-bold tracking-tight">
             {event.title}
           </h1>
 
-          <p className="mt-6 text-[color:var(--sn-muted)] max-w-2xl leading-relaxed">
+          <p className="mt-6 text-lg text-[var(--sn-muted)] max-w-2xl leading-relaxed">
             {event.description}
           </p>
-        </Reveal>
 
-        {/* Ticketmaster Widget */}
+          <div className="mt-10">
+            <ButtonPrimary href={event.ticketUrl}>Comprar Tickets</ButtonPrimary>
+          </div>
+        </Reveal>
+      </section>
+
+      <div className="border-t border-[var(--sn-border)]" />
+
+      {/* ── Ticketmaster Widget ── */}
+      <section className="px-6 md:px-12 py-16 max-w-4xl mx-auto">
         <Reveal delayMs={150}>
           <TicketmasterWidget
             eventId={event.id}
             ticketUrl={event.ticketUrl}
           />
         </Reveal>
-
-        {/* Extra info */}
-        <div className="mt-14">
-          <Reveal delayMs={200}>
-            <Card>
-              <div className="text-sm text-[color:var(--sn-muted)]">
-                Información
-              </div>
-
-              <div className="mt-2 text-lg">
-                Venta oficial gestionada por Ticketmaster.
-                Las entradas y condiciones se rigen por la plataforma oficial.
-              </div>
-            </Card>
-          </Reveal>
-        </div>
-
       </section>
+
+      <div className="border-t border-[var(--sn-border)]" />
+
+      {/* ── Info ── */}
+      <section className="px-6 md:px-12 py-16 max-w-4xl mx-auto">
+        <Reveal delayMs={200}>
+          <div className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)] mb-3">
+            Información
+          </div>
+          <p className="text-[var(--sn-muted)] leading-relaxed">
+            Venta oficial gestionada por Ticketmaster.
+            Las entradas y condiciones se rigen por la plataforma oficial.
+          </p>
+        </Reveal>
+      </section>
+
+      {/* ── Footer ── */}
+      <div className="border-t border-[var(--sn-border)]" />
+      <footer className="px-6 md:px-12 py-12 max-w-7xl mx-auto text-xs text-[var(--sn-muted)]">
+        <Link href="/eventos" className="hover:text-[var(--sn-text)] transition-colors">
+          ← Volver a eventos
+        </Link>
+      </footer>
     </main>
   )
 }

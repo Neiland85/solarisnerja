@@ -1,31 +1,29 @@
 import Link from "next/link"
 import type { Event } from "@/config/events"
-import { Card } from "@/ui/components/UI"
 
 export function EventCard({ event }: { event: Event }) {
   return (
-    <Card>
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-[color:var(--sn-muted)]">{event.tagline}</div>
-        <span className="text-xs px-3 py-1 rounded-full border border-[var(--sn-border)] text-[color:var(--sn-muted)]">
-          {event.highlight}
-        </span>
+    <Link
+      href={`/eventos/${event.id}`}
+      className="group block border border-[var(--sn-border-2)] p-6 md:p-8
+        hover:bg-[var(--sn-surface)] transition-colors duration-200"
+    >
+      <div className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)]">
+        {event.highlight}
       </div>
 
-      <div className="mt-3 text-xl font-semibold">{event.title}</div>
+      <h3 className="mt-4 text-2xl md:text-3xl font-bold tracking-tight leading-tight">
+        {event.title}
+      </h3>
 
-      <p className="mt-3 text-sm text-[color:var(--sn-muted)] leading-relaxed">
+      <p className="mt-3 text-sm text-[var(--sn-muted)] leading-relaxed">
         {event.description}
       </p>
 
-      <div className="mt-5 flex gap-3">
-        <Link
-          href={`/eventos/${event.id}`}
-          className="text-sm font-semibold text-white hover:text-[color:var(--sn-sand)] transition"
-        >
-          Ver detalles →
-        </Link>
+      <div className="mt-6 text-xs font-medium tracking-widest uppercase
+        group-hover:underline underline-offset-4 transition-all">
+        Ver detalles
       </div>
-    </Card>
+    </Link>
   )
 }
