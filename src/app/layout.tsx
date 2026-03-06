@@ -11,13 +11,14 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "SolarisNerja — Electrónica, mercadillo y atardecer frente al mar",
+  title: "Qué es Solaris Nerja | Festival cultural en Málaga junio 2026",
   description:
-    "Eventos de música electrónica, mercado creativo y experiencias frente al mar en Nerja. Edición limitada.",
+    "Descubre Solaris Nerja: festival cultural y musical en El Playazo, Costa del Sol. Conciertos, gastronomía, market creativo y experiencias frente al mar del 18 al 28 de junio.",
   metadataBase: new URL("https://www.solarisnerja.com"),
   openGraph: {
-    title: "SolarisNerja",
-    description: "Electrónica, mercadillo creativo y atardecer frente al mar.",
+    title: "Solaris Nerja — Festival cultural en Málaga",
+    description:
+      "10 días de conciertos, gastronomía mediterránea, market creativo y experiencias frente al mar. El Playazo, Nerja. 18–28 junio 2026.",
     type: "website",
     locale: "es_ES",
   },

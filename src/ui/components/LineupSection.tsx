@@ -1,6 +1,6 @@
 export default function LineupSection() {
   return (
-    <section className="section-editorial bg-white">
+    <section id="lineup" className="section-editorial bg-white">
 
       <div className="editorial-grid max-w-6xl mx-auto">
 
