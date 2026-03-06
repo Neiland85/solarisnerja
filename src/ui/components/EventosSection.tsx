@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import EventCard from "./EventCard"
 
 const events = [
@@ -59,12 +60,12 @@ export default function EventosSection() {
         </div>
 
         <div className="mt-20 flex justify-center">
-          <a
+          <Link
             href="/eventos"
             className="border-2 border-black px-12 py-4 text-lg font-semibold hover:bg-black hover:text-white transition"
           >
             Ver programación completa
-          </a>
+          </Link>
         </div>
 
       </div>
