@@ -43,38 +43,3 @@ body {
 html {
   scroll-behavior: smooth;
 }
-
-/* ── Solar textures — Mediterranean light ──
-   Radial gradients at opacity < 0.08.
-   Pure CSS, zero images, zero runtime cost.
-   Each simulates a different quality of coastal light. */
-
-/* Eventos — soft warm sunlight from above */
-.sn-light-solar {
-  background:
-    radial-gradient(
-      ellipse 80% 60% at 50% 0%,
-      rgba(255, 236, 179, 0.07) 0%,
-      transparent 70%
-    );
-}
-
-/* Mercado — soft sand tone, low warm glow */
-.sn-light-sand {
-  background:
-    radial-gradient(
-      ellipse 70% 50% at 30% 80%,
-      rgba(222, 198, 160, 0.06) 0%,
-      transparent 65%
-    );
-}
-
-/* Ubicación — soft sunset reflection, lateral warmth */
-.sn-light-sunset {
-  background:
-    radial-gradient(
-      ellipse 60% 80% at 85% 30%,
-      rgba(255, 200, 160, 0.06) 0%,
-      transparent 60%
-    );
-}

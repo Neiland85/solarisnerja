@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { EVENTS } from "@/config/events"
 import { Reveal } from "@/ui/components/Reveal"
-import { EventCard } from "@/ui/components/EventCard"
+import EventCard from "@/ui/components/EventCard"
 
 export default function EventosPage() {
   return (
@@ -37,8 +37,13 @@ export default function EventosPage() {
         <div className="grid md:grid-cols-2 gap-px bg-[var(--sn-border-2)]">
           {EVENTS.map((e, idx) => (
             <Reveal key={e.id} delayMs={idx * 60}>
-              <div className="bg-[var(--sn-bg)]">
-                <EventCard event={e} />
+              <div className="bg-[var(--sn-bg)] p-6 md:p-8">
+                <EventCard event={{
+                  id: e.id,
+                  title: e.title,
+                  time: e.highlight,
+                  description: e.description,
+                }} />
               </div>
             </Reveal>
           ))}
