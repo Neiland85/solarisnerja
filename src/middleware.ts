@@ -27,6 +27,15 @@ export function middleware(req: NextRequest) {
   const nonce = generateNonce()
   const origin = req.headers.get("origin")
 
+  // Dashboard auth: require admin cookie
+  if (req.nextUrl.pathname.startsWith("/dashboard")) {
+    const adminCookie = req.cookies.get("admin")
+    if (adminCookie?.value !== "true") {
+      const loginUrl = new URL("/login", req.url)
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
   // Handle CORS preflight
   if (req.method === "OPTIONS" && req.nextUrl.pathname.startsWith("/api/")) {
     if (!isAllowedOrigin(origin) || !origin) {
