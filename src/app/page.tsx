@@ -1,128 +1,142 @@
+import Link from "next/link"
+import HeroSection from "@/ui/components/HeroSection"
 import { Reveal } from "@/ui/components/Reveal"
-import { ButtonGhost, ButtonPrimary, Card } from "@/ui/components/UI"
 import { EventCard } from "@/ui/components/EventCard"
+import { StickyCTA } from "@/ui/components/StickyCTA"
 import { EVENTS } from "@/config/events"
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 bg-[color:var(--sn-bg)]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--sn-bg)] via-[#14141a] to-[color:var(--sn-bg)]" />
-      <div className="absolute -top-48 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-[color:var(--sn-sunset)]/18 blur-[180px]" />
-      <div className="absolute top-40 right-[-200px] w-[520px] h-[520px] rounded-full bg-[color:var(--sn-neon)]/12 blur-[170px]" />
-      <div className="sn-grain" />
+    <main className="min-h-screen">
 
-      <header className="relative z-10 px-6 pt-8 max-w-6xl mx-auto">
-        <div className="flex items-center justify-between">
-          <div className="font-semibold tracking-tight">SolarisNerja</div>
-          <nav className="text-sm text-[color:var(--sn-muted)] hidden md:flex gap-6">
-            <a href="#eventos" className="hover:text-white transition">Eventos</a>
-            <a href="#mercado" className="hover:text-white transition">Mercado</a>
-            <a href="#ubicacion" className="hover:text-white transition">Ubicación</a>
-          </nav>
-        </div>
-      </header>
+      {/* ── Hero (definitivo) ── */}
+      <HeroSection />
 
-      <section className="relative z-10 px-6 pt-20 pb-16 max-w-6xl mx-auto">
+      {/* ── Divider ── */}
+      <div className="border-t border-[var(--sn-border)]" />
+
+      {/* ── Eventos Grid ── */}
+      <section id="eventos" className="px-6 md:px-12 py-20 md:py-28 max-w-7xl mx-auto">
         <Reveal>
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
-              Solaris Nerja
-            </h1>
-
-            <p className="mt-6 text-lg md:text-xl text-[color:var(--sn-muted)] max-w-2xl leading-relaxed">
-              Electrónica, mercadillo creativo y atardecer frente al mar.
-              Un formato cuidado para fines de semana.
-            </p>
-
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <ButtonPrimary href="/eventos">Ver eventos</ButtonPrimary>
-              <ButtonGhost href="#mercado">Explorar mercado</ButtonGhost>
+          <div className="flex items-end justify-between mb-12 md:mb-16">
+            <div>
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+                Eventos
+              </h2>
+              <p className="mt-4 text-[var(--sn-muted)] max-w-lg">
+                Selección de experiencias para tarde, noche y mercado creativo.
+              </p>
             </div>
-
-            <p className="mt-8 text-sm text-[color:var(--sn-muted)]">
-              Edición limitada · Playa · Música · Mercado
-            </p>
+            <Link
+              href="/eventos"
+              className="hidden md:block text-xs font-medium tracking-widest uppercase
+                hover:underline underline-offset-4"
+            >
+              Ver todos
+            </Link>
           </div>
         </Reveal>
-      </section>
 
-      <section id="eventos" className="relative z-10 px-6 py-16 max-w-6xl mx-auto">
-        <Reveal>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            Eventos
-          </h2>
-          <p className="mt-4 text-[color:var(--sn-muted)] max-w-2xl">
-            Selección de experiencias para tarde, noche y mercado creativo.
-          </p>
-        </Reveal>
-
-        <div className="mt-10 grid md:grid-cols-3 gap-6">
-          {EVENTS.slice(0, 6).map((e, idx) => (
-            <Reveal key={e.id} delayMs={idx * 80}>
-              <EventCard event={e} />
+        <div className="grid md:grid-cols-2 gap-px bg-[var(--sn-border-2)]">
+          {EVENTS.slice(0, 4).map((e, idx) => (
+            <Reveal key={e.id} delayMs={idx * 60}>
+              <div className="bg-[var(--sn-bg)]">
+                <EventCard event={e} />
+              </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <section id="mercado" className="relative z-10 px-6 py-16 max-w-6xl mx-auto">
+      {/* ── Divider ── */}
+      <div className="border-t border-[var(--sn-border)]" />
+
+      {/* ── Mercado ── */}
+      <section id="mercado" className="px-6 md:px-12 py-20 md:py-28 max-w-7xl mx-auto">
         <Reveal>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            Mercado creativo
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+            Mercado Creativo
           </h2>
-          <p className="mt-4 text-[color:var(--sn-muted)] max-w-2xl">
-            Stands seleccionados: diseño, vinilos, arte y piezas locales. Curación real.
+          <p className="mt-4 text-[var(--sn-muted)] max-w-lg">
+            Stands seleccionados: diseño, vinilos, arte y piezas locales.
           </p>
         </Reveal>
 
-        <div className="mt-10 grid md:grid-cols-2 gap-6">
+        <div className="mt-12 md:mt-16 grid md:grid-cols-2 gap-px bg-[var(--sn-border-2)]">
           <Reveal>
-            <Card>
-              <div className="text-xl font-semibold">Stands seleccionados</div>
-              <div className="mt-3 text-sm text-[color:var(--sn-muted)]">
-                Pocos, buenos, con identidad. Calidad &gt; cantidad.
-              </div>
-            </Card>
+            <div className="bg-[var(--sn-bg)] p-6 md:p-10">
+              <h3 className="text-xl md:text-2xl font-bold">Curación real</h3>
+              <p className="mt-3 text-sm text-[var(--sn-muted)] leading-relaxed">
+                Pocos stands, buenos, con identidad. Calidad sobre cantidad.
+              </p>
+            </div>
           </Reveal>
-
-          <Reveal delayMs={140}>
-            <Card>
-              <div className="text-xl font-semibold">Gastro & descanso</div>
-              <div className="mt-3 text-sm text-[color:var(--sn-muted)]">
+          <Reveal delayMs={100}>
+            <div className="bg-[var(--sn-bg)] p-6 md:p-10">
+              <h3 className="text-xl md:text-2xl font-bold">Gastro & descanso</h3>
+              <p className="mt-3 text-sm text-[var(--sn-muted)] leading-relaxed">
                 Zona para estar, no solo pasar. Formato fin de semana.
-              </div>
-            </Card>
+              </p>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      <section id="ubicacion" className="relative z-10 px-6 py-16 max-w-6xl mx-auto">
+      {/* ── Divider ── */}
+      <div className="border-t border-[var(--sn-border)]" />
+
+      {/* ── Info ── */}
+      <section id="info" className="px-6 md:px-12 py-20 md:py-28 max-w-7xl mx-auto">
         <Reveal>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            Nerja, a pie de playa
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+            Nerja
           </h2>
-          <p className="mt-4 text-[color:var(--sn-muted)] max-w-2xl">
+          <p className="mt-4 text-[var(--sn-muted)] max-w-lg">
             Ubicación exacta y horarios se publicarán junto a la programación.
           </p>
-        </Reveal>
 
-        <Reveal delayMs={120}>
-          <div className="mt-10 rounded-[var(--sn-radius-xl)] border border-[var(--sn-border)]
-            bg-[color:var(--sn-surface)]/60 backdrop-blur p-6">
-            <div className="text-sm text-[color:var(--sn-muted)]">Info</div>
-            <div className="mt-2 text-lg">
-              Accesos claros · Señalización · Formato cuidado
+          <div className="mt-12 grid md:grid-cols-3 gap-8 md:gap-12">
+            <div>
+              <div className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)] mb-2">Ubicación</div>
+              <div className="text-lg font-semibold">Nerja, Málaga</div>
+              <div className="text-sm text-[var(--sn-muted)]">Costa del Sol oriental</div>
+            </div>
+            <div>
+              <div className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)] mb-2">Formato</div>
+              <div className="text-lg font-semibold">Fin de semana</div>
+              <div className="text-sm text-[var(--sn-muted)]">Tarde, noche y mercado</div>
+            </div>
+            <div>
+              <div className="text-xs font-medium tracking-widest uppercase text-[var(--sn-muted)] mb-2">Entradas</div>
+              <div className="text-lg font-semibold">Ticketmaster</div>
+              <div className="text-sm text-[var(--sn-muted)]">Venta oficial exclusiva</div>
             </div>
           </div>
         </Reveal>
       </section>
 
-      <footer className="relative z-10 px-6 py-14 max-w-6xl mx-auto">
-        <div className="text-sm text-[color:var(--sn-muted)]">
-          © {new Date().getFullYear()} SolarisNerja · Venta oficial Ticketmaster
+      {/* ── Divider ── */}
+      <div className="border-t border-[var(--sn-border)]" />
+
+      {/* ── Footer ── */}
+      <footer className="px-6 md:px-12 py-12 max-w-7xl mx-auto
+        flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="text-xs text-[var(--sn-muted)]">
+          © {new Date().getFullYear()} Solaris Nerja
+        </div>
+        <div className="flex gap-6 text-xs text-[var(--sn-muted)]">
+          <Link href="/privacidad" className="hover:text-[var(--sn-text)] transition-colors">
+            Privacidad
+          </Link>
+          <a href="https://www.ticketmaster.es/" target="_blank" rel="noopener noreferrer"
+            className="hover:text-[var(--sn-text)] transition-colors">
+            Ticketmaster
+          </a>
         </div>
       </footer>
+
+      {/* ── Sticky CTA mobile ── */}
+      <StickyCTA href="/eventos" />
     </main>
   )
 }
