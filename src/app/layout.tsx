@@ -1,16 +1,13 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { CookieBanner } from "@/ui/components/CookieBanner"
+import { Inter } from "next/font/google"
+import LazyCookieBanner from "@/ui/components/LazyCookieBanner"
+import LazySolarOrb from "@/ui/components/LazySolarOrb"
 import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-editorial",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -33,9 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.variable} font-editorial antialiased`}>
+        <LazySolarOrb />
         {children}
-        <CookieBanner />
+        <LazyCookieBanner />
       </body>
     </html>
   )

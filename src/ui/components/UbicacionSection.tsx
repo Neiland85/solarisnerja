@@ -1,30 +1,27 @@
-"use client"
-
 export default function UbicacionSection() {
   return (
-    <section className="bg-white relative py-28 px-6">
+    <section id="ubicacion" className="bg-white solaris-parallax-horizon relative section-editorial px-6">
 
-      {/* reflejo solar sutil */}
-      <div className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 0%, rgba(255,150,80,0.07), transparent 65%)"
-        }}
-      />
+      {/* Título alineado derecha (col 8–12 de 12) */}
+      <div className="editorial-grid max-w-6xl mx-auto">
+        <div className="col-span-12 md:col-span-5 md:col-start-8">
 
-      <div className="relative max-w-6xl mx-auto">
+          <h2 className="editorial-h2">
+            ubicación
+          </h2>
 
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">
-          Ubicación
-        </h2>
+          <p className="mt-6 opacity-70">
+            Solaris se celebra frente al Mediterráneo, en Nerja.
+            Un paisaje donde el horizonte, la luz y el mar forman parte del escenario.
+          </p>
 
-        <p className="max-w-xl text-base opacity-70 mb-14">
-          Solaris se celebra frente al Mediterráneo, en Nerja.
-          Un paisaje donde el horizonte, la luz y el mar forman parte del escenario.
-        </p>
+        </div>
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-16 items-center">
+      {/* Mapa + info en grid editorial */}
+      <div className="editorial-grid max-w-6xl mx-auto mt-14">
 
+        <div className="col-span-12 md:col-span-7">
           <div className="aspect-[4/3] w-full overflow-hidden">
             <iframe
               className="w-full h-full border-0"
@@ -32,19 +29,18 @@ export default function UbicacionSection() {
               src="https://maps.google.com/maps?q=Nerja&t=&z=13&ie=UTF8&iwloc=&output=embed"
             />
           </div>
+        </div>
 
-          <div className="text-sm space-y-4">
+        <div className="col-span-12 md:col-span-4 md:col-start-9 text-sm space-y-4 self-center">
 
-            <p className="opacity-70">
-              Nerja · Costa del Sol · Andalucía
-            </p>
+          <p className="opacity-70">
+            Nerja · Costa del Sol · Andalucía
+          </p>
 
-            <p className="opacity-70">
-              Un territorio donde el festival comienza con el sol alto,
-              se transforma en atardecer y continúa con luz diseñada.
-            </p>
-
-          </div>
+          <p className="opacity-70">
+            Un territorio donde el festival comienza con el sol alto,
+            se transforma en atardecer y continúa con luz diseñada.
+          </p>
 
         </div>
 

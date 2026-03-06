@@ -1,39 +1,51 @@
-"use client"
-
 import Image from "next/image"
 import Link from "next/link"
 
 export default function Header() {
   return (
-    <header className="bg-white text-black w-full flex items-center justify-between px-8 py-6">
+    <header className="bg-white text-black w-full px-8 py-6">
 
-      {/* LOGO */}
-      <Link href="/">
-        <Image
-          src="/solaris_logo.png"
-          alt="Solaris Nerja"
-          width={120}
-          height={60}
-          priority
-        />
-      </Link>
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
 
-      {/* NAV */}
-      <nav className="flex gap-10 text-sm font-medium">
-
-        <Link href="/eventos">
-          Eventos
+        {/* LOGO */}
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/solaris_logo.png"
+            alt="Solaris Nerja"
+            width={120}
+            height={60}
+            sizes="120px"
+            priority
+          />
         </Link>
 
-        <Link href="/mercado">
-          Mercado
-        </Link>
+        {/* NAV */}
+        <nav className="flex items-center gap-10 text-sm tracking-wide">
 
-        <Link href="/#ubicacion">
-          Ubicación
-        </Link>
+          <Link
+            href="/#eventos"
+            className="hover:opacity-60 transition"
+          >
+            eventos
+          </Link>
 
-      </nav>
+          <Link
+            href="/#mercado"
+            className="hover:opacity-60 transition"
+          >
+            mercado
+          </Link>
+
+          <Link
+            href="/#ubicacion"
+            className="hover:opacity-60 transition"
+          >
+            ubicación
+          </Link>
+
+        </nav>
+
+      </div>
 
     </header>
   )

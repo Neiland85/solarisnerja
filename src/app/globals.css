@@ -43,3 +43,99 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* ─── Solaris parallax textures ─── */
+
+.solaris-parallax-sun {
+  background-image:
+    radial-gradient(
+      circle at 60% -20%,
+      rgba(255,150,80,0.07),
+      rgba(255,150,80,0.03) 40%,
+      transparent 70%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.solaris-parallax-sand {
+  background-image:
+    radial-gradient(
+      circle at 20% 120%,
+      rgba(210,180,140,0.08),
+      transparent 60%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.solaris-parallax-horizon {
+  background-image:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(255,145,60,0.06),
+      transparent 65%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Blur solar difuso (pseudo-element) */
+.solaris-parallax-sun {
+  position: relative;
+}
+.solaris-parallax-sun::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 60% -20%, rgba(255,150,80,0.1), transparent 60%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* ─── Editorial typography ─── */
+
+.font-editorial {
+  font-family: var(--font-editorial), system-ui, sans-serif;
+}
+
+.editorial-h1 {
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.editorial-h2 {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.editorial-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* ─── Editorial rhythm ─── */
+
+.section-editorial {
+  padding-top: 10rem;
+  padding-bottom: 10rem;
+}
+
+/* ─── Editorial grid (12-col Swiss) ─── */
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 2rem;
+}
+
+/* ─── Editorial divider ─── */
+
+.section-divider {
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
