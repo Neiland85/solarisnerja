@@ -10,14 +10,6 @@ export default function PrivacidadPage() {
   return (
     <main className="min-h-screen">
 
-      {/* ── Header ── */}
-      <header className="px-6 md:px-12 pt-8 pb-6 flex items-center justify-between max-w-7xl mx-auto">
-        <Link href="/" className="text-sm font-bold tracking-widest uppercase">
-          Solaris Nerja
-        </Link>
-      </header>
-
-      <div className="border-t border-[var(--sn-border)]" />
 
       <section className="px-6 md:px-12 pt-16 pb-24 max-w-3xl mx-auto">
         <Link
@@ -163,11 +155,6 @@ export default function PrivacidadPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <div className="border-t border-[var(--sn-border)]" />
-      <footer className="px-6 md:px-12 py-12 max-w-7xl mx-auto text-xs text-[var(--sn-muted)]">
-        © {new Date().getFullYear()} Solaris Nerja
-      </footer>
     </main>
   )
 }

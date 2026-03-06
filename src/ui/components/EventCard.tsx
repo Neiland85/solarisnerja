@@ -11,7 +11,7 @@ export default function EventCard({ event }: EventCardProps) {
   return (
     <div className="space-y-4">
 
-      <p className="text-xs tracking-[0.3em] uppercase opacity-60">
+      <p className="editorial-label">
         {event.time}
       </p>
 
