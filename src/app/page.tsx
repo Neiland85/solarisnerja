@@ -1,44 +1,25 @@
-import Header from "@/ui/components/Header"
-import HeroSection from "@/ui/components/HeroSection"
-import SolarisInfoSection from "@/ui/components/SolarisInfoSection"
-import LineupSection from "@/ui/components/LineupSection"
+import Hero from "@/ui/components/Hero"
+import ProgramTicker from "@/ui/components/ProgramTicker"
 import EventosSection from "@/ui/components/EventosSection"
-import ImageCarousel from "@/ui/components/ImageCarousel"
-import MercadoSection from "@/ui/components/MercadoSection"
 import GalleryGrid from "@/ui/components/GalleryGrid"
-import UbicacionSection from "@/ui/components/UbicacionSection"
-import Footer from "@/ui/components/Footer"
+import SolarisInfoSection from "@/ui/components/SolarisInfoSection"
 
 export default function Page() {
   return (
-    <main>
+    <>
+      <Hero />
 
-      <Header />
+      {/* Program timeline */}
+      <ProgramTicker />
 
-      <HeroSection />
-
-      <div className="section-divider" />
-      <SolarisInfoSection />
-
-      <div className="section-divider" />
-      <LineupSection />
-
-      <div className="section-divider" />
+      {/* Featured events */}
       <EventosSection />
 
-      <ImageCarousel />
-
-      <div className="section-divider" />
-      <MercadoSection />
-
-      <div className="section-divider" />
+      {/* Photo gallery */}
       <GalleryGrid />
 
-      <div className="section-divider" />
-      <UbicacionSection />
-
-      <Footer />
-
-    </main>
+      {/* Festival information */}
+      <SolarisInfoSection />
+    </>
   )
 }
