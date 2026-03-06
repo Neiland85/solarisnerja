@@ -34,40 +34,52 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center px-6">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-6"
-      >
-        <h1 className="editorial-h2 text-center">solaris admin</h1>
-
-        <div>
-          <label htmlFor="password" className="editorial-label block mb-2">
-            contraseña
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoFocus
-            className="w-full border border-[rgba(0,0,0,0.16)] px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-black transition"
-          />
-        </div>
-
-        {error && (
-          <p className="text-sm text-red-600 tracking-wide">{error}</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full border-2 border-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition disabled:opacity-40"
+    <main className="min-h-screen bg-[var(--sn-surface)] flex items-center justify-center px-6 solaris-parallax-sun">
+      <div className="w-full max-w-sm">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-sm border border-[var(--sn-border)] p-10 space-y-8 shadow-sm"
         >
-          {loading ? "..." : "entrar"}
-        </button>
-      </form>
+          <div className="text-center space-y-2">
+            <h1 className="editorial-h2">solaris</h1>
+            <p className="editorial-label">panel de administración</p>
+          </div>
+
+          <div>
+            <label htmlFor="password" className="editorial-label block mb-2.5">
+              contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoFocus
+              placeholder="introduce la contraseña"
+              className="w-full bg-[var(--sn-surface)] border border-[var(--sn-border)] rounded-sm px-4 py-3 text-sm tracking-wide placeholder:text-[var(--sn-muted)] placeholder:opacity-50 focus:outline-none focus:border-[var(--sn-text)] focus:bg-white transition"
+            />
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+              <p className="text-sm text-red-700 tracking-wide">{error}</p>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full border-2 border-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition disabled:opacity-40"
+          >
+            {loading ? "accediendo..." : "entrar"}
+          </button>
+        </form>
+
+        <p className="text-center mt-8 text-xs text-[var(--sn-muted)] tracking-widest">
+          solaris nerja
+        </p>
+      </div>
     </main>
   )
 }
