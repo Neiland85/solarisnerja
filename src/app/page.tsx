@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Header from "@/ui/components/Header"
 import HeroSection from "@/ui/components/HeroSection"
 import { Reveal } from "@/ui/components/Reveal"
 import { EventCard } from "@/ui/components/EventCard"
@@ -9,7 +10,8 @@ export default function Home() {
   return (
     <main className="min-h-screen">
 
-      {/* ── Hero (definitivo) ── */}
+      <Header />
+
       <HeroSection />
 
       {/* ── Divider ── */}

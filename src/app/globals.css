@@ -43,29 +43,3 @@ body {
 html {
   scroll-behavior: smooth;
 }
-
-/* ── Solaris Logo — Wave animation ──
-   Movimiento horizontal sine lento, GPU-composited.
-   will-change solo activo en @media que soporta animaciones. */
-
-@media (prefers-reduced-motion: no-preference) {
-  .sn-wave {
-    animation: sn-wave-drift 7s ease-in-out infinite;
-    will-change: transform;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sn-wave {
-    animation: none;
-  }
-}
-
-@keyframes sn-wave-drift {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(8px);
-  }
-}
