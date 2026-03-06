@@ -85,7 +85,12 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const lead = createLead(body)
+    const lead = createLead({
+      email: body.email,
+      eventId: body.eventId,
+      ipAddress: ip,
+      consentGiven: true,
+    })
     await saveLead(lead)
 
     log("info", "lead_saved", { requestId, eventId: lead.eventId })

@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  experimental: {
+    optimizePackageImports: ["@sentry/nextjs"],
+  },
   async headers() {
     return [
       // Security headers for everything
