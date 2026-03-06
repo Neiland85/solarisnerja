@@ -1,5 +1,6 @@
 import Header from "@/ui/components/Header"
 import HeroSection from "@/ui/components/HeroSection"
+import ProgramTicker from "@/ui/components/ProgramTicker"
 import LineupSection from "@/ui/components/LineupSection"
 import EventosSection from "@/ui/components/EventosSection"
 import MercadoSection from "@/ui/components/MercadoSection"
@@ -13,6 +14,8 @@ export default function Page() {
       <Header />
 
       <HeroSection />
+
+      <ProgramTicker />
 
       <div className="section-divider" />
       <LineupSection />
