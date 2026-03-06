@@ -1,6 +1,5 @@
 import Header from "@/ui/components/Header"
 import HeroSection from "@/ui/components/HeroSection"
-import ProgramTicker from "@/ui/components/ProgramTicker"
 import SolarisInfoSection from "@/ui/components/SolarisInfoSection"
 import LineupSection from "@/ui/components/LineupSection"
 import EventosSection from "@/ui/components/EventosSection"
@@ -17,8 +16,6 @@ export default function Page() {
       <Header />
 
       <HeroSection />
-
-      <ProgramTicker />
 
       <div className="section-divider" />
       <SolarisInfoSection />
