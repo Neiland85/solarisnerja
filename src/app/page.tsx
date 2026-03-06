@@ -9,16 +9,12 @@ export default function Page() {
     <>
       <Hero />
 
-      {/* Program timeline */}
       <ProgramTicker />
 
-      {/* Featured events */}
       <EventosSection />
 
-      {/* Photo gallery */}
       <GalleryGrid />
 
-      {/* Festival information */}
       <SolarisInfoSection />
     </>
   )
