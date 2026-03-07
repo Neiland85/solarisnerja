@@ -68,12 +68,12 @@ export function middleware(req: NextRequest) {
   }
 
   // Generate Content-Security-Policy with nonce
-  // This removes 'unsafe-inline' and 'unsafe-eval' for improved security
+  // NOTE: unsafe-inline + unsafe-eval required for Next.js hydration scripts
+  // TODO: replace with proper nonce propagation via layout.tsx headers()
   const cspValue = [
     "default-src 'self'",
-    // Script-src: Removed 'unsafe-inline' and 'unsafe-eval'
-    // Third-party scripts are loaded from their official domains
-    // Nonce is added for any required inline scripts
+    // Script-src: unsafe-inline needed until nonce propagation is implemented
+    // Third-party scripts loaded from official domains
     `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' https://widget.ticketmaster.com https://www.googletagmanager.com https://connect.facebook.net`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",

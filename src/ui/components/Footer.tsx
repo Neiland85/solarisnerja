@@ -53,7 +53,7 @@ export default function Footer() {
             <a
               href="https://instagram.com"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="hover:opacity-50"
             >
               Instagram
@@ -62,7 +62,7 @@ export default function Footer() {
             <a
               href="https://youtube.com"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="hover:opacity-50"
             >
               YouTube
