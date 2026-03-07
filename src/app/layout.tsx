@@ -21,6 +21,21 @@ export const metadata: Metadata = {
       "10 días de conciertos, gastronomía mediterránea, market creativo y experiencias frente al mar. El Playazo, Nerja. 18–28 junio 2026.",
     type: "website",
     locale: "es_ES",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Solaris Nerja — Festival cultural en Málaga, junio 2026",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Solaris Nerja — Festival cultural en Málaga",
+    description:
+      "Conciertos, gastronomía, market creativo y experiencias frente al mar. El Playazo, Nerja. 18–28 junio 2026.",
+    images: ["/og-image.jpg"],
   },
 }
 
