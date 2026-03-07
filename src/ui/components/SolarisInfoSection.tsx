@@ -60,25 +60,29 @@ export default function SolarisInfoSection() {
 
         </div>
 
-        {/* CTAs — centered */}
+        {/* CTAs — grandes y llamativos */}
         <div className="col-span-12 mt-16 flex flex-col sm:flex-row items-center justify-center gap-5">
-
-          <Link
-            href="/#lineup"
-            className="border-2 border-black px-10 py-4 text-sm font-medium tracking-widest uppercase
-              hover:bg-black hover:text-white transition"
-          >
-            ver line-up
-          </Link>
 
           <Link
             href="https://www.ticketmaster.es/"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-black text-white px-10 py-4 text-sm font-medium tracking-widest uppercase
-              hover:bg-[var(--sn-text)] hover:opacity-90 transition"
+            className="group inline-flex items-center justify-center bg-black text-white
+              px-14 py-5 text-base font-bold tracking-widest uppercase
+              hover:bg-yellow-400 hover:text-black hover:scale-105
+              transition-all duration-300 shadow-lg"
           >
+            <span className="mr-3 text-xl">🎫</span>
             comprar entradas
+          </Link>
+
+          <Link
+            href="/#lineup"
+            className="inline-flex items-center justify-center border-2 border-black
+              px-10 py-5 text-sm font-medium tracking-widest uppercase
+              hover:bg-black hover:text-white transition-all duration-300"
+          >
+            ver line-up
           </Link>
 
         </div>
