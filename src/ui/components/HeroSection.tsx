@@ -27,8 +27,6 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden">
-    <section className="relative min-h-[80vh] flex flex-col items-center justify-center gap-8 overflow-hidden">
-      {/* Background images with crossfade */}
       {images.map((src, i) => (
         <Image
           key={src}
@@ -60,10 +58,7 @@ export default function HeroSection() {
             href="https://www.ticketmaster.es/"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center justify-center bg-white text-black
-              px-14 py-5 text-lg font-bold tracking-widest uppercase
-              hover:bg-yellow-300 hover:text-black hover:scale-105
-              transition-all duration-300 shadow-2xl"
+            className="group relative inline-flex items-center justify-center bg-white text-black px-14 py-5 text-lg font-bold tracking-widest uppercase hover:bg-yellow-300 hover:text-black hover:scale-105 transition-all duration-300 shadow-2xl"
           >
             <span className="mr-3 text-2xl">🎫</span>
             comprar entradas
@@ -71,34 +66,13 @@ export default function HeroSection() {
 
           <Link
             href="/#lineup"
-            className="inline-flex items-center justify-center border-2 border-white/80
-              px-10 py-5 text-base font-medium tracking-widest uppercase text-white
-              hover:bg-white hover:text-black transition-all duration-300"
+            className="inline-flex items-center justify-center border-2 border-white/80 px-10 py-5 text-base font-medium tracking-widest uppercase text-white hover:bg-white hover:text-black transition-all duration-300"
           >
             ver line-up
           </Link>
         </div>
       </div>
 
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/30" />
-
-      {/* Content */}
-      <div className="relative z-10 text-center text-white space-y-8">
-        <p className="editorial-label text-white/80">
-          mediterranean light culture
-        </p>
-
-        <Link
-          href="/eventos"
-          className="inline-block border-2 border-white px-12 py-4 text-lg font-medium tracking-wide
-            hover:bg-white hover:text-black transition"
-        >
-          tickets
-        </Link>
-      </div>
-
-      {/* Slide indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
         {images.map((_, i) => (
           <button
@@ -107,8 +81,6 @@ export default function HeroSection() {
             aria-label={`Imagen ${i + 1}`}
             className={`h-2 rounded-full transition-all ${
               i === current ? "bg-white w-8" : "bg-white/40 w-2"
-            className={`w-2 h-2 rounded-full transition-all ${
-              i === current ? "bg-white w-6" : "bg-white/40"
             }`}
           />
         ))}
