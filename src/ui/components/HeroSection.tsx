@@ -27,6 +27,8 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative min-h-[80vh] flex flex-col items-center justify-center gap-8 overflow-hidden">
+      {/* Background images with crossfade */}
       {images.map((src, i) => (
         <Image
           key={src}
@@ -78,6 +80,25 @@ export default function HeroSection() {
         </div>
       </div>
 
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/30" />
+
+      {/* Content */}
+      <div className="relative z-10 text-center text-white space-y-8">
+        <p className="editorial-label text-white/80">
+          mediterranean light culture
+        </p>
+
+        <Link
+          href="/eventos"
+          className="inline-block border-2 border-white px-12 py-4 text-lg font-medium tracking-wide
+            hover:bg-white hover:text-black transition"
+        >
+          tickets
+        </Link>
+      </div>
+
+      {/* Slide indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
         {images.map((_, i) => (
           <button
@@ -86,6 +107,8 @@ export default function HeroSection() {
             aria-label={`Imagen ${i + 1}`}
             className={`h-2 rounded-full transition-all ${
               i === current ? "bg-white w-8" : "bg-white/40 w-2"
+            className={`w-2 h-2 rounded-full transition-all ${
+              i === current ? "bg-white w-6" : "bg-white/40"
             }`}
           />
         ))}
