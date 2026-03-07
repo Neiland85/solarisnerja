@@ -27,7 +27,6 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden">
-      {/* Background images with crossfade */}
       {images.map((src, i) => (
         <Image
           key={src}
@@ -42,10 +41,8 @@ export default function HeroSection() {
         />
       ))}
 
-      {/* Gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
 
-      {/* Content */}
       <div className="relative z-10 text-center text-white space-y-10 px-6">
         <div className="space-y-4">
           <p className="text-sm tracking-[0.4em] uppercase text-white/70">
@@ -56,7 +53,6 @@ export default function HeroSection() {
           </p>
         </div>
 
-        {/* CTA grande y llamativo */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="https://www.ticketmaster.es/"
@@ -82,7 +78,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Slide indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
         {images.map((_, i) => (
           <button
