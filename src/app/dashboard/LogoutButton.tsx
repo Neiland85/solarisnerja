@@ -13,7 +13,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="hover:opacity-60 transition text-sm tracking-wide"
+      className="text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition text-sm tracking-wide"
     >
       salir
     </button>

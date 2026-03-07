@@ -15,8 +15,11 @@ export default async function EditEventPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-lg space-y-8">
-      <h1 className="editorial-h2">editar evento</h1>
+    <div className="max-w-xl">
+      <div className="mb-10">
+        <p className="editorial-label mb-2">editar</p>
+        <h1 className="editorial-h2">{event.title}</h1>
+      </div>
       <EventEditForm event={event} />
     </div>
   )

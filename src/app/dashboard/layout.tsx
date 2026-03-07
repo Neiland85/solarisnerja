@@ -12,21 +12,34 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-white">
-      <header className="border-b border-[rgba(0,0,0,0.08)] px-8 py-4">
+    <div className="min-h-screen bg-[var(--sn-surface)]">
+      <header className="bg-white border-b border-[var(--sn-border)] px-8 py-5 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link href="/dashboard" className="text-sm font-medium tracking-wide">
-            solaris admin
-          </Link>
-          <nav className="flex items-center gap-6 text-sm tracking-wide">
-            <Link href="/dashboard/events" className="hover:opacity-60 transition">
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard" className="text-sm font-semibold tracking-wide">
+              solaris
+            </Link>
+            <span className="text-[var(--sn-muted)] text-xs">admin</span>
+          </div>
+          <nav className="flex items-center gap-8 text-sm tracking-wide">
+            <Link
+              href="/dashboard"
+              className="text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition"
+            >
+              inicio
+            </Link>
+            <Link
+              href="/dashboard/events"
+              className="text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition"
+            >
               eventos
             </Link>
+            <span className="w-px h-4 bg-[var(--sn-border-2)]" />
             <LogoutButton />
           </nav>
         </div>
       </header>
-      <main className="max-w-5xl mx-auto px-8 py-12">
+      <main className="max-w-5xl mx-auto px-8 py-10">
         {children}
       </main>
     </div>
