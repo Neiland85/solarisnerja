@@ -1,0 +1,336 @@
+From 46470d211d690ea636353087e6b8987e3b7cf837 Mon Sep 17 00:00:00 2001
+From: Neiland <bookingnadarecords@gmail.com>
+Date: Fri, 6 Mar 2026 16:29:18 +0000
+Subject: [PATCH] fix: resolve merge conflicts in dashboard and login files
+
+Clean up duplicated JSX content caused by merge conflicts between
+main (which had base dashboard) and feature branch (with design
+improvements). All 9 affected files rewritten to correct versions.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ src/app/dashboard/LogoutButton.tsx            |  1 -
+ .../events/edit/[id]/EventEditForm.tsx        | 26 --------------
+ src/app/dashboard/events/edit/[id]/page.tsx   |  2 --
+ src/app/dashboard/events/new/page.tsx         | 21 ------------
+ src/app/dashboard/events/page.tsx             | 32 -----------------
+ src/app/dashboard/layout.tsx                  | 11 ------
+ src/app/dashboard/page.tsx                    | 11 ------
+ src/app/login/page.tsx                        | 34 -------------------
+ src/ui/components/LineupSection.tsx           |  1 -
+ 9 files changed, 139 deletions(-)
+
+diff --git a/src/app/dashboard/LogoutButton.tsx b/src/app/dashboard/LogoutButton.tsx
+index a2fb6d1..31e7c2f 100644
+--- a/src/app/dashboard/LogoutButton.tsx
++++ b/src/app/dashboard/LogoutButton.tsx
+@@ -14,7 +14,6 @@ export default function LogoutButton() {
+     <button
+       onClick={handleLogout}
+       className="text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition text-sm tracking-wide"
+-      className="hover:opacity-60 transition text-sm tracking-wide"
+     >
+       salir
+     </button>
+diff --git a/src/app/dashboard/events/edit/[id]/EventEditForm.tsx b/src/app/dashboard/events/edit/[id]/EventEditForm.tsx
+index 6a9c295..24dcf88 100644
+--- a/src/app/dashboard/events/edit/[id]/EventEditForm.tsx
++++ b/src/app/dashboard/events/edit/[id]/EventEditForm.tsx
+@@ -71,24 +71,16 @@ export default function EventEditForm({ event }: { event: Event }) {
+     <form onSubmit={handleSubmit} className="bg-white rounded-sm border border-[var(--sn-border)] p-8 space-y-7">
+       <div>
+         <label htmlFor="title" className="editorial-label block mb-2.5">título</label>
+-    "w-full border border-[rgba(0,0,0,0.16)] px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-black transition"
+-
+-  return (
+-    <form onSubmit={handleSubmit} className="space-y-6">
+-      <div>
+-        <label htmlFor="title" className="editorial-label block mb-2">título</label>
+         <input id="title" name="title" defaultValue={event.title} required className={inputClass} />
+       </div>
+ 
+       <div>
+         <label htmlFor="description" className="editorial-label block mb-2.5">descripción</label>
+-        <label htmlFor="description" className="editorial-label block mb-2">descripción</label>
+         <textarea id="description" name="description" defaultValue={event.description} rows={4} required className={inputClass} />
+       </div>
+ 
+       <div>
+         <label htmlFor="highlight" className="editorial-label block mb-2.5">highlight</label>
+-        <label htmlFor="highlight" className="editorial-label block mb-2">highlight</label>
+         <input id="highlight" name="highlight" defaultValue={event.highlight} required className={inputClass} />
+       </div>
+ 
+@@ -98,11 +90,6 @@ export default function EventEditForm({ event }: { event: Event }) {
+       </div>
+ 
+       <div className="flex items-center gap-3 pt-1">
+-        <label htmlFor="ticketUrl" className="editorial-label block mb-2">ticket url</label>
+-        <input id="ticketUrl" name="ticketUrl" type="url" defaultValue={event.ticketUrl} required className={inputClass} />
+-      </div>
+-
+-      <div className="flex items-center gap-3">
+         <input
+           id="active"
+           name="active"
+@@ -120,14 +107,6 @@ export default function EventEditForm({ event }: { event: Event }) {
+       )}
+ 
+       <div className="flex items-center justify-between pt-4 border-t border-[var(--sn-border)]">
+-          className="w-4 h-4 accent-black"
+-        />
+-        <label htmlFor="active" className="text-sm tracking-wide">activo</label>
+-      </div>
+-
+-      {error && <p className="text-sm text-red-600 tracking-wide">{error}</p>}
+-
+-      <div className="flex items-center justify-between pt-4">
+         <div className="flex gap-4">
+           <button
+             type="submit"
+@@ -135,13 +114,11 @@ export default function EventEditForm({ event }: { event: Event }) {
+             className="border-2 border-black px-8 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition disabled:opacity-40"
+           >
+             {loading ? "guardando..." : "guardar cambios"}
+-            {loading ? "..." : "guardar"}
+           </button>
+           <button
+             type="button"
+             onClick={() => router.back()}
+             className="px-8 py-3 text-sm tracking-wide text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition"
+-            className="px-8 py-3 text-sm tracking-wide hover:opacity-60 transition"
+           >
+             cancelar
+           </button>
+@@ -154,9 +131,6 @@ export default function EventEditForm({ event }: { event: Event }) {
+           className="text-sm tracking-wide text-red-500 hover:text-red-700 transition disabled:opacity-40"
+         >
+           {deleting ? "eliminando..." : "eliminar evento"}
+-          className="text-sm tracking-wide text-red-600 hover:opacity-60 transition disabled:opacity-40"
+-        >
+-          {deleting ? "..." : "eliminar"}
+         </button>
+       </div>
+     </form>
+diff --git a/src/app/dashboard/events/edit/[id]/page.tsx b/src/app/dashboard/events/edit/[id]/page.tsx
+index 4436e59..420ccbf 100644
+--- a/src/app/dashboard/events/edit/[id]/page.tsx
++++ b/src/app/dashboard/events/edit/[id]/page.tsx
+@@ -20,8 +20,6 @@ export default async function EditEventPage({ params }: Props) {
+         <p className="editorial-label mb-2">editar</p>
+         <h1 className="editorial-h2">{event.title}</h1>
+       </div>
+-    <div className="max-w-lg space-y-8">
+-      <h1 className="editorial-h2">editar evento</h1>
+       <EventEditForm event={event} />
+     </div>
+   )
+diff --git a/src/app/dashboard/events/new/page.tsx b/src/app/dashboard/events/new/page.tsx
+index 6eacdd0..eb2253d 100644
+--- a/src/app/dashboard/events/new/page.tsx
++++ b/src/app/dashboard/events/new/page.tsx
+@@ -60,31 +60,17 @@ export default function NewEventPage() {
+         )}
+ 
+         <div className="flex gap-4 pt-2">
+-    <div className="max-w-lg space-y-8">
+-      <h1 className="editorial-h2">nuevo evento</h1>
+-
+-      <form onSubmit={handleSubmit} className="space-y-6">
+-        <Field label="título" name="title" required />
+-        <Field label="descripción" name="description" multiline required />
+-        <Field label="highlight" name="highlight" required />
+-        <Field label="ticket url" name="ticketUrl" type="url" required />
+-
+-        {error && <p className="text-sm text-red-600 tracking-wide">{error}</p>}
+-
+-        <div className="flex gap-4">
+           <button
+             type="submit"
+             disabled={loading}
+             className="border-2 border-black px-8 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition disabled:opacity-40"
+           >
+             {loading ? "guardando..." : "crear evento"}
+-            {loading ? "..." : "crear"}
+           </button>
+           <button
+             type="button"
+             onClick={() => router.back()}
+             className="px-8 py-3 text-sm tracking-wide text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition"
+-            className="px-8 py-3 text-sm tracking-wide hover:opacity-60 transition"
+           >
+             cancelar
+           </button>
+@@ -115,13 +101,6 @@ function Field({
+   return (
+     <div>
+       <label htmlFor={name} className="editorial-label block mb-2.5">
+-}) {
+-  const baseClass =
+-    "w-full border border-[rgba(0,0,0,0.16)] px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-black transition"
+-
+-  return (
+-    <div>
+-      <label htmlFor={name} className="editorial-label block mb-2">
+         {label}
+       </label>
+       {multiline ? (
+diff --git a/src/app/dashboard/events/page.tsx b/src/app/dashboard/events/page.tsx
+index 65b74c2..3105708 100644
+--- a/src/app/dashboard/events/page.tsx
++++ b/src/app/dashboard/events/page.tsx
+@@ -55,28 +55,6 @@ export default async function EventsListPage() {
+                 <th className="text-left px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">highlight</th>
+                 <th className="text-center px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">estado</th>
+                 <th className="text-right px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">acción</th>
+-        <h1 className="editorial-h2">eventos</h1>
+-        <Link
+-          href="/dashboard/events/new"
+-          className="border-2 border-black px-6 py-2 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
+-        >
+-          nuevo evento
+-        </Link>
+-      </div>
+-
+-      {events.length === 0 ? (
+-        <p className="text-sm text-[var(--sn-muted)] tracking-wide">
+-          No hay eventos. Crea el primero.
+-        </p>
+-      ) : (
+-        <div className="border border-[rgba(0,0,0,0.08)] overflow-hidden">
+-          <table className="w-full text-sm">
+-            <thead>
+-              <tr className="border-b border-[rgba(0,0,0,0.08)] bg-[var(--sn-surface)]">
+-                <th className="text-left px-4 py-3 font-medium tracking-wide">título</th>
+-                <th className="text-left px-4 py-3 font-medium tracking-wide">highlight</th>
+-                <th className="text-center px-4 py-3 font-medium tracking-wide">activo</th>
+-                <th className="text-right px-4 py-3 font-medium tracking-wide">acción</th>
+               </tr>
+             </thead>
+             <tbody>
+@@ -103,16 +81,6 @@ export default async function EventsListPage() {
+                     <Link
+                       href={`/dashboard/events/edit/${event.id}`}
+                       className="text-sm tracking-wide text-[var(--sn-muted)] hover:text-[var(--sn-text)] transition"
+-                <tr key={event.id} className="border-b border-[rgba(0,0,0,0.04)]">
+-                  <td className="px-4 py-3 tracking-wide">{event.title}</td>
+-                  <td className="px-4 py-3 tracking-wide text-[var(--sn-muted)]">{event.highlight}</td>
+-                  <td className="px-4 py-3 text-center">
+-                    <span className={`inline-block w-2 h-2 rounded-full ${event.active ? "bg-green-500" : "bg-red-400"}`} />
+-                  </td>
+-                  <td className="px-4 py-3 text-right">
+-                    <Link
+-                      href={`/dashboard/events/edit/${event.id}`}
+-                      className="text-sm tracking-wide hover:opacity-60 transition underline"
+                     >
+                       editar
+                     </Link>
+diff --git a/src/app/dashboard/layout.tsx b/src/app/dashboard/layout.tsx
+index e15a617..79df74f 100644
+--- a/src/app/dashboard/layout.tsx
++++ b/src/app/dashboard/layout.tsx
+@@ -35,22 +35,11 @@ export default function DashboardLayout({
+               eventos
+             </Link>
+             <span className="w-px h-4 bg-[var(--sn-border-2)]" />
+-    <div className="min-h-screen bg-white">
+-      <header className="border-b border-[rgba(0,0,0,0.08)] px-8 py-4">
+-        <div className="max-w-5xl mx-auto flex items-center justify-between">
+-          <Link href="/dashboard" className="text-sm font-medium tracking-wide">
+-            solaris admin
+-          </Link>
+-          <nav className="flex items-center gap-6 text-sm tracking-wide">
+-            <Link href="/dashboard/events" className="hover:opacity-60 transition">
+-              eventos
+-            </Link>
+             <LogoutButton />
+           </nav>
+         </div>
+       </header>
+       <main className="max-w-5xl mx-auto px-8 py-10">
+-      <main className="max-w-5xl mx-auto px-8 py-12">
+         {children}
+       </main>
+     </div>
+diff --git a/src/app/dashboard/page.tsx b/src/app/dashboard/page.tsx
+index 86136d6..e98cdad 100644
+--- a/src/app/dashboard/page.tsx
++++ b/src/app/dashboard/page.tsx
+@@ -27,17 +27,6 @@ export default function DashboardPage() {
+             más secciones próximamente
+           </p>
+         </div>
+-    <div className="space-y-8">
+-      <h1 className="editorial-h2">dashboard</h1>
+-
+-      <div className="grid gap-4 md:grid-cols-2">
+-        <Link
+-          href="/dashboard/events"
+-          className="border border-[rgba(0,0,0,0.08)] p-6 hover:border-black transition"
+-        >
+-          <p className="editorial-label mb-2">gestionar</p>
+-          <p className="text-lg font-medium tracking-wide">eventos</p>
+-        </Link>
+       </div>
+     </div>
+   )
+diff --git a/src/app/login/page.tsx b/src/app/login/page.tsx
+index 1166727..a03b8c4 100644
+--- a/src/app/login/page.tsx
++++ b/src/app/login/page.tsx
+@@ -80,40 +80,6 @@ export default function LoginPage() {
+           solaris nerja
+         </p>
+       </div>
+-    <main className="min-h-screen bg-white flex items-center justify-center px-6">
+-      <form
+-        onSubmit={handleSubmit}
+-        className="w-full max-w-sm space-y-6"
+-      >
+-        <h1 className="editorial-h2 text-center">solaris admin</h1>
+-
+-        <div>
+-          <label htmlFor="password" className="editorial-label block mb-2">
+-            contraseña
+-          </label>
+-          <input
+-            id="password"
+-            type="password"
+-            value={password}
+-            onChange={(e) => setPassword(e.target.value)}
+-            required
+-            autoFocus
+-            className="w-full border border-[rgba(0,0,0,0.16)] px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-black transition"
+-          />
+-        </div>
+-
+-        {error && (
+-          <p className="text-sm text-red-600 tracking-wide">{error}</p>
+-        )}
+-
+-        <button
+-          type="submit"
+-          disabled={loading}
+-          className="w-full border-2 border-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition disabled:opacity-40"
+-        >
+-          {loading ? "..." : "entrar"}
+-        </button>
+-      </form>
+     </main>
+   )
+ }
+diff --git a/src/ui/components/LineupSection.tsx b/src/ui/components/LineupSection.tsx
+index d145dc4..4738d6e 100644
+--- a/src/ui/components/LineupSection.tsx
++++ b/src/ui/components/LineupSection.tsx
+@@ -1,7 +1,6 @@
+ export default function LineupSection() {
+   return (
+     <section id="lineup" className="section-editorial bg-white">
+-    <section className="section-editorial bg-white">
+ 
+       <div className="editorial-grid max-w-6xl mx-auto">
+ 
+-- 
+2.34.1
+
