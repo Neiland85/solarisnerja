@@ -71,7 +71,7 @@ export default function ImageCarousel() {
           <div key={src} className="relative w-full shrink-0 aspect-[2.4/1]">
             <Image
               src={src}
-              alt={`Solaris Nerja — carousel ${i + 1}`}
+              alt={`Solaris Nerja — carrusel ${i + 1}`}
               fill
               sizes="100vw"
               priority={i === 0}
@@ -88,7 +88,13 @@ export default function ImageCarousel() {
         className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-black/30 hover:bg-black/60 text-white rounded-full transition"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M12 4L6 10L12 16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
       <button
@@ -97,7 +103,13 @@ export default function ImageCarousel() {
         className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-black/30 hover:bg-black/60 text-white rounded-full transition"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M8 4L14 10L8 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M8 4L14 10L8 16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
 
