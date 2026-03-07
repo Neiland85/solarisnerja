@@ -31,17 +31,17 @@ export default function HeroSection() {
         <Image
           key={src}
           src={src}
-          alt=""
+          alt={`Solaris Nerja — imagen ${i + 1}`}
           fill
           priority={i === 0}
           sizes="100vw"
-          className={`object-cover transition-opacity duration-[1500ms] ease-in-out ${
+          className={`object-cover transition-opacity duration-1500 ease-in-out ${
             i === current ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-black/60" />
 
       <div className="relative z-10 text-center text-white space-y-10 px-6">
         <div className="space-y-4">

@@ -30,11 +30,10 @@ export function TicketmasterWidget({ eventId, ticketUrl }: Props) {
     }
 
     const node = containerRef.current
-    node.innerHTML = ""
     node.appendChild(script)
 
     return () => {
-      node.innerHTML = ""
+      if (node) node.innerHTML = ""
     }
   }, [eventId])
 
