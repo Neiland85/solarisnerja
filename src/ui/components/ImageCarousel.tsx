@@ -71,7 +71,7 @@ export default function ImageCarousel() {
           <div key={src} className="relative w-full shrink-0 aspect-[2.4/1]">
             <Image
               src={src}
-              alt=""
+              alt={`Solaris Nerja — carousel ${i + 1}`}
               fill
               sizes="100vw"
               priority={i === 0}
@@ -107,7 +107,7 @@ export default function ImageCarousel() {
           <button
             key={i}
             onClick={() => setIndex(i)}
-            aria-label={`Slide ${i + 1}`}
+            aria-label={`Diapositiva ${i + 1}`}
             className={`h-1.5 rounded-full transition-all ${
               i === index ? "bg-white w-5" : "bg-white/40 w-1.5"
             }`}

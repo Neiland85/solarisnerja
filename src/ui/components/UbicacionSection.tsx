@@ -24,6 +24,7 @@ export default function UbicacionSection() {
         <div className="col-span-12 md:col-span-7">
           <div className="aspect-[4/3] w-full overflow-hidden">
             <iframe
+              title="Mapa de Nerja, Málaga — ubicación de Solaris Nerja"
               className="w-full h-full border-0"
               loading="lazy"
               src="https://maps.google.com/maps?q=Nerja&t=&z=13&ie=UTF8&iwloc=&output=embed"
