@@ -16,13 +16,7 @@ const images = [
   "/gallery/gallery-10.webp",
 ]
 
-function RevealItem({
-  children,
-  delay,
-}: {
-  children: React.ReactNode
-  delay: number
-}) {
+function RevealItem({ children, delay }: { children: React.ReactNode; delay: number }) {
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   const refCallback = useCallback(
@@ -54,13 +48,13 @@ function RevealItem({
             observer.disconnect()
           }
         },
-        { threshold: 0.1 }
+        { threshold: 0.1 },
       )
 
       observer.observe(el)
       observerRef.current = observer
     },
-    [delay]
+    [delay],
   )
 
   return <div ref={refCallback}>{children}</div>

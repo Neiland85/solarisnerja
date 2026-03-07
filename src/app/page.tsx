@@ -8,13 +8,9 @@ export default function Page() {
   return (
     <>
       <Hero />
-
       <ProgramTicker />
-
       <EventosSection />
-
       <GalleryGrid />
-
       <SolarisInfoSection />
     </>
   )
