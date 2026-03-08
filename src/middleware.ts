@@ -81,7 +81,7 @@ export function middleware(req: NextRequest) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https:",
-    "connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://*.ingest.de.sentry.io",
+    "connect-src 'self' https://www.google-analytics.com https://www.facebook.com",
     "frame-src https://widget.ticketmaster.com",
     "object-src 'none'",
     "base-uri 'self'",

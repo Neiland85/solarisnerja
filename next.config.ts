@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   experimental: {
-    optimizePackageImports: ["@sentry/nextjs"],
+    optimizePackageImports: [],
   },
   async headers() {
     return [
