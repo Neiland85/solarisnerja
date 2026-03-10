@@ -2,27 +2,29 @@ import { NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
 
 export async function GET() {
+
   const pool = getPool()
 
-  const start = Date.now()
-
   try {
+
+    const start = Date.now()
+
     await pool.query("SELECT 1")
 
     const latency = Date.now() - start
 
     return NextResponse.json({
-      status: "healthy",
-      dbLatencyMs: latency,
-      timestamp: new Date().toISOString()
+      status: "ok",
+      dbLatency: latency
     })
 
-  } catch (error) {
+  } catch (_error) {
 
     return NextResponse.json({
-      status: "degraded",
-      dbLatencyMs: null,
-      timestamp: new Date().toISOString()
+      status: "error",
+      dbLatency: null
     })
+
   }
+
 }
