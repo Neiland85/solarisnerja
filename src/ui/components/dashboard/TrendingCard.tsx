@@ -1,39 +1,16 @@
-type Trending = {
-  title: string
-  leads_last_hour: number
-  percent: number
-}
-
-export default function TrendingCard({ data }: { data: Trending | null }) {
+export default function TrendingCard({ data }: { data: any }) {
 
   if (!data) return null
 
   return (
-    <div className="bg-white border border-[var(--sn-border)] p-8 space-y-4">
-
-      <p className="editorial-label">
-        evento trending
-      </p>
-
+    <div className="bg-white border border-[var(--sn-border)] p-8">
+      <p className="editorial-label mb-2">evento trending</p>
       <p className="text-lg font-medium">
-        {data.title}
+        {data.title ?? "sin datos"}
       </p>
-
-      <p className="text-sm text-[var(--sn-muted)] tracking-wide">
-        {data.leads_last_hour} interesados última hora
+      <p className="text-sm text-[var(--sn-muted)]">
+        {data.leads ?? 0} leads
       </p>
-
-      <div className="w-full bg-[var(--sn-surface)] h-3 rounded-sm overflow-hidden">
-        <div
-          className="bg-black h-full"
-          style={{ width: `${data.percent}%` }}
-        />
-      </div>
-
-      <p className="text-xs text-[var(--sn-muted)]">
-        ritmo de interés actual
-      </p>
-
     </div>
   )
 }

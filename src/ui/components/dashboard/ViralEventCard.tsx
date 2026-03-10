@@ -1,32 +1,16 @@
-type ViralEvent = {
-  title: string
-  leads_last_hour: number
-  leads_last_day: number
-}
-
-export default function ViralEventCard({ data }: { data: ViralEvent | null }) {
+export default function ViralEventCard({ data }: { data: any }) {
 
   if (!data) return null
 
   return (
-    <div className="bg-yellow-50 border border-yellow-200 p-6 space-y-2">
-
-      <p className="text-xs tracking-wide text-yellow-700 uppercase">
-        evento viral
+    <div className="bg-white border border-[var(--sn-border)] p-8">
+      <p className="editorial-label mb-2">evento viral</p>
+      <p className="text-lg font-medium">
+        {data.title ?? "sin datos"}
       </p>
-
-      <p className="text-lg font-semibold text-yellow-800">
-        🔥 crecimiento anómalo detectado
+      <p className="text-sm text-[var(--sn-muted)]">
+        crecimiento rápido
       </p>
-
-      <p className="text-sm text-yellow-700">
-        {data.title}
-      </p>
-
-      <p className="text-xs text-yellow-700">
-        {data.leads_last_hour} leads última hora
-      </p>
-
     </div>
   )
 }
