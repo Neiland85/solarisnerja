@@ -1,35 +1,9 @@
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import LazyCookieBanner from "@/ui/components/LazyCookieBanner"
-import LazySolarOrb from "@/ui/components/LazySolarOrb"
+import MetaPixel from "@/ui/components/MetaPixel"
 import "./globals.css"
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-editorial",
-  display: "swap",
-})
-
-export const metadata: Metadata = {
-  title: "Qué es Solaris Nerja | Festival cultural en Málaga junio 2026",
-  description:
-    "Descubre Solaris Nerja: festival cultural y musical en El Playazo, Costa del Sol.",
-  metadataBase: new URL("https://www.solarisnerja.com"),
-
-  icons: {
-    icon: "/logo-solaris.svg",
-    shortcut: "/logo-solaris.svg",
-    apple: "/logo-solaris.svg",
-  },
-
-  openGraph: {
-    title: "Solaris Nerja — Festival cultural en Málaga",
-    images: ["/og-image.jpg"],
-  },
-
-  other: {
-    "link:preload:hero": "</hero/hero-01.webp>; rel=preload; as=image",
-  },
+export const metadata = {
+  title: "Solaris Nerja",
+  description: "Festival cultural y musical en la Costa del Sol"
 }
 
 export default function RootLayout({
@@ -39,10 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${inter.variable} font-editorial antialiased`}>
-        <LazySolarOrb />
+      <body>
+
+        <MetaPixel />
+
         {children}
-        <LazyCookieBanner />
+
       </body>
     </html>
   )
