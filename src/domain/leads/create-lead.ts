@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto"
+import crypto from "crypto"
 
 export type Lead = {
   id: string
@@ -6,23 +6,27 @@ export type Lead = {
   eventId: string
   ipAddress: string
   consentGiven: boolean
-  createdAt: string
+  createdAt: Date
 }
 
-export function createLead(input:{
-  email:string
-  eventId:string
-  ipAddress:string
-  consentGiven:boolean
-}):Lead{
+type CreateLeadInput = {
+  email: string
+  eventId: string
+  ipAddress: string
+  consentGiven: boolean
+}
+
+export function createLead(input: CreateLeadInput): Lead {
+
+  const email = input.email.trim().toLowerCase()
 
   return {
-    id: randomUUID(),
-    email: input.email,
+    id: crypto.randomUUID(),
+    email,
     eventId: input.eventId,
     ipAddress: input.ipAddress,
     consentGiven: input.consentGiven,
-    createdAt: new Date().toISOString()
+    createdAt: new Date()
   }
 
 }
