@@ -1,10 +1,12 @@
+import { saveQueueSnapshot, loadQueueSnapshot, clearSnapshot } from "./queuePersistence"
+
 type LeadPayload = {
   email: string
   eventId: string
   ipAddress: string
 }
 
-const queue: LeadPayload[] = []
+let queue: LeadPayload[] = loadQueueSnapshot()
 
 const MAX_QUEUE = 5000
 
@@ -15,16 +17,24 @@ export function enqueueLead(lead: LeadPayload) {
   }
 
   queue.push(lead)
+
+  saveQueueSnapshot(queue)
+
   return true
 }
 
 export function dequeueLead(): LeadPayload | null {
 
   if (queue.length === 0) {
+    clearSnapshot()
     return null
   }
 
-  return queue.shift() ?? null
+  const lead = queue.shift() ?? null
+
+  saveQueueSnapshot(queue)
+
+  return lead
 }
 
 export function queueSize() {
