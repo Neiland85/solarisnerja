@@ -144,3 +144,24 @@ export async function POST(req: NextRequest) {
     })
   }
 }
+
+export function _isValidIp(value: string): boolean {
+  const ipv4Regex =
+    /^(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/
+  const ipv6Regex =
+    /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::1)$/
+
+  return ipv4Regex.test(value) || ipv6Regex.test(value)
+}
+
+export function _getClientIp(req: NextRequest): string {
+  const realIp = req.headers.get("x-real-ip")?.trim()
+  if (realIp && _isValidIp(realIp)) return realIp
+
+  const forwardedFor = req.headers.get("x-forwarded-for")
+  const first = forwardedFor?.split(",")[0]?.trim()
+
+  if (first && _isValidIp(first)) return first
+
+  return "unknown"
+}
