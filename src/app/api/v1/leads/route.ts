@@ -1,34 +1,49 @@
 import { NextRequest, NextResponse } from "next/server"
-import { startQueueDaemon } from "@/lib/security/queueDaemon"
-import { enqueueLead } from "@/lib/security/burstQueue"
 import { createLead } from "@/domain/leads/create-lead"
-import { _getClientIp } from "@/lib/ip"
+import { enqueueLead } from "@/lib/security/burstQueue"
+import { processLeadQueue } from "@/lib/security/leadWorker"
+import { _getClientIp, _isValidIp } from "@/lib/ip"
+import { log } from "@/lib/logger"
 
-startQueueDaemon()
+export { _getClientIp, _isValidIp }
 
-export async function POST(req:NextRequest){
+export async function POST(req: NextRequest) {
 
-  const body = await req.json()
+  try {
 
-  const ip = _getClientIp(req)
+    const body = await req.json()
 
-  const lead = createLead({
-    email: body.email,
-    eventId: body.eventId,
-    ipAddress: ip,
-    consentGiven:true
-  })
+    if (!body?.email || !body?.eventId) {
+      return NextResponse.json(
+        { error: "invalid payload" },
+        { status: 400 }
+      )
+    }
 
-  enqueueLead(lead)
+    const ip = _getClientIp(req)
 
-  return NextResponse.json({ success:true })
+    const lead = createLead({
+      email: body.email,
+      eventId: body.eventId,
+      ipAddress: ip,
+      consentGiven: true
+    })
+
+    enqueueLead(lead)
+
+    processLeadQueue()
+
+    return NextResponse.json({ success: true })
+
+  } catch (error) {
+
+    log("error", "lead_api_error", { error })
+
+    return NextResponse.json(
+      { error: "internal_error" },
+      { status: 500 }
+    )
+
+  }
 
 }
-
-// Test compatibility exports
-export { _getClientIp, _isValidIp } from "@/lib/ip"
-
-
-// re-export helpers for unit tests
-export { _getClientIp, _isValidIp } from "@/lib/ip"
-
