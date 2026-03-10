@@ -93,8 +93,7 @@ function logTrace(entry: TraceEntry, event: string): void {
     spans: entry.spans.length,
     ...(entry.parentId ? { parentId: entry.parentId } : {}),
   }
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(log))
+  console.log(JSON.stringify(log)) // eslint-disable-line no-console
 }
 
 // ── Public API ───────────────────────────────────────────

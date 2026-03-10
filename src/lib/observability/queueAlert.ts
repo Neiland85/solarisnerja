@@ -54,8 +54,8 @@ const BACKPRESSURE_THRESHOLD_MINUTES = 2
 // ── Store ───────────────────────────────────────────────
 
 let samples: QueueSample[] = []
-let totalIngested = 0
-let totalDrained = 0
+let _totalIngested = 0
+let _totalDrained = 0
 
 // ── Public API ──────────────────────────────────────────
 
@@ -64,8 +64,8 @@ export function recordQueueSample(
   justDrained: number = 0,
   justIngested: number = 0
 ): void {
-  totalDrained += justDrained
-  totalIngested += justIngested
+  _totalDrained += justDrained
+  _totalIngested += justIngested
 
   samples.push({
     size: currentSize,
@@ -160,8 +160,8 @@ export function checkQueueHealth(currentSize: number): QueueHealthSnapshot {
 
 export function resetQueueAlert(): void {
   samples = []
-  totalIngested = 0
-  totalDrained = 0
+  _totalIngested = 0
+  _totalDrained = 0
 }
 
 // ── Internal ────────────────────────────────────────────
