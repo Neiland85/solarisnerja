@@ -5,9 +5,13 @@ import Script from "next/script"
 const PIXEL_ID = "902092885883160"
 
 export default function MetaPixel() {
+
   return (
     <>
-      <Script id="meta-pixel" strategy="afterInteractive">
+      <Script
+        id="meta-pixel"
+        strategy="afterInteractive"
+      >
         {`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -23,13 +27,12 @@ export default function MetaPixel() {
       </Script>
 
       <noscript>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {/* eslint-disable-next-line jsx-a11y/alt-text */}
         <img
+          src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
           height="1"
           width="1"
+          alt=""
           style={{ display: "none" }}
-          src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
         />
       </noscript>
     </>
