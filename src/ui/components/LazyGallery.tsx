@@ -15,17 +15,23 @@ export default function LazyGallery() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0]
-        if (entry?.isIntersecting) {
+        if (entries[0]?.isIntersecting) {
           setVisible(true)
           observer.disconnect()
         }
       },
-      { threshold: 0.1 }
+      { rootMargin: "200px" }
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
+
+    // fallback por si el observer falla
+    const timeout = setTimeout(() => setVisible(true), 3000)
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(timeout)
+    }
   }, [])
 
   return (
