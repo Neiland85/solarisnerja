@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import Ajv2020 from "ajv/dist/2020"
 import addFormats from "ajv-formats"
+
 import schema from "@/contracts/schemas/lead.create.json"
 import { createLead } from "@/domain/leads/create-lead"
 import { saveLead } from "@/adapters/db/lead-repository"
 import { rateLimit } from "@/lib/rate-limit"
+import { overloadGuard } from "@/lib/security/overload"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
-import { isIP } from "node:net"
+import { _getClientIp } from "@/lib/ip"
 
 type LeadInput = {
   email: string
@@ -19,74 +21,56 @@ const ajv = new Ajv2020()
 addFormats(ajv)
 const validate = ajv.compile<LeadInput>(schema)
 
-/*
-EXPORTADAS PARA TESTS
-*/
-export function _isValidIp(value: string): boolean {
-  if (!value) return false
-  return isIP(value) !== 0
-}
-
-export function _getClientIp(req: NextRequest): string {
-  const realIp = req.headers.get("x-real-ip")?.trim()
-
-  if (realIp && _isValidIp(realIp)) {
-    return realIp
-  }
-
-  const forwardedFor = req.headers.get("x-forwarded-for")
-  const firstForwarded = forwardedFor?.split(",")[0]?.trim()
-
-  if (firstForwarded && _isValidIp(firstForwarded)) {
-    return firstForwarded
-  }
-
-  return "unknown"
-}
-
 export async function POST(req: NextRequest) {
+
   const instance = "/api/v1/leads"
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()
 
   try {
+
     const ip = _getClientIp(req)
 
-    log("info", "lead_request_received", { requestId, ip })
+    if (!overloadGuard(ip)) {
+      return problem({
+        type: "https://www.solarisnerja.com/problems/overload",
+        title: "Server Busy",
+        status: 503,
+        detail: "Server overloaded. Try again later.",
+        instance
+      })
+    }
 
     const body: unknown = await req.json()
 
     if (!validate(body)) {
-      log("warn", "validation_failed", { requestId })
       return problem({
         type: "https://www.solarisnerja.com/problems/validation",
         title: "Validation error",
         status: 400,
         detail: "Invalid payload",
-        instance,
+        instance
       })
     }
 
-    if (body.company && body.company.trim().length > 0) {
-      log("warn", "honeypot_triggered", { requestId })
+    if ((body as LeadInput).company && (body as LeadInput).company!.trim().length > 0) {
       return NextResponse.json({ success: true })
     }
 
     if (!rateLimit(ip)) {
-      log("warn", "rate_limit_triggered", { requestId, ip })
       return problem({
         type: "https://www.solarisnerja.com/problems/rate-limit",
         title: "Too Many Requests",
         status: 429,
         detail: "Demasiadas solicitudes.",
-        instance,
+        instance
       })
     }
 
     const lead = createLead({
-      email: body.email,
-      eventId: body.eventId,
+      email: (body as LeadInput).email,
+      eventId: (body as LeadInput).eventId,
       ipAddress: ip,
-      consentGiven: true,
+      consentGiven: true
     })
 
     await saveLead(lead)
@@ -94,18 +78,19 @@ export async function POST(req: NextRequest) {
     log("info", "lead_saved", { requestId, eventId: lead.eventId })
 
     return NextResponse.json({ success: true })
-  } catch (error: unknown) {
-    const errMsg = error instanceof Error ? error.message : String(error)
-    const errStack = error instanceof Error ? error.stack : undefined
 
-    log("error", "internal_error", { requestId, error: errMsg, stack: errStack })
+  } catch (error) {
+
+    const errMsg = error instanceof Error ? error.message : String(error)
+
+    log("error", "internal_error", { requestId, error: errMsg })
 
     return problem({
       type: "https://www.solarisnerja.com/problems/internal",
       title: "Internal Server Error",
       status: 500,
       detail: "Unexpected error",
-      instance,
+      instance
     })
   }
 }
