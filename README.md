@@ -1,88 +1,75 @@
-<div align="center">
-
 # ⚡ Next.js OSS Contributions
 
-<svg width="100%" height="120" viewBox="0 0 800 120">
-  <defs>
-    <linearGradient id="grad">
-      <stop offset="0%" stop-color="#00f2ff">
-        <animate attributeName="offset" values="-1;1" dur="3s" repeatCount="indefinite"/>
-      </stop>
-      <stop offset="100%" stop-color="#ff00c8">
-        <animate attributeName="offset" values="0;2" dur="3s" repeatCount="indefinite"/>
-      </stop>
-    </linearGradient>
-  </defs>
-  <rect x="0" y="40" width="800" height="40" fill="url(#grad)" opacity="0.6"/>
-</svg>
-
-Contributions to **Next.js core** focused on:
+Contributions to **Next.js core runtime behaviour** focused on:
 
 • caching internals  
 • serialization safety  
 • performance improvements  
 • runtime correctness  
-
-</div>
+• failure simulation & recovery patterns  
 
 ---
 
 # Overview
 
-This repository documents experiments and contributions related to the **Next.js core runtime**, especially around caching and serialization safety.
+This repository documents **experiments, patches and technical investigations** around the Next.js runtime.
+
+The focus is on **critical runtime mechanisms**:
+
+- Incremental Cache
+- serialization safety
+- cache key determinism
+- tag invalidation
+- runtime performance
+- error-tolerant system design
+
+The work also includes **failure simulation scenarios** to validate runtime behaviour under non-ideal conditions.
 
 ---
 
 # Key Contribution
 
-### Cache Invocation Key Fix
-
-Original code:
-
-\`\`\`ts
-JSON.stringify(args)
-\`\`\`
-
-Problem:
-
-\`\`\`
-undefined → null
-\`\`\`
-
-This could collapse cache keys.
-
-Solution:
-
-\`\`\`ts
-JSON.stringify(
-  args,
-  (_, value) => (value === undefined ? "__undefined__" : value)
-)
-\`\`\`
-
----
-
-# Performance Improvement
+## Cache Invocation Key Fix
 
 Original implementation:
 
-\`\`\`ts
+```ts
+JSON.stringify(args)
+Problem
+
+When serializing arguments:
+
+undefined → null
+
+This can collapse distinct invocation keys, producing incorrect cache reuse.
+
+Example:
+
+fn(undefined)
+fn(null)
+
+Both produce the same cache key.
+
+Solution
+JSON.stringify(
+  args,
+  (_, value) => (value === undefined ? "undefined" : value)
+)
+
+This preserves argument semantics and ensures cache key determinism.
+
+Performance Improvement
+
+Original implementation:
+
 for (const tag of tags) {
   if (!collectedTags.includes(tag)) {
     collectedTags.push(tag)
   }
 }
-\`\`\`
-
-Complexity:
-
-\`\`\`
+Complexity
 O(n²)
-\`\`\`
-
-Optimized implementation:
-
-\`\`\`ts
+Optimized implementation
 const tagSet = new Set(collectedTags)
 
 for (const tag of tags) {
@@ -90,28 +77,77 @@ for (const tag of tags) {
 }
 
 workUnitStore.tags = Array.from(tagSet)
-\`\`\`
-
-Complexity:
-
-\`\`\`
+Complexity
 O(n)
-\`\`\`
 
----
+This reduces tag deduplication cost significantly under heavy invalidation workloads.
 
-# Tech Stack
+Runtime Failure Simulation
 
-- TypeScript
-- Next.js internals
-- Incremental Cache
-- AsyncLocalStorage
-- Turbopack
+In addition to performance fixes, this repository documents failure simulations for critical runtime paths.
 
----
+The goal is to understand system behaviour under degraded conditions.
 
-# Author
+Scenarios explored include:
 
-Neil Muñoz Lago  
+Cache corruption simulation
+
+Testing behaviour when cache keys collide or become non-deterministic.
+
+Serialization edge cases
+
+Testing runtime behaviour when:
+
+undefined values
+
+circular references
+
+non-serializable values
+
+unstable objects
+
+are used in cached function arguments.
+
+Tag invalidation stress tests
+
+Simulating high-volume tag updates to measure:
+
+invalidation propagation
+
+cache rebuild behaviour
+
+memory pressure
+
+Async context propagation
+
+Experiments around AsyncLocalStorage correctness across async boundaries.
+
+This ensures runtime consistency and predictable behaviour in complex server workloads.
+
+Why This Matters
+
+Modern web runtimes must remain stable even when:
+
+cache invalidation spikes
+
+serialization behaves unexpectedly
+
+asynchronous contexts break isolation
+
+These contributions focus on making runtime behaviour more deterministic, predictable and observable.
+
+Tech Stack
+
+TypeScript
+Next.js runtime internals
+Incremental Cache
+AsyncLocalStorage
+Turbopack
+Node.js runtime analysis
+
+Author
+
+Neil Muñoz Lago
 Senior Backend Architect — Distributed Systems
 
+Microservices · Runtime Architecture · Performance Engineering
