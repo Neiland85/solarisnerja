@@ -4,6 +4,7 @@ export const HEADER_TICKER =
 export type EventConfig = {
   id: string
   title: string
+  time: string
   description: string
   highlight: string
   ticketUrl: string
@@ -13,6 +14,7 @@ export const EVENTS: EventConfig[] = [
   {
     id: "chambao",
     title: "Chambao",
+    time: "19/06",
     description: "Concierto de flamenco chill en Solaris Nerja.",
     highlight: "Flamenco chill",
     ticketUrl: "#"
@@ -20,6 +22,7 @@ export const EVENTS: EventConfig[] = [
   {
     id: "bresh",
     title: "Bresh Nerja",
+    time: "20/06",
     description: "La fiesta más viral llega a la Costa del Sol.",
     highlight: "Fiesta internacional",
     ticketUrl: "#"
@@ -27,6 +30,7 @@ export const EVENTS: EventConfig[] = [
   {
     id: "ohsee",
     title: "Oh See Málaga",
+    time: "21/06",
     description: "Electrónica contemporánea frente al mar.",
     highlight: "Electrónica",
     ticketUrl: "#"
@@ -34,6 +38,7 @@ export const EVENTS: EventConfig[] = [
   {
     id: "goa",
     title: "GOA",
+    time: "26/06",
     description: "Sesión electrónica underground.",
     highlight: "Electrónica underground",
     ticketUrl: "#"
@@ -41,6 +46,7 @@ export const EVENTS: EventConfig[] = [
   {
     id: "tropicalia",
     title: "Tropicalia",
+    time: "27/06",
     description: "Música veraniega y ambiente tropical.",
     highlight: "Summer music",
     ticketUrl: "#"
@@ -48,6 +54,7 @@ export const EVENTS: EventConfig[] = [
   {
     id: "tecnoflamenco",
     title: "Tecno Flamenco",
+    time: "28/06",
     description: "Fusión de flamenco y electrónica.",
     highlight: "Flamenco electrónico",
     ticketUrl: "#"
