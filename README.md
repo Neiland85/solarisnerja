@@ -1,127 +1,117 @@
 <div align="center">
 
-# ⚡ SolarisNerja Platform
+# ⚡ Next.js OSS Contributions
 
-<img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&size=26&duration=3000&color=00F7FF&center=true&vCenter=true&width=700&lines=Edge-First+Next.js+Platform;High-Performance+Event+Infrastructure;CDN-Optimized+Content+Delivery;Modern+Web+Architecture" />
+<svg width="100%" height="120" viewBox="0 0 800 120">
+  <defs>
+    <linearGradient id="grad">
+      <stop offset="0%" stop-color="#00f2ff">
+        <animate attributeName="offset" values="-1;1" dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#ff00c8">
+        <animate attributeName="offset" values="0;2" dur="3s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="40" width="800" height="40" fill="url(#grad)" opacity="0.6"/>
+</svg>
 
----
+Contributions to **Next.js core** focused on:
 
-High-performance **Next.js edge platform** designed for scalable event publishing and ultra-fast content delivery.
+• caching internals  
+• serialization safety  
+• performance improvements  
+• runtime correctness  
 
 </div>
 
 ---
 
-# 🧠 Architecture Overview
+# Overview
 
-
-Client
-↓
-Edge CDN (HTML Cache 5m)
-↓
-Next.js App Router
-↓
-Route Handlers
-↓
-Domain Logic
-↓
-PostgreSQL / External APIs
-
-
-Core principles:
-
-- **Edge-first architecture**
-- **Deterministic caching**
-- **Minimal backend complexity**
-- **Fast content propagation**
+This repository documents experiments and contributions related to the **Next.js core runtime**, especially around caching and serialization safety.
 
 ---
 
-# 🚀 Getting Started
+# Key Contribution
 
-Install dependencies
+### Cache Invocation Key Fix
 
-```bash
-pnpm install
+Original code:
 
-Run development server
+\`\`\`ts
+JSON.stringify(args)
+\`\`\`
 
-pnpm dev
+Problem:
 
-Open
+\`\`\`
+undefined → null
+\`\`\`
 
-http://localhost:3000
+This could collapse cache keys.
 
-Edit
+Solution:
 
-app/page.tsx
+\`\`\`ts
+JSON.stringify(
+  args,
+  (_, value) => (value === undefined ? "__undefined__" : value)
+)
+\`\`\`
 
-Hot reload is enabled automatically.
+---
 
-⚡ Cache & Content Propagation
+# Performance Improvement
 
-The platform implements an edge-optimized caching strategy.
+Original implementation:
 
-Resource	Cache Strategy
-HTML Pages	5 min edge cache
-APIs	no-store
-Static Assets	1 year immutable
-Propagation Expectations
-Update Type	Time
-Non-critical	~5 minutes
-Critical	< 1 minute with purge
-🧩 Cache Debugging
+\`\`\`ts
+for (const tag of tags) {
+  if (!collectedTags.includes(tag)) {
+    collectedTags.push(tag)
+  }
+}
+\`\`\`
 
-Check headers
+Complexity:
 
-./scripts/check-cache-headers.sh https://your-domain.com
-🔥 Purge Cache
-./scripts/purge-cache.sh "/"
-./scripts/purge-cache.sh "/eventos"
-🧰 CI/CD Cache Integration
+\`\`\`
+O(n²)
+\`\`\`
 
-Automated purge supported for:
+Optimized implementation:
 
-GitHub Actions
+\`\`\`ts
+const tagSet = new Set(collectedTags)
 
-GitLab CI
+for (const tag of tags) {
+  tagSet.add(tag)
+}
 
-Vercel
+workUnitStore.tags = Array.from(tagSet)
+\`\`\`
 
-AWS CloudFront
+Complexity:
 
-See
+\`\`\`
+O(n)
+\`\`\`
 
-DEPLOYMENT-CACHE-GUIDE.md
-📚 Documentation
+---
 
-Main resources
+# Tech Stack
 
-Next.js Docs
-https://nextjs.org/docs
+- TypeScript
+- Next.js internals
+- Incremental Cache
+- AsyncLocalStorage
+- Turbopack
 
-Learn Next.js
-https://nextjs.org/learn
+---
 
-Next.js Repository
-https://github.com/vercel/next.js
+# Author
 
-☁️ Deployment
+Neil Muñoz Lago  
+Senior Backend Architect — Distributed Systems
 
-The easiest deployment method:
-
-Vercel
-
-https://vercel.com/new
-🧑‍💻 Author
-
-Neil Muñoz Lago
-
-Architect · Distributed Systems · Edge Platforms
-
-GitHub → https://github.com/Neiland85
-<div align="center">
-
-Built with Next.js App Router + Edge Caching
-
-</div> ```
