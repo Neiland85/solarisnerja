@@ -1,25 +1,52 @@
 import Link from "next/link"
-import CapacityProgress from "@/ui/components/dashboard/CapacityProgress"
 
-async function getCapacity() {
-  const res = await fetch("/api/admin/capacity", { cache: "no-store" })
-  if (!res.ok) return []
-  return res.json()
+import LeadsChart from "@/ui/components/dashboard/LeadsChart"
+import ForecastCard from "@/ui/components/dashboard/ForecastCard"
+import TrendingCard from "@/ui/components/dashboard/TrendingCard"
+import ViralEventCard from "@/ui/components/dashboard/ViralEventCard"
+import SystemStatusCard from "@/ui/components/dashboard/SystemStatusCard"
+
+async function getMetrics() {
+
+  const metrics = await fetch("/api/admin/metrics", {
+    cache: "no-store"
+  }).then(r => r.json())
+
+  const system = await fetch("/api/admin/system", {
+    cache: "no-store"
+  }).then(r => r.json())
+
+  return {
+    metrics,
+    system
+  }
 }
 
 export default async function DashboardPage() {
 
-  const capacity = await getCapacity()
+  const { metrics, system } = await getMetrics()
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-10">
 
       <div>
-        <p className="editorial-label mb-3">panel de control</p>
+        <p className="editorial-label mb-3">panel de gestión</p>
         <h1 className="editorial-h2">solaris nerja</h1>
       </div>
 
-      <CapacityProgress events={capacity} />
+      <SystemStatusCard data={system} />
+
+      <LeadsChart data={metrics.events} />
+
+      <div className="grid md:grid-cols-3 gap-6">
+
+        <ForecastCard data={metrics} />
+
+        <TrendingCard data={metrics.events} />
+
+        <ViralEventCard data={metrics.events} />
+
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2">
 
