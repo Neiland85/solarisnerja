@@ -1,9 +1,7 @@
 import Link from "next/link"
 
 async function getMetrics() {
-  const base = process.env["NEXT_PUBLIC_BASE_URL"] ?? ""
-
-  const res = await fetch(`${base}/api/admin/metrics`, {
+  const res = await fetch("/api/admin/metrics", {
     cache: "no-store"
   })
 
@@ -15,9 +13,7 @@ async function getMetrics() {
 }
 
 async function getActivity() {
-  const base = process.env["NEXT_PUBLIC_BASE_URL"] ?? ""
-
-  const res = await fetch(`${base}/api/admin/activity`, {
+  const res = await fetch("/api/admin/activity", {
     cache: "no-store"
   })
 
