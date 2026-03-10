@@ -1,50 +1,15 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
-import { corsGuard, corsHeaders } from "@/lib/security/cors"
 
-export async function GET(req: NextRequest) {
+export async function GET(){
 
-  const blocked = corsGuard(req)
-  if (blocked) return blocked
+  const pool = getPool()
 
-  const origin = req.headers.get("origin") || ""
+  const db = await pool.query("SELECT 1")
 
-  try {
-
-    const pool = getPool()
-
-    const start = Date.now()
-
-    const db = await pool.query("SELECT 1")
-
-    const latency = Date.now() - start
-
-    return NextResponse.json(
-      {
-        status: "ok",
-        database: db.rowCount === 1 ? "connected" : "error",
-        dbLatency: latency,
-        timestamp: new Date().toISOString()
-      },
-      {
-        headers: corsHeaders(origin)
-      }
-    )
-
-  } catch {
-
-    return NextResponse.json(
-      {
-        status: "error",
-        database: "unreachable",
-        timestamp: new Date().toISOString()
-      },
-      {
-        status: 500,
-        headers: corsHeaders(origin)
-      }
-    )
-
-  }
-
+  return NextResponse.json({
+    status: "ok",
+    database: db.rowCount === 1 ? "connected" : "error",
+    timestamp: new Date().toISOString()
+  })
 }
