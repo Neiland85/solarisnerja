@@ -80,3 +80,10 @@ export async function POST(req: NextRequest) {
     })
   }
 }
+
+// --------------------------------------------------
+// test helpers (exposed only for unit tests)
+// --------------------------------------------------
+
+export { _isValidIp, _getClientIp } from "@/lib/ip"
+
