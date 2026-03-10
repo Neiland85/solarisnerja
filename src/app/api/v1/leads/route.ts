@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
+
 import { createLead } from "@/domain/leads/create-lead"
 import { enqueueLead } from "@/lib/security/burstQueue"
-import { _getClientIp } from "@/lib/ip"
+import { _getClientIp, _isValidIp } from "@/lib/ip"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
 
-export { _getClientIp }
+export { _getClientIp, _isValidIp }
 
 export async function POST(req: NextRequest) {
 
