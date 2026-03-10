@@ -5,50 +5,61 @@ import ForecastCard from "@/ui/components/dashboard/ForecastCard"
 import TrendingCard from "@/ui/components/dashboard/TrendingCard"
 import ViralEventCard from "@/ui/components/dashboard/ViralEventCard"
 import SystemStatusCard from "@/ui/components/dashboard/SystemStatusCard"
+import AttendanceForecastCard from "@/ui/components/dashboard/AttendanceForecastCard"
 
 async function getMetrics() {
+  const res = await fetch("/api/admin/metrics", { cache: "no-store" })
+  if (!res.ok) return { leadsTotal: 0, events: [] }
+  return res.json()
+}
 
-  const metrics = await fetch("/api/admin/metrics", {
-    cache: "no-store"
-  }).then(r => r.json())
+async function getForecast() {
+  const res = await fetch("/api/admin/forecast", { cache: "no-store" })
+  if (!res.ok) return []
+  return res.json()
+}
 
-  const system = await fetch("/api/admin/system", {
-    cache: "no-store"
-  }).then(r => r.json())
+async function getTrending() {
+  const res = await fetch("/api/admin/trending", { cache: "no-store" })
+  if (!res.ok) return []
+  return res.json()
+}
 
-  return {
-    metrics,
-    system
-  }
+async function getSystem() {
+  const res = await fetch("/api/admin/system", { cache: "no-store" })
+  if (!res.ok) return {}
+  return res.json()
 }
 
 export default async function DashboardPage() {
 
-  const { metrics, system } = await getMetrics()
+  const metrics = await getMetrics()
+  const forecast = await getForecast()
+  const trending = await getTrending()
+  const system = await getSystem()
 
   return (
-    <div className="space-y-10">
+
+    <div className="space-y-12">
 
       <div>
-        <p className="editorial-label mb-3">panel de gestión</p>
-        <h1 className="editorial-h2">solaris nerja</h1>
+        <p className="editorial-label mb-2">control center</p>
+        <h1 className="editorial-h2">solaris nerja dashboard</h1>
       </div>
 
       <SystemStatusCard data={system} />
 
       <LeadsChart data={metrics.events} />
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <ForecastCard data={metrics} />
 
-        <ForecastCard data={metrics} />
+      <TrendingCard data={trending} />
 
-        <TrendingCard data={metrics.events} />
+      <ViralEventCard data={trending} />
 
-        <ViralEventCard data={metrics.events} />
+      <AttendanceForecastCard data={forecast} />
 
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid md:grid-cols-2 gap-6">
 
         <Link
           href="/dashboard/events"
@@ -75,5 +86,6 @@ export default async function DashboardPage() {
       </div>
 
     </div>
+
   )
 }
