@@ -74,6 +74,9 @@ export function middleware(req: NextRequest) {
     "default-src 'self'",
     // Script-src: unsafe-inline needed until nonce propagation is implemented
     // Third-party scripts loaded from official domains
+    // Script-src: Removed 'unsafe-inline' and 'unsafe-eval'
+    // Third-party scripts are loaded from their official domains
+    // Nonce is added for any required inline scripts
     `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-${nonce}' https://widget.ticketmaster.com https://www.googletagmanager.com https://connect.facebook.net`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
