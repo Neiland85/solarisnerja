@@ -1,11 +1,11 @@
 import Redis from "ioredis"
 import type { Lead } from "@/domain/leads/create-lead"
 
-if(!process.env.REDIS_URL){
+if(!process.env["REDIS_URL"]){
   throw new Error("REDIS_URL not configured")
 }
 
-const redis = new Redis(process.env.REDIS_URL)
+const redis = new Redis(process.env["REDIS_URL"])
 
 const QUEUE_KEY = "solaris:lead_queue"
 
