@@ -1,0 +1,74 @@
+import { getPool } from "@/adapters/db/pool"
+
+export const dynamic = "force-dynamic"
+
+export default async function LeadsPage() {
+  const pool = getPool()
+
+  const result = await pool.query(`
+    SELECT
+      leads.id,
+      leads.email,
+      leads.ip_address,
+      leads.created_at,
+      events.title AS event_title
+    FROM leads
+    JOIN events ON events.id = leads.event_id
+    ORDER BY leads.created_at DESC
+    LIMIT 500
+  `)
+
+  const leads = result.rows
+
+  return (
+    <div className="space-y-10">
+      <div>
+        <p className="editorial-label mb-3">panel de gestión</p>
+        <h1 className="editorial-h2">leads</h1>
+      </div>
+
+      {leads.length === 0 ? (
+        <div className="bg-white rounded-sm border border-dashed border-[var(--sn-border-2)] p-16 text-center">
+          <p className="editorial-label mb-4">sin leads</p>
+          <p className="text-sm text-[var(--sn-muted)] tracking-wide">
+            Aún no se han recibido registros desde los formularios.
+          </p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-sm border border-[var(--sn-border)] overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--sn-border)] bg-[var(--sn-surface)]">
+                <th className="text-left px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">email</th>
+                <th className="text-left px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">evento</th>
+                <th className="text-left px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">fecha</th>
+                <th className="text-left px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">ip</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leads.map((lead) => (
+                <tr
+                  key={lead.id}
+                  className="border-b border-[var(--sn-border)] last:border-b-0 hover:bg-[var(--sn-surface)] transition-colors"
+                >
+                  <td className="px-5 py-4 tracking-wide font-medium">
+                    {lead.email}
+                  </td>
+                  <td className="px-5 py-4 tracking-wide text-[var(--sn-muted)]">
+                    {lead.event_title}
+                  </td>
+                  <td className="px-5 py-4 tracking-wide text-[var(--sn-muted)]">
+                    {new Date(lead.created_at).toLocaleString()}
+                  </td>
+                  <td className="px-5 py-4 tracking-wide text-[var(--sn-muted)]">
+                    {lead.ip_address}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
