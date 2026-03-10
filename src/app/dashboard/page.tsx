@@ -1,102 +1,118 @@
-import { getPool } from "@/adapters/db/pool"
+import Link from "next/link"
 
-export const dynamic = "force-dynamic"
+async function getMetrics() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/admin/metrics`, {
+    cache: "no-store"
+  })
+
+  if (!res.ok) {
+    return { leadsTotal: 0, events: [] }
+  }
+
+  return res.json()
+}
 
 export default async function DashboardPage() {
-  const pool = getPool()
+  const data = await getMetrics()
 
-  const eventsResult = await pool.query(`
-    SELECT COUNT(*) as total FROM events
-  `)
+  const topEvent = data.events?.[0]
 
-  const activeResult = await pool.query(`
-    SELECT COUNT(*) as total FROM events WHERE active = true
-  `)
-
-  const leadsResult = await pool.query(`
-    SELECT COUNT(*) as total FROM leads
-  `)
-
-  const topEventResult = await pool.query(`
-    SELECT
-      events.title,
-      COUNT(leads.id) as leads
-    FROM events
-    LEFT JOIN leads ON events.id = leads.event_id
-    GROUP BY events.title
-    ORDER BY leads DESC
-    LIMIT 1
-  `)
-
-  const totalEvents = eventsResult.rows[0]?.total ?? 0
-  const activeEvents = activeResult.rows[0]?.total ?? 0
-  const totalLeads = leadsResult.rows[0]?.total ?? 0
-  const topEvent = topEventResult.rows[0]
+  const interest =
+    topEvent && topEvent.capacity
+      ? ((topEvent.leads / topEvent.capacity) * 100).toFixed(1)
+      : "0"
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
 
       <div>
-        <p className="editorial-label mb-3">panel de gestión</p>
+        <p className="editorial-label mb-3">panel de control</p>
         <h1 className="editorial-h2">solaris nerja</h1>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid gap-6 md:grid-cols-3">
 
-        <div className="bg-white border border-[var(--sn-border)] rounded-sm p-6">
-          <p className="editorial-label mb-2">eventos totales</p>
-          <p className="text-3xl font-semibold">{totalEvents}</p>
+        <div className="bg-white border border-[var(--sn-border)] p-6">
+          <p className="text-xs tracking-wide text-[var(--sn-muted)] mb-2">
+            leads totales
+          </p>
+          <p className="text-3xl font-semibold">
+            {data.leadsTotal ?? 0}
+          </p>
         </div>
 
-        <div className="bg-white border border-[var(--sn-border)] rounded-sm p-6">
-          <p className="editorial-label mb-2">eventos activos</p>
-          <p className="text-3xl font-semibold">{activeEvents}</p>
+        <div className="bg-white border border-[var(--sn-border)] p-6">
+          <p className="text-xs tracking-wide text-[var(--sn-muted)] mb-2">
+            eventos
+          </p>
+          <p className="text-3xl font-semibold">
+            {data.events?.length ?? 0}
+          </p>
         </div>
 
-        <div className="bg-white border border-[var(--sn-border)] rounded-sm p-6">
-          <p className="editorial-label mb-2">leads totales</p>
-          <p className="text-3xl font-semibold">{totalLeads}</p>
+        <div className="bg-white border border-[var(--sn-border)] p-6">
+          <p className="text-xs tracking-wide text-[var(--sn-muted)] mb-2">
+            evento con más interés
+          </p>
+
+          {topEvent ? (
+            <>
+              <p className="font-medium">{topEvent.title}</p>
+              <p className="text-sm text-[var(--sn-muted)] mt-1">
+                {topEvent.leads} interesados
+              </p>
+            </>
+          ) : (
+            <p className="text-sm text-[var(--sn-muted)]">sin datos</p>
+          )}
         </div>
 
       </div>
 
       {topEvent && (
-        <div className="bg-white border border-[var(--sn-border)] rounded-sm p-6">
-          <p className="editorial-label mb-3">evento con más interés</p>
+        <div className="bg-white border border-[var(--sn-border)] p-8 space-y-4">
 
-          <div className="flex items-center justify-between">
-            <span className="tracking-wide font-medium">
-              {topEvent.title}
-            </span>
+          <p className="editorial-label">interés vs aforo</p>
 
-            <span className="text-sm text-[var(--sn-muted)]">
-              {topEvent.leads} leads
-            </span>
+          <p className="text-lg font-medium">{topEvent.title}</p>
+
+          <div className="w-full bg-[var(--sn-surface)] h-3 rounded-sm overflow-hidden">
+            <div
+              className="bg-black h-full"
+              style={{ width: `${interest}%` }}
+            />
           </div>
+
+          <p className="text-sm text-[var(--sn-muted)] tracking-wide">
+            {topEvent.leads} interesados · aforo {topEvent.capacity} · {interest}%
+          </p>
+
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid gap-6 md:grid-cols-2">
 
-        <a
+        <Link
           href="/dashboard/events"
-          className="bg-white border border-[var(--sn-border)] rounded-sm p-8 hover:border-black transition"
+          className="bg-white border border-[var(--sn-border)] p-8 hover:border-black transition"
         >
           <p className="editorial-label mb-2">gestionar</p>
-          <p className="text-lg font-medium tracking-wide">
-            eventos
+          <p className="text-lg font-medium">eventos</p>
+          <p className="text-sm text-[var(--sn-muted)] mt-2">
+            crear, editar y activar eventos
           </p>
-        </a>
+        </Link>
 
-        <a
+        <Link
           href="/dashboard/leads"
-          className="bg-white border border-[var(--sn-border)] rounded-sm p-8 hover:border-black transition"
+          className="bg-white border border-[var(--sn-border)] p-8 hover:border-black transition"
         >
-          <p className="editorial-label mb-2">ver</p>
-          <p className="text-lg font-medium tracking-wide">
-            leads
+          <p className="editorial-label mb-2">marketing</p>
+          <p className="text-lg font-medium">leads</p>
+          <p className="text-sm text-[var(--sn-muted)] mt-2">
+            ver interesados y exportar CSV
           </p>
-        </a>
+        </Link>
 
       </div>
 
