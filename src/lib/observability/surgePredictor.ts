@@ -1,27 +1,84 @@
-export interface SurgePrediction {
-  surge: boolean
-  probability: number
+type Bucket = {
+  ts: number
+  count: number
 }
 
-export function predictTrafficSurge(
-  currentRequests: number,
-  historicalAverage: number
-): SurgePrediction {
+const WINDOW = 30
+let buckets: Bucket[] = []
 
-  if (historicalAverage === 0) {
-    return { surge: false, probability: 0 }
+function getCurrentBucket(): Bucket {
+
+  const now = Math.floor(Date.now() / 60000)
+
+  const last = buckets[buckets.length - 1]
+
+  if (!last || last.ts !== now) {
+
+    const bucket = { ts: now, count: 0 }
+
+    buckets.push(bucket)
+
+    if (buckets.length > WINDOW) {
+      buckets.shift()
+    }
+
+    return bucket
   }
 
-  const ratio = currentRequests / historicalAverage
+  return last
+}
 
-  if (ratio > 2) {
-    return { surge: true, probability: 0.9 }
+export function recordLead() {
+  const bucket = getCurrentBucket()
+  bucket.count++
+}
+
+export function resetSurgePredictor() {
+  buckets = []
+}
+
+export function getSurgeStatus() {
+
+  const counts = buckets.map(b => b.count)
+
+  const total = counts.reduce((a, b) => a + b, 0)
+
+  const currentRate = counts[counts.length - 1] ?? 0
+
+  const peak = Math.max(...counts, 0)
+
+  let level = "NORMAL"
+
+  if (currentRate >= 100) level = "SURGE"
+  else if (currentRate >= 50) level = "HIGH"
+  else if (currentRate >= 20) level = "ELEVATED"
+
+  return {
+    level,
+    currentRate,
+    peak,
+    average: counts.length ? total / counts.length : 0,
+    buckets: [...buckets].reverse(),
+    collectedAt: new Date().toISOString()
+  }
+}
+
+export function predict15m() {
+
+  const counts = buckets.map(b => b.count)
+
+  if (counts.length < 2) {
+    return counts[counts.length - 1] ?? 0
   }
 
-  if (ratio > 1.5) {
-    return { surge: true, probability: 0.6 }
-  }
+  const gradient =
+    counts[counts.length - 1] -
+    counts[counts.length - 2]
 
-  return { surge: false, probability: 0.1 }
+  let prediction = counts[counts.length - 1] + gradient * 15
 
+  if (prediction < 0) prediction = 0
+  if (prediction > 10000) prediction = 10000
+
+  return prediction
 }
