@@ -1,22 +1,21 @@
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+import HeroVideo from "@/ui/components/HeroVideo"
+import CarouselSection from "@/ui/components/CarouselSection"
+import LocationSection from "@/ui/components/LocationSection"
 
-import HeroSection from "@/ui/components/HeroSection"
-import ProgramTicker from "@/ui/components/ProgramTicker"
-import EventosSection from "@/ui/components/EventosSection"
-import LazyGallery from "@/ui/components/LazyGallery"
-import SolarisInfoSection from "@/ui/components/SolarisInfoSection"
-
-export default function Page() {
+export default function HomePage(){
 
   return (
-    <>
-      <HeroSection />
-      <ProgramTicker />
-      <EventosSection />
-      <LazyGallery />
-      <SolarisInfoSection />
-    </>
+
+    <main>
+
+      <HeroVideo />
+
+      <CarouselSection />
+
+      <LocationSection />
+
+    </main>
+
   )
 
 }
