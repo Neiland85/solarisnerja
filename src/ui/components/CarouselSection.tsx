@@ -14,13 +14,17 @@ export default function CarouselSection(){
 
   return (
 
-    <section className="py-24 bg-white">
+    <section id="ambiente" className="py-24 bg-white">
 
       <div className="max-w-6xl mx-auto px-6">
 
-        <h2 className="text-4xl text-center mb-16">
-          El ambiente
+        <h2 className="text-4xl text-center mb-4">
+          El ambiente Solaris
         </h2>
+
+        <p className="text-center text-neutral-500 mb-16">
+          Música, arte digital, gastronomía y atardeceres frente al mar.
+        </p>
 
         <div className="grid md:grid-cols-3 gap-6">
 
@@ -28,7 +32,7 @@ export default function CarouselSection(){
             <Image
               key={i}
               src={img}
-              alt="Festival Solaris Nerja"
+              alt="Festival Solaris Nerja ambiente"
               width={800}
               height={600}
               className="w-full h-[320px] object-cover rounded-lg"
