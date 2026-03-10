@@ -1,0 +1,40 @@
+import { NextResponse } from "next/server"
+import { getPool } from "@/adapters/db/pool"
+
+export async function GET() {
+
+  const pool = getPool()
+
+  const result = await pool.query(`
+    SELECT
+      events.id,
+      events.title,
+      events.capacity,
+
+      COUNT(CASE WHEN leads.created_at > NOW() - INTERVAL '1 hour' THEN 1 END)::int AS leads_last_hour,
+      COUNT(CASE WHEN leads.created_at > NOW() - INTERVAL '24 hours' THEN 1 END)::int AS leads_last_day
+
+    FROM events
+    LEFT JOIN leads
+      ON leads.event_id = events.id
+
+    GROUP BY events.id
+  `)
+
+  const viral = result.rows.find(e => {
+
+    const avgPerHour = (e.leads_last_day || 0) / 24
+    return e.leads_last_hour > avgPerHour * 3 && e.leads_last_hour > 5
+
+  })
+
+  if (!viral) {
+    return NextResponse.json(null)
+  }
+
+  return NextResponse.json({
+    title: viral.title,
+    leads_last_hour: viral.leads_last_hour,
+    leads_last_day: viral.leads_last_day
+  })
+}

@@ -1,0 +1,38 @@
+import { NextResponse } from "next/server"
+import { getPool } from "@/adapters/db/pool"
+
+export async function GET() {
+
+  const pool = getPool()
+
+  const result = await pool.query(`
+    SELECT
+      events.id,
+      events.title,
+      events.capacity,
+      COUNT(leads.id)::int AS leads_last_hour
+    FROM events
+    LEFT JOIN leads
+      ON leads.event_id = events.id
+      AND leads.created_at > NOW() - INTERVAL '1 hour'
+    GROUP BY events.id
+    ORDER BY leads_last_hour DESC
+    LIMIT 1
+  `)
+
+  const event = result.rows[0]
+
+  if (!event) {
+    return NextResponse.json(null)
+  }
+
+  const percent = Math.min(
+    Math.round((event.leads_last_hour / event.capacity) * 100),
+    100
+  )
+
+  return NextResponse.json({
+    ...event,
+    percent
+  })
+}
