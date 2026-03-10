@@ -28,8 +28,15 @@ export default async function LeadsPage() {
     ORDER BY total DESC
   `)
 
+  const totalResult = await pool.query(`
+    SELECT COUNT(*) as total FROM leads
+  `)
+
   const leads = leadsResult.rows
   const stats = statsResult.rows
+  const totalLeads = totalResult.rows[0]?.total || 0
+
+  const max = Math.max(...stats.map(s => Number(s.total)), 1)
 
   return (
     <div className="space-y-12">
@@ -39,7 +46,12 @@ export default async function LeadsPage() {
         <h1 className="editorial-h2">leads</h1>
       </div>
 
-      <div className="flex gap-4">
+      <div className="bg-white border border-[var(--sn-border)] rounded-sm p-6 flex items-center justify-between">
+        <div>
+          <p className="editorial-label mb-1">total leads</p>
+          <p className="text-3xl font-semibold">{totalLeads}</p>
+        </div>
+
         <a
           href="/api/v1/leads/export"
           className="border-2 border-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
@@ -49,20 +61,29 @@ export default async function LeadsPage() {
       </div>
 
       <div className="bg-white rounded-sm border border-[var(--sn-border)] p-6">
-        <p className="editorial-label mb-4">leads por evento</p>
+        <p className="editorial-label mb-6">interés por evento</p>
 
-        <div className="space-y-3">
-          {stats.map((row) => (
-            <div
-              key={row.title}
-              className="flex items-center justify-between border-b border-[var(--sn-border)] pb-2"
-            >
-              <span className="tracking-wide">{row.title}</span>
-              <span className="text-sm text-[var(--sn-muted)]">
-                {row.total} leads
-              </span>
-            </div>
-          ))}
+        <div className="space-y-4">
+          {stats.map((row) => {
+            const value = Number(row.total)
+            const width = (value / max) * 100
+
+            return (
+              <div key={row.title}>
+                <div className="flex justify-between text-sm tracking-wide mb-1">
+                  <span>{row.title}</span>
+                  <span className="text-[var(--sn-muted)]">{value}</span>
+                </div>
+
+                <div className="h-2 bg-[var(--sn-surface)] rounded">
+                  <div
+                    className="h-2 bg-black rounded"
+                    style={{ width: `${width}%` }}
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -84,6 +105,7 @@ export default async function LeadsPage() {
                 <th className="text-left px-5 py-4 font-medium tracking-wide text-[var(--sn-muted)]">ip</th>
               </tr>
             </thead>
+
             <tbody>
               {leads.map((lead) => (
                 <tr
@@ -93,12 +115,15 @@ export default async function LeadsPage() {
                   <td className="px-5 py-4 tracking-wide font-medium">
                     {lead.email}
                   </td>
+
                   <td className="px-5 py-4 tracking-wide text-[var(--sn-muted)]">
                     {lead.event_title}
                   </td>
+
                   <td className="px-5 py-4 tracking-wide text-[var(--sn-muted)]">
                     {new Date(lead.created_at).toLocaleString()}
                   </td>
+
                   <td className="px-5 py-4 tracking-wide text-[var(--sn-muted)]">
                     {lead.ip_address}
                   </td>
