@@ -16,7 +16,7 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth/requireAdmin"
-import { getSurgeStatus } from "@/lib/observability/surgePredictor"
+import { getSurgeStatus, predict15m } from "@/lib/observability/surgePredictor"
 
 export async function GET(req: NextRequest) {
   if (!requireAdmin(req)) {
@@ -27,8 +27,9 @@ export async function GET(req: NextRequest) {
   }
 
   const status = getSurgeStatus()
+  const prediction = predict15m()
 
-  return NextResponse.json(status, {
+  return NextResponse.json({ ...status, prediction15m: prediction }, {
     headers: { "Cache-Control": "no-store" },
   })
 }

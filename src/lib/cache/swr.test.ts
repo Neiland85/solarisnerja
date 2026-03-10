@@ -2,7 +2,7 @@
  * Tests para M4: Cache Layer — Stale-While-Revalidate
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest"
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 import { SWRCache, TTL } from "./swr"
 
 describe("SWRCache", () => {
@@ -10,6 +10,10 @@ describe("SWRCache", () => {
 
   beforeEach(() => {
     cache = new SWRCache()
+    vi.useRealTimers()
+  })
+
+  afterEach(() => {
     vi.useRealTimers()
   })
 

@@ -71,11 +71,11 @@ export function predict15m() {
     return counts[counts.length - 1] ?? 0
   }
 
-  const gradient =
-    counts[counts.length - 1] -
-    counts[counts.length - 2]
+  const last = counts[counts.length - 1] ?? 0
+  const prev = counts[counts.length - 2] ?? 0
+  const gradient = last - prev
 
-  let prediction = counts[counts.length - 1] + gradient * 15
+  let prediction = last + gradient * 15
 
   if (prediction < 0) prediction = 0
   if (prediction > 10000) prediction = 10000
