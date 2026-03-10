@@ -1,6 +1,6 @@
 import type { NextConfig } from "next"
 
-// Static security headers (CSP is handled by middleware for per-request nonce)
+// Static security headers
 const getSecurityHeaders = () => {
   return [
     { key: "X-Frame-Options", value: "DENY" },
@@ -14,6 +14,21 @@ const getSecurityHeaders = () => {
       key: "Permissions-Policy",
       value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
     },
+    {
+      key: "Content-Security-Policy",
+      value: [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' https://widget.ticketmaster.com https://www.googletagmanager.com https://connect.facebook.net",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data: https:",
+        "connect-src 'self' https://www.google-analytics.com https://www.facebook.com",
+        "frame-src https://widget.ticketmaster.com",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "upgrade-insecure-requests",
+      ].join("; "),
+    },
   ]
 }
 
@@ -24,15 +39,15 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [],
   },
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
   async headers() {
     return [
-      // Security headers for everything
       {
         source: "/(.*)",
         headers: getSecurityHeaders(),
       },
-
-      // Cache HTML pages at the edge with short TTL
       {
         source: "/",
         headers: [
@@ -51,14 +66,10 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-
-      // Never cache APIs
       {
         source: "/api/:path*",
         headers: [{ key: "Cache-Control", value: "no-store" }],
       },
-
-      // Cache Next.js static assets aggressively
       {
         source: "/_next/static/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
