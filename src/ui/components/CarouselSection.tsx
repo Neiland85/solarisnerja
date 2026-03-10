@@ -26,6 +26,14 @@ export default function CarouselSection(){
           Música, arte digital, gastronomía y atardeceres frente al mar.
         </p>
 
+    <section className="py-24 bg-white">
+
+      <div className="max-w-6xl mx-auto px-6">
+
+        <h2 className="text-4xl text-center mb-16">
+          El ambiente
+        </h2>
+
         <div className="grid md:grid-cols-3 gap-6">
 
           {images.map((img,i)=>(
@@ -33,6 +41,7 @@ export default function CarouselSection(){
               key={i}
               src={img}
               alt="Festival Solaris Nerja ambiente"
+              alt="Festival Solaris Nerja"
               width={800}
               height={600}
               className="w-full h-[320px] object-cover rounded-lg"
