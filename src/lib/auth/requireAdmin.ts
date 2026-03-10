@@ -1,10 +1,23 @@
 import { NextRequest } from "next/server"
 
 export function requireAdmin(req: NextRequest) {
-  const session = req.cookies.get("admin_session")?.value
+
+  const cookie = req.cookies.get("admin_session")?.value
+
+  if (!cookie) {
+    return false
+  }
+
   const adminPassword = process.env["ADMIN_PASSWORD"]
 
-  if (!session || !adminPassword || session !== adminPassword) {
-    throw new Error("unauthorized")
+  if (!adminPassword) {
+    console.error("ADMIN_PASSWORD not configured")
+    return false
   }
+
+  if (cookie !== adminPassword) {
+    return false
+  }
+
+  return true
 }
