@@ -1,30 +1,33 @@
 import Redis from "ioredis"
 import type { Lead } from "@/domain/leads/create-lead"
 
-if(!process.env["REDIS_URL"]){
-  throw new Error("REDIS_URL not configured")
-}
-
-const redis = new Redis(process.env["REDIS_URL"])
-
 const QUEUE_KEY = "solaris:lead_queue"
 
-export async function enqueueLeadRedis(lead:Lead){
-  await redis.lpush(QUEUE_KEY, JSON.stringify(lead))
+let redis: Redis | null = null
+
+function getRedis(): Redis {
+  if (!redis) {
+    const url = process.env["REDIS_URL"]
+    if (!url) {
+      throw new Error("REDIS_URL not configured")
+    }
+    redis = new Redis(url)
+  }
+  return redis
 }
 
-export async function dequeueLeadRedis():Promise<Lead | null>{
+export async function enqueueLeadRedis(lead: Lead) {
+  await getRedis().lpush(QUEUE_KEY, JSON.stringify(lead))
+}
 
-  const item = await redis.rpop(QUEUE_KEY)
-
-  if(!item){
+export async function dequeueLeadRedis(): Promise<Lead | null> {
+  const item = await getRedis().rpop(QUEUE_KEY)
+  if (!item) {
     return null
   }
-
   return JSON.parse(item) as Lead
-
 }
 
-export async function queueLength(){
-  return redis.llen(QUEUE_KEY)
+export async function queueLength() {
+  return getRedis().llen(QUEUE_KEY)
 }
