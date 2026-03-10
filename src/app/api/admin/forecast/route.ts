@@ -1,60 +1,41 @@
 import { NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
 
+const DEFAULT_CONVERSION = 0.22
+
 export async function GET() {
 
   const pool = getPool()
 
-  const result = await pool.query(`
-    SELECT
+  const events = await pool.query(`
+    SELECT 
       events.id,
       events.title,
       events.capacity,
-      COUNT(leads.id)::int as leads,
-      MIN(leads.created_at) as first_lead
+      COUNT(leads.id)::int as leads
     FROM events
     LEFT JOIN leads ON leads.event_id = events.id
     GROUP BY events.id
-    ORDER BY leads DESC
   `)
 
-  const now = Date.now()
+  const forecast = events.rows.map(e => {
 
-  const forecast = result.rows.map((e) => {
-
-    const leads = Number(e.leads ?? 0)
-    const capacity = Number(e.capacity ?? 5000)
-
-    if (!e.first_lead || leads === 0) {
-      return {
-        ...e,
-        predicted: 0,
-        fillPercent: 0
-      }
-    }
-
-    const firstLead = new Date(e.first_lead).getTime()
-
-    const daysRunning =
-      Math.max((now - firstLead) / (1000 * 60 * 60 * 24), 1)
-
-    const leadsPerDay = leads / daysRunning
-
-    const festivalDays = 30
-
-    const predicted = Math.round(leadsPerDay * festivalDays)
-
-    const fillPercent = Math.min(
-      Math.round((predicted / capacity) * 100),
-      100
-    )
+    const predicted = Math.round(e.leads * DEFAULT_CONVERSION)
+    const occupancy = e.capacity
+      ? (predicted / e.capacity) * 100
+      : 0
 
     return {
-      ...e,
-      predicted,
-      fillPercent
+      id: e.id,
+      title: e.title,
+      leads: e.leads,
+      predictedAttendance: predicted,
+      capacity: e.capacity,
+      occupancy: Number(occupancy.toFixed(1))
     }
+
   })
 
   return NextResponse.json(forecast)
+
 }

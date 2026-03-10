@@ -6,6 +6,7 @@ import TrendingCard from "@/ui/components/dashboard/TrendingCard"
 import ViralEventCard from "@/ui/components/dashboard/ViralEventCard"
 import SystemStatusCard from "@/ui/components/dashboard/SystemStatusCard"
 import AttendanceForecastCard from "@/ui/components/dashboard/AttendanceForecastCard"
+import FestivalHealthCard from "@/ui/components/dashboard/FestivalHealthCard"
 
 async function getMetrics() {
   const res = await fetch("/api/admin/metrics", { cache: "no-store" })
@@ -31,12 +32,19 @@ async function getSystem() {
   return res.json()
 }
 
+async function getHealth() {
+  const res = await fetch("/api/admin/health", { cache: "no-store" })
+  if (!res.ok) return null
+  return res.json()
+}
+
 export default async function DashboardPage() {
 
   const metrics = await getMetrics()
   const forecast = await getForecast()
   const trending = await getTrending()
   const system = await getSystem()
+  const health = await getHealth()
 
   return (
 
@@ -46,6 +54,8 @@ export default async function DashboardPage() {
         <p className="editorial-label mb-2">control center</p>
         <h1 className="editorial-h2">solaris nerja dashboard</h1>
       </div>
+
+      {health && <FestivalHealthCard data={health} />}
 
       <SystemStatusCard data={system} />
 
@@ -67,9 +77,6 @@ export default async function DashboardPage() {
         >
           <p className="editorial-label mb-2">gestionar</p>
           <p className="text-lg font-medium">eventos</p>
-          <p className="text-sm text-[var(--sn-muted)] mt-2">
-            crear, editar y activar eventos
-          </p>
         </Link>
 
         <Link
@@ -78,9 +85,6 @@ export default async function DashboardPage() {
         >
           <p className="editorial-label mb-2">marketing</p>
           <p className="text-lg font-medium">leads</p>
-          <p className="text-sm text-[var(--sn-muted)] mt-2">
-            ver interesados y exportar CSV
-          </p>
         </Link>
 
       </div>
@@ -88,4 +92,5 @@ export default async function DashboardPage() {
     </div>
 
   )
+
 }
