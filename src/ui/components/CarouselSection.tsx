@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export default function CarouselSection(){
 
   const images = [
@@ -23,9 +25,12 @@ export default function CarouselSection(){
         <div className="grid md:grid-cols-3 gap-6">
 
           {images.map((img,i)=>(
-            <img
+            <Image
               key={i}
               src={img}
+              alt="Festival Solaris Nerja"
+              width={800}
+              height={600}
               className="w-full h-[320px] object-cover rounded-lg"
             />
           ))}
