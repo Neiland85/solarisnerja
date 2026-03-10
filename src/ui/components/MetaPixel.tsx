@@ -27,6 +27,7 @@ export default function MetaPixel() {
       </Script>
 
       <noscript>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
           height="1"
