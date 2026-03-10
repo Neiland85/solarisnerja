@@ -18,7 +18,7 @@ export async function GET() {
       dbLatency: latency
     })
 
-  } catch (_error) {
+  } catch {
 
     return NextResponse.json({
       status: "error",
