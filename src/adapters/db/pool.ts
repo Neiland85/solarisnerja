@@ -1,21 +1,24 @@
 import { Pool } from "pg"
 
-let pool: Pool | null = null
+let pool: Pool | undefined
 
-export function getPool(): Pool {
+export function getPool() {
+
   if (!pool) {
+
     const connectionString = process.env["DATABASE_URL"]
 
     if (!connectionString) {
-      throw new Error("DATABASE_URL is not defined")
+      throw new Error("DATABASE_URL not configured")
     }
 
     pool = new Pool({
       connectionString,
-      max: 5,
-      idleTimeoutMillis: 10_000,
-      connectionTimeoutMillis: 5_000
+      ssl: {
+        rejectUnauthorized: false
+      }
     })
+
   }
 
   return pool
