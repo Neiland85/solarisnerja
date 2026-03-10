@@ -117,7 +117,7 @@ function pushAlert(alert: CorrelationAlert): void {
     sources: alert.sources,
     message: alert.message,
   }
-  console.log(JSON.stringify(log)) // eslint-disable-line no-console
+  console.log(JSON.stringify(log))
 }
 
 // ── Correlation patterns ─────────────────────────────────
