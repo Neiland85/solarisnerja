@@ -28,3 +28,7 @@ export async function POST(req:NextRequest){
 // Test compatibility exports
 export { _getClientIp, _isValidIp } from "@/lib/ip"
 
+
+// re-export helpers for unit tests
+export { _getClientIp, _isValidIp } from "@/lib/ip"
+
