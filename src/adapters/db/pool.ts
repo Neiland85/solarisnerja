@@ -2,13 +2,13 @@ import { Pool } from "pg"
 
 let pool: Pool | undefined
 
-export function getPool() {
+export function getPool(){
 
-  if (!pool) {
+  if (!pool){
 
     const connectionString = process.env["DATABASE_URL"]
 
-    if (!connectionString) {
+    if (!connectionString){
       throw new Error("DATABASE_URL not configured")
     }
 
@@ -16,7 +16,8 @@ export function getPool() {
       connectionString,
       ssl: {
         rejectUnauthorized: false
-      }
+      },
+      max: 5
     })
 
   }
