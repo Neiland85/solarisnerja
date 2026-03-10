@@ -22,7 +22,7 @@ export default function HeroBackground() {
   }, [])
 
   return (
-    <>
+    <div className="absolute inset-0">
       {images.map((src, i) => (
         <Image
           key={src}
@@ -31,11 +31,11 @@ export default function HeroBackground() {
           fill
           priority={i === 0}
           sizes="100vw"
-          className={`object-cover transition-opacity duration-1500 ease-in-out ${
+          className={`absolute inset-0 object-cover transition-opacity duration-1500 ease-in-out ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
-    </>
+    </div>
   )
 }
