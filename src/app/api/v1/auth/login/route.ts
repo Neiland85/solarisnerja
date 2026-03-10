@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     log("info", "login_success", { requestId })
 
     const response = NextResponse.json({ success: true })
-    response.cookies.set("admin", "true", {
+    response.cookies.set("admin_session", adminPassword, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
