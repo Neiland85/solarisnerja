@@ -17,10 +17,10 @@ export function middleware(req: NextRequest) {
   const origin = req.headers.get("origin")
 
   if (req.nextUrl.pathname.startsWith("/dashboard")) {
-    const adminCookie = req.cookies.get("admin")?.value
-    const adminToken = process.env["ADMIN_TOKEN"]
+    const sessionCookie = req.cookies.get("admin_session")?.value
+    const adminPassword = process.env["ADMIN_PASSWORD"]
 
-    if (!adminToken || adminCookie !== adminToken) {
+    if (!adminPassword || sessionCookie !== adminPassword) {
       const loginUrl = new URL("/login", req.url)
       return NextResponse.redirect(loginUrl)
     }
