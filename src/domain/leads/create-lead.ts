@@ -1,17 +1,28 @@
-import { Lead } from "./types"
+import { randomUUID } from "crypto"
 
-export function createLead(input: {
+export type Lead = {
+  id: string
   email: string
   eventId: string
   ipAddress: string
   consentGiven: boolean
-}): Lead {
+  createdAt: string
+}
+
+export function createLead(input:{
+  email:string
+  eventId:string
+  ipAddress:string
+  consentGiven:boolean
+}):Lead{
+
   return {
-    id: crypto.randomUUID(),
-    email: input.email.toLowerCase(),
+    id: randomUUID(),
+    email: input.email,
     eventId: input.eventId,
     ipAddress: input.ipAddress,
     consentGiven: input.consentGiven,
-    createdAt: new Date()
+    createdAt: new Date().toISOString()
   }
+
 }
