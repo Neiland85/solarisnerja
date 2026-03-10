@@ -1,59 +1,30 @@
 import { NextRequest, NextResponse } from "next/server"
-
-import { createLead } from "@/domain/leads/create-lead"
+import { startQueueDaemon } from "@/lib/security/queueDaemon"
 import { enqueueLead } from "@/lib/security/burstQueue"
-import { _getClientIp, _isValidIp } from "@/lib/ip"
-import { problem } from "@/lib/problem"
-import { log } from "@/lib/logger"
+import { createLead } from "@/domain/leads/create-lead"
+import { _getClientIp } from "@/lib/ip"
 
-export { _getClientIp, _isValidIp }
+startQueueDaemon()
 
-export async function POST(req: NextRequest) {
+export async function POST(req:NextRequest){
 
-  const requestId = crypto.randomUUID()
+  const body = await req.json()
 
-  try {
+  const ip = _getClientIp(req)
 
-    const body = await req.json()
+  const lead = createLead({
+    email: body.email,
+    eventId: body.eventId,
+    ipAddress: ip,
+    consentGiven:true
+  })
 
-    if (!body?.email || !body?.eventId) {
-      return problem({
-        type: "https://www.solarisnerja.com/problems/validation",
-        title: "Validation error",
-        status: 400,
-        detail: "email and eventId required",
-        instance: "/api/v1/leads"
-      })
-    }
+  enqueueLead(lead)
 
-    const ip = _getClientIp(req)
-
-    const lead = createLead({
-      email: String(body.email),
-      eventId: String(body.eventId),
-      ipAddress: ip,
-      consentGiven: true
-    })
-
-    enqueueLead(lead)
-
-    return NextResponse.json({ success: true })
-
-  } catch (error) {
-
-    const errMsg =
-      error instanceof Error ? error.message : String(error)
-
-    log("error","internal_error",{ requestId,error:errMsg })
-
-    return problem({
-      type:"https://www.solarisnerja.com/problems/internal",
-      title:"Internal Server Error",
-      status:500,
-      detail:"Unexpected error",
-      instance:"/api/v1/leads"
-    })
-
-  }
+  return NextResponse.json({ success:true })
 
 }
+
+// Test compatibility exports
+export { _getClientIp, _isValidIp } from "@/lib/ip"
+
