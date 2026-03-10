@@ -22,9 +22,18 @@ export default async function LeadsPage() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <p className="editorial-label mb-3">panel de gestión</p>
-        <h1 className="editorial-h2">leads</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="editorial-label mb-3">panel de gestión</p>
+          <h1 className="editorial-h2">leads</h1>
+        </div>
+
+        <a
+          href="/api/v1/leads/export"
+          className="border-2 border-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
+        >
+          exportar CSV
+        </a>
       </div>
 
       {leads.length === 0 ? (
