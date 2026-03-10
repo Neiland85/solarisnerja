@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     title: "Solaris Nerja — Festival cultural en Málaga",
     images: ["/og-image.jpg"],
   },
+
+  other: {
+    "link:preload:hero": "</hero/hero-01.webp>; rel=preload; as=image",
+  },
 }
 
 export default function RootLayout({
