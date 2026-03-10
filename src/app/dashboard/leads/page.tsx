@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic"
 export default async function LeadsPage() {
   const pool = getPool()
 
-  const result = await pool.query(`
+  const leadsResult = await pool.query(`
     SELECT
       leads.id,
       leads.email,
@@ -18,22 +18,52 @@ export default async function LeadsPage() {
     LIMIT 500
   `)
 
-  const leads = result.rows
+  const statsResult = await pool.query(`
+    SELECT
+      events.title,
+      COUNT(leads.id) AS total
+    FROM events
+    LEFT JOIN leads ON events.id = leads.event_id
+    GROUP BY events.title
+    ORDER BY total DESC
+  `)
+
+  const leads = leadsResult.rows
+  const stats = statsResult.rows
 
   return (
-    <div className="space-y-10">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="editorial-label mb-3">panel de gestión</p>
-          <h1 className="editorial-h2">leads</h1>
-        </div>
+    <div className="space-y-12">
 
+      <div>
+        <p className="editorial-label mb-3">panel de gestión</p>
+        <h1 className="editorial-h2">leads</h1>
+      </div>
+
+      <div className="flex gap-4">
         <a
           href="/api/v1/leads/export"
           className="border-2 border-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
         >
           exportar CSV
         </a>
+      </div>
+
+      <div className="bg-white rounded-sm border border-[var(--sn-border)] p-6">
+        <p className="editorial-label mb-4">leads por evento</p>
+
+        <div className="space-y-3">
+          {stats.map((row) => (
+            <div
+              key={row.title}
+              className="flex items-center justify-between border-b border-[var(--sn-border)] pb-2"
+            >
+              <span className="tracking-wide">{row.title}</span>
+              <span className="text-sm text-[var(--sn-muted)]">
+                {row.total} leads
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {leads.length === 0 ? (
