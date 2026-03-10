@@ -9,7 +9,13 @@ import { rateLimit } from "@/lib/rate-limit"
 import { overloadGuard } from "@/lib/security/overload"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
-import { _getClientIp } from "@/lib/ip"
+
+import { _getClientIp, _isValidIp } from "@/lib/ip"
+
+/*
+Re-export for tests
+*/
+export { _getClientIp, _isValidIp }
 
 type LeadInput = {
   email: string
@@ -31,13 +37,10 @@ export async function POST(req: NextRequest) {
     const ip = _getClientIp(req)
 
     if (!overloadGuard(ip)) {
-      return problem({
-        type: "https://www.solarisnerja.com/problems/overload",
-        title: "Server Busy",
-        status: 503,
-        detail: "Server overloaded. Try again later.",
-        instance
-      })
+      return NextResponse.json(
+        { error: "server overloaded" },
+        { status: 503 }
+      )
     }
 
     const body: unknown = await req.json()
@@ -52,7 +55,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    if ((body as LeadInput).company && (body as LeadInput).company!.trim().length > 0) {
+    if ((body as LeadInput).company?.trim()) {
       return NextResponse.json({ success: true })
     }
 
