@@ -2,6 +2,7 @@ import Link from "next/link"
 import LeadsChart from "@/ui/components/dashboard/LeadsChart"
 import ForecastCard from "@/ui/components/dashboard/ForecastCard"
 import TrendingCard from "@/ui/components/dashboard/TrendingCard"
+import ViralEventCard from "@/ui/components/dashboard/ViralEventCard"
 
 async function getMetrics() {
   const res = await fetch("/api/admin/metrics", { cache: "no-store" })
@@ -33,6 +34,12 @@ async function getTrending() {
   return res.json()
 }
 
+async function getViral() {
+  const res = await fetch("/api/admin/viral", { cache: "no-store" })
+  if (!res.ok) return null
+  return res.json()
+}
+
 export default async function DashboardPage() {
 
   const metrics = await getMetrics()
@@ -40,6 +47,7 @@ export default async function DashboardPage() {
   const leadsPerDay = await getLeadsPerDay()
   const forecast = await getForecast()
   const trending = await getTrending()
+  const viral = await getViral()
 
   const topEvent = metrics.events?.[0]
 
@@ -103,6 +111,8 @@ export default async function DashboardPage() {
         <TrendingCard data={trending} />
 
       </div>
+
+      <ViralEventCard data={viral} />
 
       <div className="grid gap-6 md:grid-cols-2">
 
