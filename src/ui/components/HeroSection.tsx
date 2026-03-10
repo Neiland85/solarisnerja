@@ -43,7 +43,7 @@ export default function HeroSection() {
       ))}
 
       {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-black/60" />
 
       {/* Content */}
       <div className="relative z-10 text-center text-white space-y-10 px-6">
