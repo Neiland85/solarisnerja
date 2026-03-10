@@ -1,40 +1,13 @@
-import { saveQueueSnapshot, loadQueueSnapshot, clearSnapshot } from "./queuePersistence"
+import type { Lead } from "@/domain/leads/types"
 
-type LeadPayload = {
-  email: string
-  eventId: string
-  ipAddress: string
-}
+const queue: Lead[] = []
 
-let queue: LeadPayload[] = loadQueueSnapshot()
-
-const MAX_QUEUE = 5000
-
-export function enqueueLead(lead: LeadPayload) {
-
-  if (queue.length >= MAX_QUEUE) {
-    return false
-  }
-
+export function enqueueLead(lead: Lead) {
   queue.push(lead)
-
-  saveQueueSnapshot(queue)
-
-  return true
 }
 
-export function dequeueLead(): LeadPayload | null {
-
-  if (queue.length === 0) {
-    clearSnapshot()
-    return null
-  }
-
-  const lead = queue.shift() ?? null
-
-  saveQueueSnapshot(queue)
-
-  return lead
+export function dequeueLead(): Lead | undefined {
+  return queue.shift()
 }
 
 export function queueSize() {
