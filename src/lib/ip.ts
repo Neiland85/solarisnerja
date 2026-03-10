@@ -2,6 +2,7 @@ import { isIP } from "node:net"
 import type { NextRequest } from "next/server"
 
 export function _isValidIp(value: string): boolean {
+  if (!value) return false
   return isIP(value) !== 0
 }
 
@@ -12,11 +13,14 @@ export function _getClientIp(req: NextRequest): string {
     return realIp
   }
 
-  const forwardedFor = req.headers.get("x-forwarded-for")
-  const first = forwardedFor?.split(",")[0]?.trim()
+  const forwarded = req.headers.get("x-forwarded-for")
 
-  if (first && _isValidIp(first)) {
-    return first
+  if (forwarded) {
+    const first = forwarded.split(",")[0]?.trim()
+
+    if (first && _isValidIp(first)) {
+      return first
+    }
   }
 
   return "unknown"
