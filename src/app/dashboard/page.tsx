@@ -12,8 +12,21 @@ async function getMetrics() {
   return res.json()
 }
 
+async function getActivity() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/admin/activity`, {
+    cache: "no-store"
+  })
+
+  if (!res.ok) {
+    return { lastHour: 0, last24h: 0 }
+  }
+
+  return res.json()
+}
+
 export default async function DashboardPage() {
   const data = await getMetrics()
+  const activity = await getActivity()
 
   const topEvent = data.events?.[0]
 
@@ -69,26 +82,44 @@ export default async function DashboardPage() {
 
       </div>
 
-      {topEvent && (
-        <div className="bg-white border border-[var(--sn-border)] p-8 space-y-4">
+      <div className="grid gap-6 md:grid-cols-2">
 
-          <p className="editorial-label">interés vs aforo</p>
+        {topEvent && (
+          <div className="bg-white border border-[var(--sn-border)] p-8 space-y-4">
 
-          <p className="text-lg font-medium">{topEvent.title}</p>
+            <p className="editorial-label">interés vs aforo</p>
 
-          <div className="w-full bg-[var(--sn-surface)] h-3 rounded-sm overflow-hidden">
-            <div
-              className="bg-black h-full"
-              style={{ width: `${interest}%` }}
-            />
+            <p className="text-lg font-medium">{topEvent.title}</p>
+
+            <div className="w-full bg-[var(--sn-surface)] h-3 rounded-sm overflow-hidden">
+              <div
+                className="bg-black h-full"
+                style={{ width: `${interest}%` }}
+              />
+            </div>
+
+            <p className="text-sm text-[var(--sn-muted)] tracking-wide">
+              {topEvent.leads} interesados · aforo {topEvent.capacity} · {interest}%
+            </p>
+
           </div>
+        )}
+
+        <div className="bg-white border border-[var(--sn-border)] p-8 space-y-3">
+
+          <p className="editorial-label">actividad reciente</p>
+
+          <p className="text-lg">
+            🔥 {activity.lastHour} interesados en la última hora
+          </p>
 
           <p className="text-sm text-[var(--sn-muted)] tracking-wide">
-            {topEvent.leads} interesados · aforo {topEvent.capacity} · {interest}%
+            {activity.last24h} en las últimas 24h
           </p>
 
         </div>
-      )}
+
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2">
 
