@@ -1,4 +1,5 @@
 import Link from "next/link"
+import LeadsChart from "@/ui/components/dashboard/LeadsChart"
 
 async function getMetrics() {
   const res = await fetch("/api/admin/metrics", {
@@ -24,11 +25,25 @@ async function getActivity() {
   return res.json()
 }
 
-export default async function DashboardPage() {
-  const data = await getMetrics()
-  const activity = await getActivity()
+async function getLeadsPerDay() {
+  const res = await fetch("/api/admin/leads-per-day", {
+    cache: "no-store"
+  })
 
-  const topEvent = data.events?.[0]
+  if (!res.ok) {
+    return []
+  }
+
+  return res.json()
+}
+
+export default async function DashboardPage() {
+
+  const metrics = await getMetrics()
+  const activity = await getActivity()
+  const leadsPerDay = await getLeadsPerDay()
+
+  const topEvent = metrics.events?.[0]
 
   const interest =
     topEvent && topEvent.capacity
@@ -50,7 +65,7 @@ export default async function DashboardPage() {
             leads totales
           </p>
           <p className="text-3xl font-semibold">
-            {data.leadsTotal ?? 0}
+            {metrics.leadsTotal ?? 0}
           </p>
         </div>
 
@@ -59,7 +74,7 @@ export default async function DashboardPage() {
             eventos
           </p>
           <p className="text-3xl font-semibold">
-            {data.events?.length ?? 0}
+            {metrics.events?.length ?? 0}
           </p>
         </div>
 
@@ -78,6 +93,7 @@ export default async function DashboardPage() {
           ) : (
             <p className="text-sm text-[var(--sn-muted)]">sin datos</p>
           )}
+
         </div>
 
       </div>
@@ -87,9 +103,13 @@ export default async function DashboardPage() {
         {topEvent && (
           <div className="bg-white border border-[var(--sn-border)] p-8 space-y-4">
 
-            <p className="editorial-label">interés vs aforo</p>
+            <p className="editorial-label">
+              interés vs aforo
+            </p>
 
-            <p className="text-lg font-medium">{topEvent.title}</p>
+            <p className="text-lg font-medium">
+              {topEvent.title}
+            </p>
 
             <div className="w-full bg-[var(--sn-surface)] h-3 rounded-sm overflow-hidden">
               <div
@@ -107,19 +127,23 @@ export default async function DashboardPage() {
 
         <div className="bg-white border border-[var(--sn-border)] p-8 space-y-3">
 
-          <p className="editorial-label">actividad reciente</p>
+          <p className="editorial-label">
+            actividad reciente
+          </p>
 
           <p className="text-lg">
-            🔥 {activity.lastHour} interesados en la última hora
+            🔥 {activity.lastHour} interesados última hora
           </p>
 
           <p className="text-sm text-[var(--sn-muted)] tracking-wide">
-            {activity.last24h} en las últimas 24h
+            {activity.last24h} últimas 24h
           </p>
 
         </div>
 
       </div>
+
+      <LeadsChart data={leadsPerDay} />
 
       <div className="grid gap-6 md:grid-cols-2">
 
