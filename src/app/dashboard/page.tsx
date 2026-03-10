@@ -1,6 +1,7 @@
 import Link from "next/link"
 import LeadsChart from "@/ui/components/dashboard/LeadsChart"
 import ForecastCard from "@/ui/components/dashboard/ForecastCard"
+import TrendingCard from "@/ui/components/dashboard/TrendingCard"
 
 async function getMetrics() {
   const res = await fetch("/api/admin/metrics", { cache: "no-store" })
@@ -26,12 +27,19 @@ async function getForecast() {
   return res.json()
 }
 
+async function getTrending() {
+  const res = await fetch("/api/admin/trending", { cache: "no-store" })
+  if (!res.ok) return null
+  return res.json()
+}
+
 export default async function DashboardPage() {
 
   const metrics = await getMetrics()
   const activity = await getActivity()
   const leadsPerDay = await getLeadsPerDay()
   const forecast = await getForecast()
+  const trending = await getTrending()
 
   const topEvent = metrics.events?.[0]
 
@@ -88,7 +96,13 @@ export default async function DashboardPage() {
 
       </div>
 
-      <ForecastCard data={forecast} />
+      <div className="grid gap-6 md:grid-cols-2">
+
+        <ForecastCard data={forecast} />
+
+        <TrendingCard data={trending} />
+
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2">
 
