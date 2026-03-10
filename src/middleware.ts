@@ -16,16 +16,29 @@ export function middleware(req: NextRequest) {
   const requestId = crypto.randomUUID()
   const origin = req.headers.get("origin")
 
-  if (req.nextUrl.pathname.startsWith("/dashboard")) {
+  /*
+  ADMIN PROTECTION
+  */
+  if (
+    req.nextUrl.pathname.startsWith("/dashboard") ||
+    req.nextUrl.pathname.startsWith("/api/admin")
+  ) {
     const sessionCookie = req.cookies.get("admin_session")?.value
     const adminPassword = process.env["ADMIN_PASSWORD"]
 
     if (!adminPassword || sessionCookie !== adminPassword) {
-      const loginUrl = new URL("/login", req.url)
-      return NextResponse.redirect(loginUrl)
+      if (req.nextUrl.pathname.startsWith("/dashboard")) {
+        const loginUrl = new URL("/login", req.url)
+        return NextResponse.redirect(loginUrl)
+      }
+
+      return new NextResponse(null, { status: 401 })
     }
   }
 
+  /*
+  CORS PREFLIGHT
+  */
   if (req.method === "OPTIONS" && req.nextUrl.pathname.startsWith("/api/")) {
     if (!isAllowedOrigin(origin) || !origin) {
       return new NextResponse(null, { status: 403 })
