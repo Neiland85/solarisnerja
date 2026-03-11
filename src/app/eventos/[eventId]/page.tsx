@@ -5,6 +5,7 @@ import { getEvent } from "@/config/events"
 import { Reveal } from "@/ui/components/Reveal"
 import { ButtonPrimary } from "@/ui/components/UI"
 import LazyTicketmasterWidget from "@/ui/components/LazyTicketmasterWidget"
+import { ViewContentTracker } from "@/ui/components/ViewContentTracker"
 
 type Props = {
   params: Promise<{
@@ -16,12 +17,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { eventId } = await params
   const event = getEvent(eventId)
   if (!event) return {}
+
+  const title = `${event.title} — Solaris Nerja`
+  const description = event.description
+
   return {
-    title: `${event.title} — SolarisNerja`,
-    description: event.description,
+    title,
+    description,
     openGraph: {
       title: event.title,
-      description: event.description,
+      description,
+      type: "website",
+      locale: "es_ES",
+      siteName: "Solaris Nerja",
+      images: [
+        {
+          url: "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${event.title} — Solaris Nerja Festival 2026`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: event.title,
+      description,
+      images: ["/og-image.jpg"],
     },
   }
 }
@@ -34,9 +56,13 @@ export default async function EventDetailPage({ params }: Props) {
     return notFound()
   }
 
+  const hasRealUrl = event.ticketUrl && event.ticketUrl !== "#"
+
   return (
     <main className="min-h-screen">
 
+      {/* ── Meta Pixel: ViewContent ── */}
+      <ViewContentTracker eventId={event.id} eventTitle={event.title} />
 
       {/* ── Event Detail ── */}
       <section className="px-6 md:px-12 pt-16 md:pt-24 pb-16 max-w-4xl mx-auto">
@@ -61,15 +87,17 @@ export default async function EventDetailPage({ params }: Props) {
             {event.description}
           </p>
 
-          <div className="mt-10">
-            <ButtonPrimary href={event.ticketUrl}>Comprar Tickets</ButtonPrimary>
-          </div>
+          {hasRealUrl && (
+            <div className="mt-10">
+              <ButtonPrimary href={event.ticketUrl}>Comprar Tickets</ButtonPrimary>
+            </div>
+          )}
         </Reveal>
       </section>
 
       <div className="border-t border-[var(--sn-border)]" />
 
-      {/* ── Ticketmaster Widget ── */}
+      {/* ── Ticket Widget / Coming Soon ── */}
       <section className="px-6 md:px-12 py-16 max-w-4xl mx-auto">
         <Reveal delayMs={150}>
           <LazyTicketmasterWidget
@@ -88,8 +116,10 @@ export default async function EventDetailPage({ params }: Props) {
             Información
           </div>
           <p className="text-[var(--sn-muted)] leading-relaxed">
-            Venta oficial gestionada por Ticketmaster.
-            Las entradas y condiciones se rigen por la plataforma oficial.
+            {hasRealUrl
+              ? "Venta oficial gestionada por Ticketmaster. Las entradas y condiciones se rigen por la plataforma oficial."
+              : "La venta de entradas estará disponible próximamente a través de Ticketmaster."
+            }
           </p>
         </Reveal>
       </section>

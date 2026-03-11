@@ -26,7 +26,12 @@ export async function POST(req: NextRequest) {
       email: body.email,
       eventId: body.eventId,
       ipAddress: ip,
-      consentGiven: true
+      consentGiven: true,
+      name: body.name,
+      surname: body.surname,
+      phone: body.phone,
+      profession: body.profession,
+      source: body.source,
     })
 
     enqueueLead(lead)

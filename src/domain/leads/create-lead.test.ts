@@ -13,8 +13,42 @@ describe("createLead", () => {
     expect(lead.eventId).toBe("music")
     expect(lead.ipAddress).toBe("192.168.1.1")
     expect(lead.consentGiven).toBe(true)
+    expect(lead.source).toBe("organic")
     expect(lead.createdAt).toBeInstanceOf(Date)
     expect(typeof lead.id).toBe("string")
     expect(lead.id.length).toBeGreaterThan(10)
+  })
+
+  it("accepts profile fields and custom source", () => {
+    const lead = createLead({
+      email: "promo@test.com",
+      eventId: "promo-entradas-2x1",
+      ipAddress: "10.0.0.1",
+      consentGiven: true,
+      name: " Ana ",
+      surname: " García López ",
+      phone: "+34600111222",
+      profession: "Diseñadora",
+      source: "promo-entradas-2x1",
+    })
+    expect(lead.name).toBe("Ana")
+    expect(lead.surname).toBe("García López")
+    expect(lead.phone).toBe("+34600111222")
+    expect(lead.profession).toBe("Diseñadora")
+    expect(lead.source).toBe("promo-entradas-2x1")
+  })
+
+  it("omits empty optional fields", () => {
+    const lead = createLead({
+      email: "basic@test.com",
+      eventId: "chambao",
+      ipAddress: "1.2.3.4",
+      consentGiven: true,
+    })
+    expect(lead.name).toBeUndefined()
+    expect(lead.surname).toBeUndefined()
+    expect(lead.phone).toBeUndefined()
+    expect(lead.profession).toBeUndefined()
+    expect(lead.source).toBe("organic")
   })
 })
