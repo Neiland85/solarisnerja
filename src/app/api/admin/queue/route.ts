@@ -7,7 +7,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "unauthorized" }, { status: 403 })
   }
 
-
   const length = await queueLength()
 
   return NextResponse.json({

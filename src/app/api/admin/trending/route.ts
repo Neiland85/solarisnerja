@@ -30,10 +30,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(null)
   }
 
-  const percent = Math.min(
-    Math.round((event.leads_last_hour / event.capacity) * 100),
-    100
-  )
+  const percent = event.capacity > 0
+    ? Math.min(Math.round((event.leads_last_hour / event.capacity) * 100), 100)
+    : 0
 
   return NextResponse.json({
     ...event,
