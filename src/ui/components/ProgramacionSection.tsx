@@ -39,7 +39,7 @@ export default function ProgramacionSection(){
               <div className="p-6 space-y-3">
 
                 <p className="text-sm text-neutral-500">
-                  {event.date} · {event.time}
+                  {event.date ? `${event.date} · ${event.time}` : event.time}
                 </p>
 
                 <h3 className="text-xl font-semibold">
@@ -53,6 +53,7 @@ export default function ProgramacionSection(){
                 <a
                   href={event.ticketUrl}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block mt-4 px-6 py-3 bg-black text-white rounded-full text-sm hover:bg-neutral-800 transition"
                 >
                   Comprar entrada
