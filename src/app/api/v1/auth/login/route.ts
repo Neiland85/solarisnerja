@@ -17,8 +17,6 @@ export async function POST(req: NextRequest) {
     )
   }
 
-
-export async function POST(req: NextRequest) {
   const body = await req.json()
   const adminPassword = process.env["ADMIN_PASSWORD"]
 
@@ -34,14 +32,9 @@ export async function POST(req: NextRequest) {
 
   loginAttempts.delete(ip)
 
-  const res = NextResponse.json({ success: true })
+  const response = NextResponse.json({ success: true })
 
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 })
-  }
-
-  const res = NextResponse.json({ success: true })
-
-  res.cookies.set("admin_session", adminPassword, {
+  response.cookies.set("admin_session", adminPassword, {
     httpOnly: true,
     secure: process.env["NODE_ENV"] === "production",
     sameSite: "lax",
@@ -49,5 +42,5 @@ export async function POST(req: NextRequest) {
     maxAge: 60 * 60 * 8,
   })
 
-  return res
+  return response
 }

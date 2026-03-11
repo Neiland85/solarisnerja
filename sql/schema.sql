@@ -8,6 +8,11 @@ CREATE TABLE IF NOT EXISTS leads (
   event_id TEXT NOT NULL,
   ip_address TEXT,
   consent_given BOOLEAN NOT NULL DEFAULT false,
+  name TEXT,
+  surname TEXT,
+  phone TEXT,
+  profession TEXT,
+  source TEXT NOT NULL DEFAULT 'organic',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ
 );

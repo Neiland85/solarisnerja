@@ -2,6 +2,7 @@ import HeroVideo from "@/ui/components/HeroVideo"
 import ProgramacionSection from "@/ui/components/ProgramacionSection"
 import CarouselSection from "@/ui/components/CarouselSection"
 import LocationSection from "@/ui/components/LocationSection"
+import PromoFormSection from "@/ui/components/PromoFormSection"
 
 export default function HomePage(){
 
@@ -16,6 +17,8 @@ export default function HomePage(){
       <CarouselSection />
 
       <LocationSection />
+
+      <PromoFormSection />
 
     </main>
 

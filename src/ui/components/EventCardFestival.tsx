@@ -10,12 +10,15 @@ type Props = {
 }
 
 export default function EventCardFestival({
+  id,
   title,
   highlight,
   ticketUrl,
   logo,
   eventDate
 }: Props) {
+  const hasRealUrl = ticketUrl && ticketUrl !== "#"
+
   return (
     <div className="border border-[var(--sn-border)] bg-white p-6 space-y-6">
 
@@ -49,13 +52,23 @@ export default function EventCardFestival({
         </p>
       </div>
 
-      <a
-        href={ticketUrl}
-        target="_blank"
-        className="inline-block border-2 border-black px-6 py-2 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
-      >
-        comprar entradas
-      </a>
+      {hasRealUrl ? (
+        <a
+          href={ticketUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block border-2 border-black px-6 py-2 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
+        >
+          comprar entradas
+        </a>
+      ) : (
+        <a
+          href={`/eventos/${id}`}
+          className="inline-block border-2 border-black/30 px-6 py-2 text-sm font-medium tracking-wide text-black/50 hover:border-black hover:text-black transition"
+        >
+          más información
+        </a>
+      )}
 
     </div>
   )

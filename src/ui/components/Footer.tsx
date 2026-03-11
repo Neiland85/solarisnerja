@@ -51,7 +51,7 @@ export default function Footer() {
 
           <div className="pt-6 flex gap-6 text-sm">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/solarisnerja"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:opacity-50"
@@ -60,7 +60,16 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://youtube.com"
+              href="https://www.facebook.com/solarisnerja"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-50"
+            >
+              Facebook
+            </a>
+
+            <a
+              href="https://www.youtube.com/@solarisnerja"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:opacity-50"
