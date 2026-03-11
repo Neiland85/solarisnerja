@@ -17,6 +17,8 @@ export async function POST(req: NextRequest) {
     )
   }
 
+
+export async function POST(req: NextRequest) {
   const body = await req.json()
   const adminPassword = process.env["ADMIN_PASSWORD"]
 
@@ -31,6 +33,11 @@ export async function POST(req: NextRequest) {
   }
 
   loginAttempts.delete(ip)
+
+  const res = NextResponse.json({ success: true })
+
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 })
+  }
 
   const res = NextResponse.json({ success: true })
 
