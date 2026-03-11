@@ -30,9 +30,13 @@ export default function CarouselSection(){
 
       <div className="max-w-6xl mx-auto px-6">
 
-        <h2 className="text-4xl text-center mb-16">
-          El ambiente
+        <h2 className="text-4xl text-center mb-4">
+          El ambiente Solaris
         </h2>
+
+        <p className="text-center text-neutral-500 mb-16">
+          Música, arte digital, gastronomía y atardeceres frente al mar.
+        </p>
 
         <div className="grid md:grid-cols-3 gap-6">
 
