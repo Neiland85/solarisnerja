@@ -1,31 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSessionToken } from "@/lib/auth/session"
 
-export async function POST(req: NextRequest){
-
+export async function POST(req: NextRequest) {
   const body = await req.json()
+  const adminPassword = process.env["ADMIN_PASSWORD"]
 
-  if(body.password !== process.env["ADMIN_PASSWORD"]){
-
-    return NextResponse.json(
-      { error:"unauthorized" },
-      { status:401 }
-    )
-
+  if (!adminPassword || body.password !== adminPassword) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 })
   }
 
-  const token = createSessionToken()
+  const res = NextResponse.json({ success: true })
 
-  const res = NextResponse.json({ success:true })
-
-  res.cookies.set("admin_session",token,{
-    httpOnly:true,
-    secure:true,
-    sameSite:"lax",
-    path:"/",
-    maxAge:60*60*8
+  res.cookies.set("admin_session", adminPassword, {
+    httpOnly: true,
+    secure: process.env["NODE_ENV"] === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 8,
   })
 
   return res
-
 }
