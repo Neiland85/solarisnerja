@@ -1,14 +1,19 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
+import { requireAdmin } from "@/lib/auth/requireAdmin"
+import { safeHandler } from "@/lib/api/safeHandler"
 
 const DEFAULT_CONVERSION = 0.22
 
-export async function GET() {
+export const GET = safeHandler(async (req: NextRequest) => {
+  if (!requireAdmin(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+  }
 
   const pool = getPool()
 
   const events = await pool.query(`
-    SELECT 
+    SELECT
       events.id,
       events.title,
       events.capacity,
@@ -18,12 +23,9 @@ export async function GET() {
     GROUP BY events.id
   `)
 
-  const forecast = events.rows.map(e => {
-
+  const forecast = events.rows.map((e) => {
     const predicted = Math.round(e.leads * DEFAULT_CONVERSION)
-    const occupancy = e.capacity
-      ? (predicted / e.capacity) * 100
-      : 0
+    const occupancy = e.capacity ? (predicted / e.capacity) * 100 : 0
 
     return {
       id: e.id,
@@ -31,11 +33,9 @@ export async function GET() {
       leads: e.leads,
       predictedAttendance: predicted,
       capacity: e.capacity,
-      occupancy: Number(occupancy.toFixed(1))
+      occupancy: Number(occupancy.toFixed(1)),
     }
-
   })
 
   return NextResponse.json(forecast)
-
-}
+})

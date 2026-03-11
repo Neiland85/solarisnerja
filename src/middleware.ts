@@ -12,21 +12,34 @@ function isAllowedOrigin(origin: string | null): boolean {
   return ALLOWED_ORIGINS.has(origin)
 }
 
-export function proxy(req: NextRequest) {
+function isAdminAuthenticated(req: NextRequest): boolean {
+  const sessionCookie = req.cookies.get("admin_session")?.value
+  const adminPassword = process.env["ADMIN_PASSWORD"]
+  if (!adminPassword || !sessionCookie) return false
+  return sessionCookie === adminPassword
+}
+
+export function middleware(req: NextRequest) {
   const requestId = crypto.randomUUID()
   const origin = req.headers.get("origin")
+  const { pathname } = req.nextUrl
 
-  if (req.nextUrl.pathname.startsWith("/dashboard")) {
-    const sessionCookie = req.cookies.get("admin_session")?.value
-    const adminPassword = process.env["ADMIN_PASSWORD"]
-
-    if (!adminPassword || sessionCookie !== adminPassword) {
-      const loginUrl = new URL("/login", req.url)
-      return NextResponse.redirect(loginUrl)
+  // --- Dashboard pages: redirect to login if not authenticated ---
+  if (pathname.startsWith("/dashboard")) {
+    if (!isAdminAuthenticated(req)) {
+      return NextResponse.redirect(new URL("/login", req.url))
     }
   }
 
-  if (req.method === "OPTIONS" && req.nextUrl.pathname.startsWith("/api/")) {
+  // --- Admin API: return 403 if not authenticated ---
+  if (pathname.startsWith("/api/admin/")) {
+    if (!isAdminAuthenticated(req)) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+    }
+  }
+
+  // --- CORS preflight ---
+  if (req.method === "OPTIONS" && pathname.startsWith("/api/")) {
     if (!isAllowedOrigin(origin) || !origin) {
       return new NextResponse(null, { status: 403 })
     }
@@ -34,7 +47,7 @@ export function proxy(req: NextRequest) {
     return new NextResponse(null, {
       status: 204,
       headers: {
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PATCH, DELETE",
         "Access-Control-Allow-Headers": "Content-Type, x-request-id",
         "Access-Control-Max-Age": "86400",
         "Access-Control-Allow-Origin": origin,
@@ -43,11 +56,11 @@ export function proxy(req: NextRequest) {
     })
   }
 
+  // --- Default: pass through with request ID and CORS header ---
   const response = NextResponse.next()
-
   response.headers.set("x-request-id", requestId)
 
-  if (req.nextUrl.pathname.startsWith("/api/") && origin && isAllowedOrigin(origin)) {
+  if (pathname.startsWith("/api/") && origin && isAllowedOrigin(origin)) {
     response.headers.set("Access-Control-Allow-Origin", origin)
   }
 

@@ -4,6 +4,7 @@ import addFormats from "ajv-formats"
 import updateSchema from "@/contracts/schemas/event.update.json"
 import { applyEventUpdate, type EventUpdate } from "@/domain/events/update-event"
 import { findEventById, updateEvent, deleteEvent } from "@/adapters/db/event-repository"
+import { requireAdmin } from "@/lib/auth/requireAdmin"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
 
@@ -47,6 +48,10 @@ export async function GET(req: NextRequest, context: RouteContext) {
 }
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
+  if (!requireAdmin(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+  }
+
   const { id } = await context.params
   const instance = `/api/v1/events/${id}`
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()
@@ -97,6 +102,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
+  if (!requireAdmin(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+  }
+
   const { id } = await context.params
   const instance = `/api/v1/events/${id}`
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()

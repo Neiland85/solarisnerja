@@ -1,7 +1,12 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
+import { requireAdmin } from "@/lib/auth/requireAdmin"
+import { safeHandler } from "@/lib/api/safeHandler"
 
-export async function GET() {
+export const GET = safeHandler(async (req: NextRequest) => {
+  if (!requireAdmin(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+  }
 
   const pool = getPool()
 
@@ -21,11 +26,9 @@ export async function GET() {
     GROUP BY events.id
   `)
 
-  const viral = result.rows.find(e => {
-
+  const viral = result.rows.find((e) => {
     const avgPerHour = (e.leads_last_day || 0) / 24
     return e.leads_last_hour > avgPerHour * 3 && e.leads_last_hour > 5
-
   })
 
   if (!viral) {
@@ -35,6 +38,6 @@ export async function GET() {
   return NextResponse.json({
     title: viral.title,
     leads_last_hour: viral.leads_last_hour,
-    leads_last_day: viral.leads_last_day
+    leads_last_day: viral.leads_last_day,
   })
-}
+})

@@ -6,5 +6,10 @@ export interface Lead {
   eventId: string
   ipAddress: string
   consentGiven: boolean
+  name?: string
+  surname?: string
+  phone?: string
+  profession?: string
+  source: string
   createdAt: Date
 }

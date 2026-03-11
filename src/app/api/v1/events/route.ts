@@ -4,6 +4,7 @@ import addFormats from "ajv-formats"
 import createSchema from "@/contracts/schemas/event.create.json"
 import { createEvent } from "@/domain/events/create-event"
 import { findAllEvents, saveEvent } from "@/adapters/db/event-repository"
+import { requireAdmin } from "@/lib/auth/requireAdmin"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
 
@@ -42,6 +43,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  if (!requireAdmin(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+  }
+
   const instance = "/api/v1/events"
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()
 
