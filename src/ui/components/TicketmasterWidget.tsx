@@ -39,18 +39,17 @@ export function TicketmasterWidget({ eventId, ticketUrl }: Props) {
 
   return (
     <div className="mt-10 space-y-6">
-
       {/* Widget container */}
       <div
         ref={containerRef}
         onClick={() => trackEvent("ticket_widget_click", { eventId })}
-        className="min-h-[300px] rounded-[var(--sn-radius-xl)]
-          border border-[var(--sn-border)]
-          bg-[color:var(--sn-surface)]/70
+        className="min-h-75 rounded-(--sn-radius-xl)
+          border border-(--sn-border)
+          bg-(--sn-surface)/70
           backdrop-blur p-6"
       >
         {!loaded && (
-          <p className="text-sm text-[color:var(--sn-muted)]">
+          <p className="text-sm text-(--sn-muted)">
             Cargando venta oficial Ticketmaster…
           </p>
         )}
@@ -63,12 +62,11 @@ export function TicketmasterWidget({ eventId, ticketUrl }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackEvent("ticket_fallback_click", { eventId })}
-          className="text-sm text-[color:var(--sn-muted)] underline hover:text-white transition"
+          className="text-sm text-(--sn-muted) underline hover:text-white transition"
         >
           Abrir venta oficial en nueva pestaña
         </a>
       </div>
-
     </div>
   )
 }
