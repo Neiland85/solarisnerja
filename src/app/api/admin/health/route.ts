@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
 import { requireAdmin } from "@/lib/auth/requireAdmin"
+import { safeHandler } from "@/lib/api/safeHandler"
 
-export async function GET(req: NextRequest) {
+export const GET = safeHandler(async (req: NextRequest) => {
   if (!requireAdmin(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 403 })
   }
@@ -33,7 +34,6 @@ export async function GET(req: NextRequest) {
   const occupancy = totalLeads / totalCapacity
 
   let score = "LOW"
-
   if (occupancy > 0.7 || lastDay > 100) score = "STRONG"
   else if (occupancy > 0.4 || lastDay > 40) score = "GROWING"
 
@@ -42,7 +42,6 @@ export async function GET(req: NextRequest) {
     last24h: lastDay,
     capacity: totalCapacity,
     occupancy,
-    momentum: score
+    momentum: score,
   })
-
-}
+})
