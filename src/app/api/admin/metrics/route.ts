@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getPool } from "@/adapters/db/pool"
+import { requireAdmin } from "@/lib/auth/requireAdmin"
 import { overloadGuard } from "@/lib/security/overload"
 import { _getClientIp } from "@/lib/ip"
 
-export async function GET(req: NextRequest){
+export async function GET(req: NextRequest) {
+  if (!requireAdmin(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 403 })
+  }
 
   const ip = _getClientIp(req)
 
