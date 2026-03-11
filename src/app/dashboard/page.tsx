@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 import LeadsChart from "@/ui/components/dashboard/LeadsChart"
 import ForecastCard from "@/ui/components/dashboard/ForecastCard"
@@ -8,69 +11,166 @@ import SystemStatusCard from "@/ui/components/dashboard/SystemStatusCard"
 import AttendanceForecastCard from "@/ui/components/dashboard/AttendanceForecastCard"
 import FestivalHealthCard from "@/ui/components/dashboard/FestivalHealthCard"
 
-async function getMetrics() {
-  const res = await fetch("/api/admin/metrics", { cache: "no-store" })
-  if (!res.ok) return { leadsTotal: 0, events: [] }
-  return res.json()
+type HealthData = {
+  totalLeads: number
+  last24h: number
+  capacity: number
+  occupancy: number
+  momentum: string
 }
 
-async function getForecast() {
-  const res = await fetch("/api/admin/forecast", { cache: "no-store" })
-  if (!res.ok) return []
-  return res.json()
+type SystemData = {
+  status: string
+  dbLatencyMs: number | null
+  timestamp: string
 }
 
-async function getTrending() {
-  const res = await fetch("/api/admin/trending", { cache: "no-store" })
-  if (!res.ok) return []
-  return res.json()
+type LeadsChartData = {
+  leadsTotal: number
+  lastHour: number
+  last24h: number
 }
 
-async function getSystem() {
-  const res = await fetch("/api/admin/system", { cache: "no-store" })
-  if (!res.ok) return {}
-  return res.json()
+type ForecastEvent = {
+  id: string
+  title: string
+  leads: number
+  predictedAttendance: number
+  capacity: number
+  occupancy: number
 }
 
-async function getHealth() {
-  const res = await fetch("/api/admin/health", { cache: "no-store" })
-  if (!res.ok) return null
-  return res.json()
+type TrendingData = {
+  title?: string
+  leads?: number
 }
 
-export default async function DashboardPage() {
+type ViralData = {
+  title?: string
+}
 
-  const metrics = await getMetrics()
-  const forecast = await getForecast()
-  const trending = await getTrending()
-  const system = await getSystem()
-  const health = await getHealth()
+type ForecastData = {
+  title?: string
+  eta?: string
+}
+
+interface DashboardState {
+  metrics: { leadsTotal: number; events: LeadsChartData[] }
+  forecast: ForecastEvent[]
+  trending: TrendingData | null
+  viral: ViralData | null
+  system: SystemData
+  health: HealthData | null
+  soldOut: ForecastData | null
+  loading: boolean
+  error: string | null
+}
+
+const DEFAULT_SYSTEM: SystemData = { status: "unknown", dbLatencyMs: null, timestamp: "" }
+
+async function safeFetch<T>(url: string, fallback: T): Promise<T> {
+  try {
+    const res = await fetch(url, { cache: "no-store" })
+    if (!res.ok) return fallback
+    return await res.json()
+  } catch {
+    return fallback
+  }
+}
+
+export default function DashboardPage() {
+  const [state, setState] = useState<DashboardState>({
+    metrics: { leadsTotal: 0, events: [] },
+    forecast: [],
+    trending: null,
+    viral: null,
+    system: DEFAULT_SYSTEM,
+    health: null,
+    soldOut: null,
+    loading: true,
+    error: null,
+  })
+
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        const [metrics, forecast, trending, system, health] = await Promise.all([
+          safeFetch("/api/admin/metrics", { leadsTotal: 0, events: [] as LeadsChartData[] }),
+          safeFetch<ForecastEvent[]>("/api/admin/forecast", []),
+          safeFetch<TrendingData | null>("/api/admin/trending", null),
+          safeFetch<SystemData>("/api/admin/system", DEFAULT_SYSTEM),
+          safeFetch<HealthData | null>("/api/admin/health", null),
+        ])
+
+        setState({
+          metrics,
+          forecast,
+          trending,
+          viral: trending,
+          system,
+          health,
+          soldOut: null,
+          loading: false,
+          error: null,
+        })
+      } catch {
+        setState((prev) => ({ ...prev, loading: false, error: "Error cargando datos del dashboard" }))
+      }
+    }
+
+    loadDashboard()
+  }, [])
+
+  if (state.loading) {
+    return (
+      <div className="space-y-12">
+        <div>
+          <p className="editorial-label mb-2">control center</p>
+          <h1 className="editorial-h2">solaris nerja dashboard</h1>
+        </div>
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-pulse text-sm text-gray-400 tracking-wide">cargando datos…</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (state.error) {
+    return (
+      <div className="space-y-12">
+        <div>
+          <p className="editorial-label mb-2">control center</p>
+          <h1 className="editorial-h2">solaris nerja dashboard</h1>
+        </div>
+        <div className="bg-red-50 border border-red-200 p-6 text-sm text-red-700">
+          {state.error}
+        </div>
+      </div>
+    )
+  }
 
   return (
-
     <div className="space-y-12">
-
       <div>
         <p className="editorial-label mb-2">control center</p>
         <h1 className="editorial-h2">solaris nerja dashboard</h1>
       </div>
 
-      {health && <FestivalHealthCard data={health} />}
+      {state.health && <FestivalHealthCard data={state.health} />}
 
-      <SystemStatusCard data={system} />
+      <SystemStatusCard data={state.system} />
 
-      <LeadsChart data={metrics.events} />
+      <LeadsChart data={state.metrics.events[0] ?? { leadsTotal: 0, lastHour: 0, last24h: 0 }} />
 
-      <ForecastCard data={metrics} />
+      <ForecastCard data={state.soldOut} />
 
-      <TrendingCard data={trending} />
+      <TrendingCard data={state.trending} />
 
-      <ViralEventCard data={trending} />
+      <ViralEventCard data={state.viral} />
 
-      <AttendanceForecastCard data={forecast} />
+      <AttendanceForecastCard data={state.forecast} />
 
       <div className="grid md:grid-cols-2 gap-6">
-
         <Link
           href="/dashboard/events"
           className="bg-white border border-[var(--sn-border)] p-8 hover:border-black transition"
@@ -86,11 +186,7 @@ export default async function DashboardPage() {
           <p className="editorial-label mb-2">marketing</p>
           <p className="text-lg font-medium">leads</p>
         </Link>
-
       </div>
-
     </div>
-
   )
-
 }
