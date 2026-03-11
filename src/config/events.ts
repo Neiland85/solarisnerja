@@ -19,7 +19,7 @@ export const EVENTS: EventConfig[] = [
     time: "19/06",
     description: "Concierto de flamenco chill en Solaris Nerja.",
     highlight: "Flamenco chill",
-    ticketUrl: "#"
+    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
   },
   {
     id: "bresh",
@@ -27,7 +27,7 @@ export const EVENTS: EventConfig[] = [
     time: "20/06",
     description: "La fiesta más viral llega a la Costa del Sol.",
     highlight: "Fiesta internacional",
-    ticketUrl: "#"
+    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
   },
   {
     id: "ohsee",
@@ -35,7 +35,7 @@ export const EVENTS: EventConfig[] = [
     time: "21/06",
     description: "Electrónica contemporánea frente al mar.",
     highlight: "Electrónica",
-    ticketUrl: "#"
+    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
   },
   {
     id: "goa",
@@ -43,7 +43,7 @@ export const EVENTS: EventConfig[] = [
     time: "26/06",
     description: "Sesión electrónica underground.",
     highlight: "Electrónica underground",
-    ticketUrl: "#"
+    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
   },
   {
     id: "tropicalia",
@@ -51,7 +51,7 @@ export const EVENTS: EventConfig[] = [
     time: "27/06",
     description: "Música veraniega y ambiente tropical.",
     highlight: "Summer music",
-    ticketUrl: "#"
+    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
   },
   {
     id: "tecnoflamenco",
@@ -59,7 +59,7 @@ export const EVENTS: EventConfig[] = [
     time: "28/06",
     description: "Fusión de flamenco y electrónica.",
     highlight: "Flamenco electrónico",
-    ticketUrl: "#"
+    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
   }
 ]
 
