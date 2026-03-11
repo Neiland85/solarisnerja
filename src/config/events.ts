@@ -4,10 +4,12 @@ export const HEADER_TICKER =
 export type EventConfig = {
   id: string
   title: string
+  date?: string
   time: string
   description: string
   highlight: string
   ticketUrl: string
+  logo?: string
 }
 
 export const EVENTS: EventConfig[] = [
