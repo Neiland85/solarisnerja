@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { timingSafeEqual } from "node:crypto"
 import { _getClientIp } from "@/lib/ip"
+import { createSession } from "@/lib/auth/sessionStore"
 
 const LOGIN_WINDOW_MS = 60_000
 const MAX_ATTEMPTS = 5
@@ -39,9 +40,10 @@ export async function POST(req: NextRequest) {
 
   loginAttempts.delete(ip)
 
+  const session = createSession()
   const response = NextResponse.json({ success: true })
 
-  response.cookies.set("admin_session", adminPassword, {
+  response.cookies.set("admin_session", session.token, {
     httpOnly: true,
     secure: process.env["NODE_ENV"] === "production",
     sameSite: "lax",

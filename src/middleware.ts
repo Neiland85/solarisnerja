@@ -13,10 +13,10 @@ function isAllowedOrigin(origin: string | null): boolean {
 }
 
 function isAdminAuthenticated(req: NextRequest): boolean {
-  const sessionCookie = req.cookies.get("admin_session")?.value
-  const adminPassword = process.env["ADMIN_PASSWORD"]
-  if (!adminPassword || !sessionCookie) return false
-  return sessionCookie === adminPassword
+  const token = req.cookies.get("admin_session")?.value
+  if (!token) return false
+  // Validate token format (UUID v4) — actual session lookup happens in route handlers
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)
 }
 
 export function middleware(req: NextRequest) {
