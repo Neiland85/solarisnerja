@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
@@ -35,8 +36,8 @@ describe("CookieBanner", () => {
   })
 
   it("dismisses banner on accept", async () => {
-    const user = userEvent.setup()
     render(<CookieBanner />)
+    const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: /aceptar/i }))
 
@@ -45,8 +46,8 @@ describe("CookieBanner", () => {
   })
 
   it("dismisses banner on reject", async () => {
-    const user = userEvent.setup()
     render(<CookieBanner />)
+    const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: /rechazar/i }))
 

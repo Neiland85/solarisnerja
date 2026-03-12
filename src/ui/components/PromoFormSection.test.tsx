@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
@@ -26,8 +27,8 @@ describe("PromoFormSection", () => {
   })
 
   it("transitions from CTA to RGPD on button click", async () => {
-    const user = userEvent.setup()
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
 
@@ -37,8 +38,8 @@ describe("PromoFormSection", () => {
   })
 
   it("transitions from RGPD to form on accept", async () => {
-    const user = userEvent.setup()
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     // CTA → RGPD
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
@@ -51,8 +52,8 @@ describe("PromoFormSection", () => {
   })
 
   it("returns from RGPD to CTA on Volver click", async () => {
-    const user = userEvent.setup()
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
     await user.click(screen.getByRole("button", { name: /volver/i }))
@@ -61,10 +62,9 @@ describe("PromoFormSection", () => {
   })
 
   it("shows success state after successful submission", async () => {
-    const user = userEvent.setup()
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: true })
-
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     // Navigate to form
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
@@ -85,10 +85,9 @@ describe("PromoFormSection", () => {
   })
 
   it("shows error state on failed submission", async () => {
-    const user = userEvent.setup()
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: false })
-
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     // Navigate to form
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
@@ -109,10 +108,9 @@ describe("PromoFormSection", () => {
   })
 
   it("shows retry button on error state", async () => {
-    const user = userEvent.setup()
     globalThis.fetch = vi.fn().mockRejectedValue(new Error("network"))
-
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
     await user.click(screen.getByRole("button", { name: /acepto/i }))
@@ -130,11 +128,10 @@ describe("PromoFormSection", () => {
   })
 
   it("disables submit button while sending", async () => {
-    const user = userEvent.setup()
     // Never resolve to keep sending state
     globalThis.fetch = vi.fn().mockImplementation(() => new Promise(() => {}))
-
     render(<PromoFormSection />)
+    const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
     await user.click(screen.getByRole("button", { name: /acepto/i }))
