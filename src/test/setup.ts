@@ -1,4 +1,4 @@
-/* global test setup — imported by vitest via setupFiles */
+// Test setup — imported by vitest via setupFiles
 export {}
 
 // Extend vitest matchers with jest-dom (toBeInTheDocument, toHaveTextContent, etc.)
