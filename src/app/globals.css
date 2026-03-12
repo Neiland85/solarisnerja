@@ -94,6 +94,23 @@ html {
   pointer-events: none;
 }
 
+/* ─── Vinyl grooves texture (programación section) ─── */
+
+.solaris-vinyl-texture {
+  position: relative;
+  background-color: var(--sn-surface);
+}
+
+.solaris-vinyl-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='%23000' stroke-width='0.3' opacity='0.04'/%3E%3Ccircle cx='100' cy='100' r='78' fill='none' stroke='%23000' stroke-width='0.25' opacity='0.03'/%3E%3Ccircle cx='100' cy='100' r='66' fill='none' stroke='%23000' stroke-width='0.3' opacity='0.04'/%3E%3Ccircle cx='100' cy='100' r='54' fill='none' stroke='%23000' stroke-width='0.25' opacity='0.03'/%3E%3Ccircle cx='100' cy='100' r='42' fill='none' stroke='%23000' stroke-width='0.3' opacity='0.04'/%3E%3Ccircle cx='100' cy='100' r='30' fill='none' stroke='%23000' stroke-width='0.25' opacity='0.03'/%3E%3Ccircle cx='100' cy='100' r='18' fill='none' stroke='%23000' stroke-width='0.3' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 /* ─── Editorial typography ─── */
 
 .font-editorial {
