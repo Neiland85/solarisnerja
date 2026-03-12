@@ -1,7 +1,0 @@
-            <Image
-              src={src}
-              alt={`Solaris Nerja — carousel ${i + 1}`}
-              fill
-              sizes="100vw"
-              priority={i === 0}
-            />

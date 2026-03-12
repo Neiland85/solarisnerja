@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { timingSafeEqual } from "node:crypto"
 import { _getClientIp } from "@/lib/ip"
 
 const LOGIN_WINDOW_MS = 60_000
@@ -20,7 +21,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const adminPassword = process.env["ADMIN_PASSWORD"]
 
-  if (!adminPassword || body.password !== adminPassword) {
+  const input = String(body.password ?? "")
+  const passwordMatch =
+    adminPassword &&
+    input.length === adminPassword.length &&
+    timingSafeEqual(Buffer.from(input), Buffer.from(adminPassword))
+
+  if (!passwordMatch) {
     const current = loginAttempts.get(ip)
     if (!current || now >= current.resetAt) {
       loginAttempts.set(ip, { count: 1, resetAt: now + LOGIN_WINDOW_MS })
