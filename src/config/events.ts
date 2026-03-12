@@ -27,7 +27,7 @@ export const EVENTS: EventConfig[] = [
     time: "20/06",
     description: "La fiesta más viral llega a la Costa del Sol.",
     highlight: "Fiesta internacional",
-    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
+    ticketUrl: "https://www.universe.com/events/bresh-tickets-0K4Y3W"
   },
   {
     id: "ohsee",
@@ -35,7 +35,7 @@ export const EVENTS: EventConfig[] = [
     time: "21/06",
     description: "Electrónica contemporánea frente al mar.",
     highlight: "Electrónica",
-    ticketUrl: "https://www.ticketmaster.com/solaris-nerja-tickets/artist/4275554"
+    ticketUrl: "https://www.universe.com/events/oh-see-tickets-ZM38BC"
   },
   {
     id: "goa",
