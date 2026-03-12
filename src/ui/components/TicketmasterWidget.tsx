@@ -32,12 +32,10 @@ export function TicketmasterWidget({ eventId, ticketUrl }: Props) {
             bg-(--sn-surface)/70 backdrop-blur overflow-hidden"
         >
           {!iframeLoaded && (
-            <div className="flex items-center justify-center h-[400px]">
+            <div className="flex items-center justify-center h-100">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-6 h-6 border-2 border-(--sn-muted) border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm text-(--sn-muted)">
-                  Cargando venta oficial…
-                </p>
+                <p className="text-sm text-(--sn-muted)">Cargando venta oficial…</p>
               </div>
             </div>
           )}
@@ -86,9 +84,7 @@ export function TicketmasterWidget({ eventId, ticketUrl }: Props) {
           className="rounded-(--sn-radius-xl) border border-(--sn-border)
             bg-(--sn-surface)/70 backdrop-blur p-8 text-center space-y-3"
         >
-          <p className="text-lg font-medium tracking-wide">
-            Venta de entradas
-          </p>
+          <p className="text-lg font-medium tracking-wide">Venta de entradas</p>
           <p className="text-sm text-(--sn-muted)">
             Próximamente disponible a través de Ticketmaster
           </p>
