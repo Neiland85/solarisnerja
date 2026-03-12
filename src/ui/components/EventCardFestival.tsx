@@ -61,6 +61,14 @@ export default function EventCardFestival({
           href={ticketUrl}
           colorIndex={colorIndex}
         />
+        <a
+          href={ticketUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block border-2 border-black px-6 py-2 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
+        >
+          comprar entradas
+        </a>
       ) : (
         <a
           href={`/eventos/${id}`}
