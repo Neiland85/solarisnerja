@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import HeroVideo from "@/ui/components/HeroVideo"
 import EventosSection from "@/ui/components/EventosSection"
 import CarouselSection from "@/ui/components/CarouselSection"
