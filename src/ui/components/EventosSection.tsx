@@ -14,28 +14,51 @@ type EventRow = {
 
 export default async function EventosSection() {
 
-  const events = (await findAllEvents()) as EventRow[]
+  let events: EventRow[] = []
+  let dbError = false
+
+  try {
+    events = (await findAllEvents()) as EventRow[]
+  } catch (err) {
+    dbError = true
+    console.error("[EventosSection] DB fetch failed:", err instanceof Error ? err.message : err)
+  }
 
   return (
-    <section id="programacion" className="py-24 px-6 max-w-6xl mx-auto space-y-16">
+    <section id="programacion" className="solaris-vinyl-texture py-24 px-6">
 
-      <h2 className="editorial-h2 text-center">
-        Programación
-      </h2>
+      <div className="max-w-6xl mx-auto space-y-16">
 
-      <div className="grid md:grid-cols-3 gap-10">
+        <h2 className="editorial-h2 text-center">
+          Programación
+        </h2>
 
-        {events.map((event) => (
-          <EventCardFestival
-            key={event.id}
-            id={event.id}
-            title={event.title}
-            highlight={event.highlight}
-            ticketUrl={event.ticketUrl}
-            logo={event.logo ?? undefined}
-            eventDate={event.event_date ?? undefined}
-          />
-        ))}
+        {dbError ? (
+          <p className="text-center text-neutral-500 py-12">
+            La programación se actualizará próximamente.
+          </p>
+        ) : events.length === 0 ? (
+          <p className="text-center text-neutral-500 py-12">
+            No hay eventos programados en este momento.
+          </p>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-10">
+
+            {events.map((event, index) => (
+              <EventCardFestival
+                key={event.id}
+                id={event.id}
+                title={event.title}
+                highlight={event.highlight}
+                ticketUrl={event.ticketUrl}
+                logo={event.logo ?? undefined}
+                eventDate={event.event_date ?? undefined}
+                colorIndex={index}
+              />
+            ))}
+
+          </div>
+        )}
 
       </div>
 

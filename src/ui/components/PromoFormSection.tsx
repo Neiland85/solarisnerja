@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import Link from "next/link"
-import { trackLead } from "@/lib/tracking"
+import { trackEvent } from "@/lib/tracking"
 
 type FormState = "cta" | "rgpd" | "form" | "success" | "error"
 
@@ -38,7 +38,7 @@ export default function PromoFormSection() {
 
       if (!res.ok) throw new Error("fetch failed")
 
-      trackLead("promo-entradas-2x1", email)
+      trackEvent("lead", { email })
       setState("success")
     } catch {
       setState("error")
@@ -52,7 +52,6 @@ export default function PromoFormSection() {
     return (
       <section className="py-20 px-6 bg-black text-white">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-
           <p className="text-xs font-medium tracking-[0.3em] uppercase opacity-50">
             Promoción verano 2026
           </p>
@@ -72,7 +71,6 @@ export default function PromoFormSection() {
           <p className="text-sm opacity-50 max-w-md mx-auto leading-relaxed">
             Consigue acceso a promociones exclusivas del festival
           </p>
-
         </div>
       </section>
     )
@@ -83,7 +81,6 @@ export default function PromoFormSection() {
     return (
       <section className="py-20 px-6 bg-black text-white">
         <div className="max-w-2xl mx-auto space-y-8">
-
           <div className="text-center space-y-3">
             <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
               Consigue entradas gratuitas y 2x1 en nuestras promociones de verano
@@ -91,29 +88,32 @@ export default function PromoFormSection() {
           </div>
 
           <div className="border border-white/20 p-6 md:p-8 space-y-5 text-sm leading-relaxed opacity-80">
-
             <p className="text-base font-medium text-white opacity-100">
               Protección de tus datos personales
             </p>
 
             <p>
-              En Solaris Nerja nos comprometemos a proteger tu privacidad.
-              Antes de continuar, queremos que sepas exactamente cómo tratamos tus datos:
+              En Solaris Nerja nos comprometemos a proteger tu privacidad. Antes de
+              continuar, queremos que sepas exactamente cómo tratamos tus datos:
             </p>
 
             <ul className="space-y-3 ml-1">
               <li className="flex gap-3">
                 <span className="shrink-0 mt-0.5 text-white opacity-100">&#10003;</span>
                 <span>
-                  <strong className="text-white opacity-100">No vendemos ni compartimos tus datos</strong> con
-                  empresas externas, anunciantes ni terceros con fines comerciales.
+                  <strong className="text-white opacity-100">
+                    No vendemos ni compartimos tus datos
+                  </strong>{" "}
+                  con empresas externas, anunciantes ni terceros con fines comerciales.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="shrink-0 mt-0.5 text-white opacity-100">&#10003;</span>
                 <span>
-                  <strong className="text-white opacity-100">Solo usamos cookies técnicas y analíticas</strong> para
-                  mejorar tu experiencia de navegación. Las cookies de marketing
+                  <strong className="text-white opacity-100">
+                    Solo usamos cookies técnicas y analíticas
+                  </strong>{" "}
+                  para mejorar tu experiencia de navegación. Las cookies de marketing
                   (Facebook Pixel, Google Analytics) solo se activan si tú las aceptas
                   expresamente en el banner de cookies.
                 </span>
@@ -121,30 +121,38 @@ export default function PromoFormSection() {
               <li className="flex gap-3">
                 <span className="shrink-0 mt-0.5 text-white opacity-100">&#10003;</span>
                 <span>
-                  <strong className="text-white opacity-100">Tus datos se almacenan de forma segura</strong> en
-                  servidores europeos (Supabase/Vercel EU) con cifrado en tránsito y en reposo.
+                  <strong className="text-white opacity-100">
+                    Tus datos se almacenan de forma segura
+                  </strong>{" "}
+                  en servidores europeos (Supabase/Vercel EU) con cifrado en tránsito y en
+                  reposo.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="shrink-0 mt-0.5 text-white opacity-100">&#10003;</span>
                 <span>
-                  <strong className="text-white opacity-100">Usaremos tu email y teléfono únicamente</strong> para
-                  enviarte las promociones de entradas gratis y 2x1 del festival Solaris Nerja 2026.
+                  <strong className="text-white opacity-100">
+                    Usaremos tu email y teléfono únicamente
+                  </strong>{" "}
+                  para enviarte las promociones de entradas gratis y 2x1 del festival
+                  Solaris Nerja 2026.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="shrink-0 mt-0.5 text-white opacity-100">&#10003;</span>
                 <span>
-                  Puedes <strong className="text-white opacity-100">retirar tu consentimiento, acceder, rectificar
-                  o eliminar tus datos</strong> en cualquier momento contactándonos
-                  o ejerciendo tus derechos RGPD.
+                  Puedes{" "}
+                  <strong className="text-white opacity-100">
+                    retirar tu consentimiento, acceder, rectificar o eliminar tus datos
+                  </strong>{" "}
+                  en cualquier momento contactándonos o ejerciendo tus derechos RGPD.
                 </span>
               </li>
             </ul>
 
             <p className="text-xs opacity-60">
-              Base legal: art. 6.1.a RGPD (consentimiento explícito).
-              Responsable: Solaris Nerja.{" "}
+              Base legal: art. 6.1.a RGPD (consentimiento explícito). Responsable: Solaris
+              Nerja.{" "}
               <Link href="/privacidad" className="underline hover:opacity-100 transition">
                 Política de privacidad completa
               </Link>
@@ -169,7 +177,6 @@ export default function PromoFormSection() {
               Volver
             </button>
           </div>
-
         </div>
       </section>
     )
@@ -180,7 +187,6 @@ export default function PromoFormSection() {
     return (
       <section className="py-20 px-6 bg-black text-white">
         <div className="max-w-xl mx-auto space-y-8">
-
           <div className="text-center space-y-3">
             <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
               Consigue entradas gratuitas y 2x1
@@ -191,10 +197,12 @@ export default function PromoFormSection() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-
             {/* Nombre */}
             <div className="space-y-1.5">
-              <label htmlFor="promo-name" className="text-xs font-medium tracking-wide uppercase opacity-70">
+              <label
+                htmlFor="promo-name"
+                className="text-xs font-medium tracking-wide uppercase opacity-70"
+              >
                 Nombre *
               </label>
               <input
@@ -212,7 +220,10 @@ export default function PromoFormSection() {
 
             {/* Apellidos */}
             <div className="space-y-1.5">
-              <label htmlFor="promo-surname" className="text-xs font-medium tracking-wide uppercase opacity-70">
+              <label
+                htmlFor="promo-surname"
+                className="text-xs font-medium tracking-wide uppercase opacity-70"
+              >
                 Apellidos *
               </label>
               <input
@@ -230,7 +241,10 @@ export default function PromoFormSection() {
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label htmlFor="promo-email" className="text-xs font-medium tracking-wide uppercase opacity-70">
+              <label
+                htmlFor="promo-email"
+                className="text-xs font-medium tracking-wide uppercase opacity-70"
+              >
                 Email *
               </label>
               <input
@@ -248,7 +262,10 @@ export default function PromoFormSection() {
 
             {/* Teléfono */}
             <div className="space-y-1.5">
-              <label htmlFor="promo-phone" className="text-xs font-medium tracking-wide uppercase opacity-70">
+              <label
+                htmlFor="promo-phone"
+                className="text-xs font-medium tracking-wide uppercase opacity-70"
+              >
                 Teléfono *
               </label>
               <input
@@ -266,7 +283,10 @@ export default function PromoFormSection() {
 
             {/* Oficio (opcional) */}
             <div className="space-y-1.5">
-              <label htmlFor="promo-profession" className="text-xs font-medium tracking-wide uppercase opacity-70">
+              <label
+                htmlFor="promo-profession"
+                className="text-xs font-medium tracking-wide uppercase opacity-70"
+              >
                 Oficio <span className="opacity-50">(opcional)</span>
               </label>
               <input
@@ -309,7 +329,6 @@ export default function PromoFormSection() {
                 política de privacidad
               </Link>
             </p>
-
           </form>
         </div>
       </section>
@@ -326,8 +345,8 @@ export default function PromoFormSection() {
             ¡Estás dentro!
           </h3>
           <p className="text-sm opacity-60 max-w-md mx-auto leading-relaxed">
-            Recibirás en tu email las promociones de entradas gratis y 2x1
-            para Solaris Nerja 2026. Revisa tu bandeja de entrada.
+            Recibirás en tu email las promociones de entradas gratis y 2x1 para Solaris
+            Nerja 2026. Revisa tu bandeja de entrada.
           </p>
         </div>
       </section>
@@ -339,9 +358,7 @@ export default function PromoFormSection() {
     <section className="py-20 px-6 bg-black text-white">
       <div className="max-w-xl mx-auto text-center space-y-6">
         <p className="text-4xl">&#9888;&#65039;</p>
-        <h3 className="text-2xl font-bold tracking-tight">
-          Ha ocurrido un error
-        </h3>
+        <h3 className="text-2xl font-bold tracking-tight">Ha ocurrido un error</h3>
         <p className="text-sm opacity-60">
           No hemos podido procesar tu solicitud. Inténtalo de nuevo.
         </p>
@@ -355,4 +372,8 @@ export default function PromoFormSection() {
       </div>
     </section>
   )
+}
+
+export function trackLead(data: Record<string, unknown>) {
+  trackEvent("lead", data)
 }
