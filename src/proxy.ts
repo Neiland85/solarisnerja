@@ -19,7 +19,7 @@ function isAdminAuthenticated(req: NextRequest): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const requestId = crypto.randomUUID()
   const origin = req.headers.get("origin")
   const { pathname } = req.nextUrl
