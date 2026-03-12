@@ -89,7 +89,12 @@ export async function verifySignedToken(token: string): Promise<SignedPayload | 
     const signatureBytes = fromBase64Url(signatureB64)
 
     const key = await getSigningKey()
-    const valid = await crypto.subtle.verify("HMAC", key, signatureBytes, payloadBytes)
+    const valid = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      signatureBytes.buffer as ArrayBuffer,
+      payloadBytes.buffer as ArrayBuffer,
+    )
     if (!valid) return null
 
     const dec = new TextDecoder()
