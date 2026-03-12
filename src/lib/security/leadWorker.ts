@@ -1,5 +1,6 @@
 import { getPool } from "@/adapters/db/pool"
-import { dequeueLead } from "./burstQueue"
+import { dequeueLead } from "./queueFacade"
+import * as Sentry from "@sentry/nextjs"
 
 let running = false
 
@@ -11,7 +12,7 @@ export async function processLeadQueue() {
 
   try {
 
-    const lead = dequeueLead()
+    const lead = await dequeueLead()
 
     if (!lead) {
       running = false
@@ -49,6 +50,7 @@ export async function processLeadQueue() {
   } catch (err) {
 
     console.error("lead worker error", err)
+    Sentry.captureException(err, { tags: { module: "leadWorker" } })
 
   } finally {
 

@@ -5,7 +5,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "author": "Neiland85 <bookingnadarecords@gmail.com>",
   "scripts": {
-    "verify": "pnpm lint && pnpm test && pnpm build",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "audit:prod": "pnpm audit --prod --audit-level=moderate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -18,6 +19,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.43.0",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
     "ioredis": "^5.10.0",
@@ -35,7 +37,11 @@
     }
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
@@ -43,6 +49,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-tailwindcss": "^3.18.2",
+    "jsdom": "^28.1.0",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
     "typescript": "^5",
