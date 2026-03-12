@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { timingSafeEqual } from "node:crypto"
 import { _getClientIp } from "@/lib/ip"
-import { createSession } from "@/lib/auth/sessionStore"
+import { createSessionAsync } from "@/lib/auth/sessionStore"
 import { audit } from "@/lib/observability/auditLog"
 
 const LOGIN_WINDOW_MS = 60_000
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
   loginAttempts.delete(ip)
 
-  const session = createSession()
+  const session = await createSessionAsync()
   audit({ action: "admin.login", ip, actor: "admin" })
   const response = NextResponse.json({ success: true })
 

@@ -207,6 +207,36 @@ export function getMetrics(): GlobalSnapshot {
 }
 
 /**
+ * Emite snapshot completo de métricas a stdout como structured JSON.
+ * Llamar periódicamente o antes de shutdown para persistir en log drain.
+ * Compatible con Vercel log drain, CloudWatch, Loki, Datadog.
+ */
+export function flushMetricsToStdout(): void {
+  if (store.size === 0) return
+
+  const snapshot = getMetrics()
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: "info",
+    event: "metrics.flush",
+    uptime: snapshot.uptime,
+    totalRequests: snapshot.totalRequests,
+    totalErrors: snapshot.totalErrors,
+    globalErrorRate: snapshot.globalErrorRate,
+    routeCount: snapshot.routes.length,
+    routes: snapshot.routes.map((r) => ({
+      route: r.route,
+      requests: r.requests,
+      errors: r.errors,
+      errorRate: r.errorRate,
+      avgMs: r.avgMs,
+      p95Ms: r.p95Ms,
+      p99Ms: r.p99Ms,
+    })),
+  }))
+}
+
+/**
  * Resetea todas las métricas. Útil para tests.
  */
 export function resetMetrics(): void {
