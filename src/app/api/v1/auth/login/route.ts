@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { timingSafeEqual } from "node:crypto"
 import { _getClientIp } from "@/lib/ip"
 import { createSession } from "@/lib/auth/sessionStore"
+import { audit } from "@/lib/observability/auditLog"
 
 const LOGIN_WINDOW_MS = 60_000
 const MAX_ATTEMPTS = 5
@@ -35,12 +36,14 @@ export async function POST(req: NextRequest) {
     } else {
       current.count++
     }
+    audit({ action: "admin.login_failed", ip, details: { reason: "bad_password" } })
     return NextResponse.json({ error: "unauthorized" }, { status: 401 })
   }
 
   loginAttempts.delete(ip)
 
   const session = createSession()
+  audit({ action: "admin.login", ip, actor: "admin" })
   const response = NextResponse.json({ success: true })
 
   response.cookies.set("admin_session", session.token, {

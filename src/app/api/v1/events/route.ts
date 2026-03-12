@@ -7,6 +7,8 @@ import { findAllEvents, saveEvent } from "@/adapters/db/event-repository"
 import { requireAdmin } from "@/lib/auth/requireAdmin"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
+import * as Sentry from "@sentry/nextjs"
+import { audit } from "@/lib/observability/auditLog"
 
 type CreateInput = {
   title: string
@@ -31,6 +33,7 @@ export async function GET(req: NextRequest) {
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : String(error)
     log("error", "events_list_error", { requestId, error: errMsg })
+    Sentry.captureException(error, { tags: { route: "/api/v1/events", method: "GET" } })
 
     return problem({
       type: "https://www.solarisnerja.com/problems/internal",
@@ -74,11 +77,13 @@ export async function POST(req: NextRequest) {
     await saveEvent(event)
 
     log("info", "event_created", { requestId, eventId: event.id })
+    audit({ action: "event.create", req, resource: event.id, details: { title: body.title } })
 
     return NextResponse.json({ data: event }, { status: 201 })
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : String(error)
     log("error", "event_create_error", { requestId, error: errMsg })
+    Sentry.captureException(error, { tags: { route: "/api/v1/events", method: "POST" } })
 
     return problem({
       type: "https://www.solarisnerja.com/problems/internal",

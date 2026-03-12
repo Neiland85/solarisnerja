@@ -24,10 +24,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm audit --prod
-        continue-on-error: true
+      - name: Security audit (prod dependencies)
+        run: pnpm audit --prod --audit-level=moderate
 
       - run: pnpm lint
+
+      - run: pnpm typecheck
 
       - run: pnpm test
 

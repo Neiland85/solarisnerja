@@ -130,6 +130,21 @@ export function recordRequest(
   if (statusCode >= 400) {
     m.errors++
   }
+
+  // Structured JSON log para errores y requests lentas (>2s)
+  // Compatible con Vercel log drain, CloudWatch, Loki, Datadog
+  if (statusCode >= 500 || durationMs > 2000) {
+    console.log(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      level: statusCode >= 500 ? "error" : "warn",
+      event: "metrics.request",
+      route,
+      statusCode,
+      durationMs: Math.round(durationMs),
+      totalRequests: m.count,
+      errorRate: m.count > 0 ? ((m.errors / m.count) * 100).toFixed(1) + "%" : "0%",
+    }))
+  }
 }
 
 /**

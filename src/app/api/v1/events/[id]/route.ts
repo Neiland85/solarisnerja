@@ -7,6 +7,8 @@ import { findEventById, updateEvent, deleteEvent } from "@/adapters/db/event-rep
 import { requireAdmin } from "@/lib/auth/requireAdmin"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
+import * as Sentry from "@sentry/nextjs"
+import { audit } from "@/lib/observability/auditLog"
 
 const ajv = new Ajv2020()
 addFormats(ajv)
@@ -36,6 +38,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : String(error)
     log("error", "event_get_error", { requestId, error: errMsg })
+    Sentry.captureException(error, { tags: { route: `/api/v1/events/${id}`, method: "GET" } })
 
     return problem({
       type: "https://www.solarisnerja.com/problems/internal",
@@ -85,11 +88,13 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     await updateEvent(updated)
 
     log("info", "event_updated", { requestId, eventId: id })
+    audit({ action: "event.update", req, resource: id })
 
     return NextResponse.json({ data: updated })
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : String(error)
     log("error", "event_update_error", { requestId, error: errMsg })
+    Sentry.captureException(error, { tags: { route: `/api/v1/events/${id}`, method: "PATCH" } })
 
     return problem({
       type: "https://www.solarisnerja.com/problems/internal",
@@ -124,11 +129,13 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
     }
 
     log("info", "event_deleted", { requestId, eventId: id })
+    audit({ action: "event.delete", req, resource: id })
 
     return new NextResponse(null, { status: 204 })
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : String(error)
     log("error", "event_delete_error", { requestId, error: errMsg })
+    Sentry.captureException(error, { tags: { route: `/api/v1/events/${id}`, method: "DELETE" } })
 
     return problem({
       type: "https://www.solarisnerja.com/problems/internal",
