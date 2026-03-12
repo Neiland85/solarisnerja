@@ -1,7 +1,10 @@
 import { randomUUID } from "node:crypto"
+import type { Role } from "./rbac"
 
 export interface Session {
   token: string
+  role: Role
+  userId?: string
   createdAt: number
   expiresAt: number
 }
@@ -20,7 +23,9 @@ function purgeExpired(): void {
   }
 }
 
-export function createSession(): Session {
+export function createSession(
+  opts: { role?: Role; userId?: string } = {}
+): Session {
   purgeExpired()
 
   // Evict oldest if at capacity
@@ -34,6 +39,8 @@ export function createSession(): Session {
   const now = Date.now()
   const session: Session = {
     token: randomUUID(),
+    role: opts.role ?? "admin",
+    userId: opts.userId,
     createdAt: now,
     expiresAt: now + SESSION_TTL_MS,
   }
@@ -56,6 +63,13 @@ export function validateSession(token: string | undefined): boolean {
   }
 
   return true
+}
+
+export function getSessionRole(token: string | undefined): Role | null {
+  if (!token) return null
+  const session = sessions.get(token)
+  if (!session || Date.now() >= session.expiresAt) return null
+  return session.role
 }
 
 export function destroySession(token: string | undefined): void {

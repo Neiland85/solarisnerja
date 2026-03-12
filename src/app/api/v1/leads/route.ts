@@ -6,12 +6,22 @@ import { _getClientIp, _isValidIp } from "@/lib/ip"
 import { log } from "@/lib/logger"
 import { verifyCsrf } from "@/lib/security/verifyCsrf"
 import { hashIp } from "@/lib/security/hashIp"
+import { rateLimit } from "@/lib/rate-limit"
 
 export { _getClientIp, _isValidIp }
 
 export async function POST(req: NextRequest) {
 
   try {
+
+    const rawIpForRl = _getClientIp(req)
+    const allowed = await rateLimit(rawIpForRl)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "too many requests" },
+        { status: 429 }
+      )
+    }
 
     if (!verifyCsrf(req)) {
       return NextResponse.json(
