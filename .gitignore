@@ -23,8 +23,22 @@ yarn-error.log*
 .vercel
 .env*.local
 
-# Previews
+# Previews / temp artifacts
 vinyl-preview.html
+*.tmp
+*.patch
+
+# Scripts de fix one-off
+fix-*.sh
+deploy-*.sh
+
+# Audit artifacts (keep in local, not in repo)
+*.pdf
+AUDIT-*.md
+PERFORMANCE-*.md
+SECURITY-*.md
+PRODUCTION-*.md
+IMAGE-EXPORT-GUIDE.md
 
 # Claude worktrees
 .claude
