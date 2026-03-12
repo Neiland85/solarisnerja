@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { verifySignedToken, looksLikeSignedToken } from "@/lib/auth/signedSession"
 
 const ALLOWED_ORIGINS = new Set([
   "https://www.solarisnerja.com",
   "https://solarisnerja.com",
 ])
+
+const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false
@@ -12,28 +15,41 @@ function isAllowedOrigin(origin: string | null): boolean {
   return ALLOWED_ORIGINS.has(origin)
 }
 
-function isAdminAuthenticated(req: NextRequest): boolean {
+/**
+ * Verifica autenticación admin.
+ *
+ * Signed token (producción): verifica HMAC + expiración en edge.
+ * UUID token (desarrollo sin SESSION_SECRET): solo valida formato.
+ */
+async function isAdminAuthenticated(req: NextRequest): Promise<boolean> {
   const token = req.cookies.get("admin_session")?.value
   if (!token) return false
-  // Validate token format (UUID v4) — actual session lookup happens in route handlers
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)
+
+  // Signed token — verify HMAC + expiry at edge
+  if (looksLikeSignedToken(token)) {
+    const payload = await verifySignedToken(token)
+    return payload !== null
+  }
+
+  // Legacy UUID token (dev mode without SESSION_SECRET)
+  return UUID_V4_RE.test(token)
 }
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const requestId = crypto.randomUUID()
   const origin = req.headers.get("origin")
   const { pathname } = req.nextUrl
 
   // --- Dashboard pages: redirect to login if not authenticated ---
   if (pathname.startsWith("/dashboard")) {
-    if (!isAdminAuthenticated(req)) {
+    if (!(await isAdminAuthenticated(req))) {
       return NextResponse.redirect(new URL("/login", req.url))
     }
   }
 
   // --- Admin API: return 403 if not authenticated ---
   if (pathname.startsWith("/api/admin/")) {
-    if (!isAdminAuthenticated(req)) {
+    if (!(await isAdminAuthenticated(req))) {
       return NextResponse.json({ error: "unauthorized" }, { status: 403 })
     }
   }
@@ -48,9 +64,9 @@ export function proxy(req: NextRequest) {
       status: 204,
       headers: {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PATCH, DELETE",
-        "Access-Control-Allow-Headers": "Content-Type, x-request-id",
-        "Access-Control-Max-Age": "86400",
+        "Access-Control-Allow-Headers": "Content-Type, x-request-id, idempotency-key",
         "Access-Control-Allow-Origin": origin,
+        "Access-Control-Max-Age": "86400",
         "x-request-id": requestId,
       },
     })
