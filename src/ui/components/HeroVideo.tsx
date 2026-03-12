@@ -29,7 +29,7 @@ export default function HeroVideo(){
           </p>
 
           <a
-            href="#eventos"
+            href="#programacion"
             className="inline-block px-10 py-4 bg-white text-black text-lg font-medium rounded-full hover:bg-neutral-200 transition"
           >
             ENTRADAS
