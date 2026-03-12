@@ -1,7 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
-import { rateLimit, _resetStore, _getStoreSize, _getCleanupEvery } from "./rate-limit"
+import {
+  rateLimit as rateLimitLocal,
+  _resetStore,
+  _getStoreSize,
+  _getCleanupEvery,
+} from "./rateLimitLocal"
 
-describe("rateLimit", () => {
+/**
+ * These tests exercise the in-memory (local) rate limiter directly.
+ * The unified async wrapper in rate-limit.ts delegates to this module
+ * when REDIS_URL is not configured.
+ */
+describe("rateLimitLocal", () => {
   beforeEach(() => {
     _resetStore()
     vi.useFakeTimers()
@@ -15,9 +25,9 @@ describe("rateLimit", () => {
   it("allows requests until limit is reached", () => {
     const ip = "1.2.3.4"
     for (let i = 0; i < 20; i++) {
-      expect(rateLimit(ip)).toBe(true)
+      expect(rateLimitLocal(ip)).toBe(true)
     }
-    expect(rateLimit(ip)).toBe(false)
+    expect(rateLimitLocal(ip)).toBe(false)
   })
 
   it("tracks IPs independently", () => {
@@ -25,11 +35,11 @@ describe("rateLimit", () => {
     const ipB = "10.0.0.2"
 
     for (let i = 0; i < 20; i++) {
-      rateLimit(ipA)
+      rateLimitLocal(ipA)
     }
 
-    expect(rateLimit(ipA)).toBe(false)
-    expect(rateLimit(ipB)).toBe(true)
+    expect(rateLimitLocal(ipA)).toBe(false)
+    expect(rateLimitLocal(ipB)).toBe(true)
   })
 
   describe("window expiration", () => {
@@ -38,25 +48,25 @@ describe("rateLimit", () => {
 
       // Fill up to the limit
       for (let i = 0; i < 20; i++) {
-        expect(rateLimit(ip)).toBe(true)
+        expect(rateLimitLocal(ip)).toBe(true)
       }
 
       // Next request is blocked
-      expect(rateLimit(ip)).toBe(false)
+      expect(rateLimitLocal(ip)).toBe(false)
 
       // Advance time by 59 seconds - still blocked
       vi.advanceTimersByTime(59 * 1000)
-      expect(rateLimit(ip)).toBe(false)
+      expect(rateLimitLocal(ip)).toBe(false)
 
       // Advance more than 1 second to ensure > 60000ms has passed
       vi.advanceTimersByTime(1500)
 
       // Now new requests are allowed
-      expect(rateLimit(ip)).toBe(true)
+      expect(rateLimitLocal(ip)).toBe(true)
       for (let i = 1; i < 20; i++) {
-        expect(rateLimit(ip)).toBe(true)
+        expect(rateLimitLocal(ip)).toBe(true)
       }
-      expect(rateLimit(ip)).toBe(false)
+      expect(rateLimitLocal(ip)).toBe(false)
     })
 
     it("allows new IPs within the same window", () => {
@@ -64,17 +74,17 @@ describe("rateLimit", () => {
 
       // Use up the limit for the first IP
       for (let i = 0; i < 20; i++) {
-        rateLimit(ip)
+        rateLimitLocal(ip)
       }
 
       // Advance 30 seconds (still within 60-second window)
       vi.advanceTimersByTime(30 * 1000)
 
       // A different IP should still be allowed
-      expect(rateLimit("192.168.1.2")).toBe(true)
+      expect(rateLimitLocal("192.168.1.2")).toBe(true)
 
       // But the original IP remains blocked
-      expect(rateLimit(ip)).toBe(false)
+      expect(rateLimitLocal(ip)).toBe(false)
     })
 
     it("prunes expired entries on access using sampled cleanup", () => {
@@ -84,7 +94,7 @@ describe("rateLimit", () => {
 
       const countedCall = (ip: string) => {
         calls++
-        rateLimit(ip)
+        rateLimitLocal(ip)
       }
 
       countedCall(ipA)
@@ -116,7 +126,7 @@ describe("rateLimit", () => {
       // Fill the store with 10,000 entries
       for (let i = 0; i < 10000; i++) {
         const ip = `192.168.1.${i}`
-        rateLimit(ip)
+        rateLimitLocal(ip)
       }
 
       // Store should be at capacity
@@ -126,15 +136,15 @@ describe("rateLimit", () => {
       const newIp = "10.0.0.1"
 
       // The first IP had one request, verify new IP can be added
-      expect(rateLimit(newIp)).toBe(true)
+      expect(rateLimitLocal(newIp)).toBe(true)
 
       // The store should have evicted the oldest entry (first IP)
       // We can't directly check this, but we can verify the new IP was added
       // by making many requests to it and seeing it behaves normally
       for (let i = 1; i < 20; i++) {
-        expect(rateLimit(newIp)).toBe(true)
+        expect(rateLimitLocal(newIp)).toBe(true)
       }
-      expect(rateLimit(newIp)).toBe(false)
+      expect(rateLimitLocal(newIp)).toBe(false)
     })
 
     it("handles rapid evictions under high load", () => {
@@ -147,13 +157,13 @@ describe("rateLimit", () => {
       // Make requests from all IPs multiple times
       for (let batch = 0; batch < 22; batch++) {
         for (const ip of ips) {
-          rateLimit(ip)
+          rateLimitLocal(ip)
         }
       }
 
       // Add one more IP - should work despite high load
       const crashTestIp = "10.0.0.1"
-      expect(rateLimit(crashTestIp)).toBe(true)
+      expect(rateLimitLocal(crashTestIp)).toBe(true)
     })
   })
 
@@ -164,7 +174,7 @@ describe("rateLimit", () => {
       // Make 5 sequential requests and track the counter implicitly
       const results: boolean[] = []
       for (let i = 0; i < 5; i++) {
-        results.push(rateLimit(ip))
+        results.push(rateLimitLocal(ip))
       }
 
       // All 5 should succeed
@@ -172,11 +182,11 @@ describe("rateLimit", () => {
 
       // Next 15 should also succeed (reaching limit of 20)
       for (let i = 0; i < 15; i++) {
-        expect(rateLimit(ip)).toBe(true)
+        expect(rateLimitLocal(ip)).toBe(true)
       }
 
       // The 21st should fail
-      expect(rateLimit(ip)).toBe(false)
+      expect(rateLimitLocal(ip)).toBe(false)
     })
 
     it("maintains accurate count with interleaved IPs", () => {
@@ -186,26 +196,57 @@ describe("rateLimit", () => {
 
       // Make interleaved requests
       for (let i = 0; i < 10; i++) {
-        expect(rateLimit(ipA)).toBe(true)
-        expect(rateLimit(ipB)).toBe(true)
-        expect(rateLimit(ipC)).toBe(true)
+        expect(rateLimitLocal(ipA)).toBe(true)
+        expect(rateLimitLocal(ipB)).toBe(true)
+        expect(rateLimitLocal(ipC)).toBe(true)
       }
 
       // Complete limits for A and B
       for (let i = 10; i < 20; i++) {
-        expect(rateLimit(ipA)).toBe(true)
-        expect(rateLimit(ipB)).toBe(true)
+        expect(rateLimitLocal(ipA)).toBe(true)
+        expect(rateLimitLocal(ipB)).toBe(true)
       }
 
       // A and B should be blocked
-      expect(rateLimit(ipA)).toBe(false)
-      expect(rateLimit(ipB)).toBe(false)
+      expect(rateLimitLocal(ipA)).toBe(false)
+      expect(rateLimitLocal(ipB)).toBe(false)
 
       // But C should still have requests available
       for (let i = 10; i < 20; i++) {
-        expect(rateLimit(ipC)).toBe(true)
+        expect(rateLimitLocal(ipC)).toBe(true)
       }
-      expect(rateLimit(ipC)).toBe(false)
+      expect(rateLimitLocal(ipC)).toBe(false)
     })
+  })
+})
+
+describe("rateLimit (unified facade)", () => {
+  beforeEach(() => {
+    _resetStore()
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.useRealTimers()
+  })
+
+  it("falls back to local when REDIS_URL is not set", async () => {
+    // Dynamic import to get the facade
+    const { rateLimit } = await import("./rate-limit")
+
+    const ip = "10.0.0.1"
+    const result = await rateLimit(ip)
+    expect(result).toBe(true)
+  })
+
+  it("rateLimitSync always uses local store", async () => {
+    const { rateLimitSync } = await import("./rate-limit")
+
+    const ip = "10.0.0.1"
+    for (let i = 0; i < 20; i++) {
+      expect(rateLimitSync(ip)).toBe(true)
+    }
+    expect(rateLimitSync(ip)).toBe(false)
   })
 })
