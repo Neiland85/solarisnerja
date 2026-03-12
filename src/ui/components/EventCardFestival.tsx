@@ -1,4 +1,5 @@
 import Image from "next/image"
+import VinylButton from "@/ui/components/VinylButton"
 
 type Props = {
   id: string
@@ -7,6 +8,7 @@ type Props = {
   ticketUrl: string
   logo?: string | null
   eventDate?: string | null
+  colorIndex?: number
 }
 
 export default function EventCardFestival({
@@ -15,15 +17,16 @@ export default function EventCardFestival({
   highlight,
   ticketUrl,
   logo,
-  eventDate
+  eventDate,
+  colorIndex = 0
 }: Props) {
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
 
   return (
-    <div className="border border-[var(--sn-border)] bg-white p-6 space-y-6">
+    <div className="border border-[var(--sn-border)] bg-white p-6 space-y-6 flex flex-col items-center text-center">
 
       {logo && (
-        <div className="h-20 relative">
+        <div className="h-20 w-full relative">
           <Image
             src={logo}
             alt={title}
@@ -53,14 +56,11 @@ export default function EventCardFestival({
       </div>
 
       {hasRealUrl ? (
-        <a
+        <VinylButton
+          artistName={title}
           href={ticketUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block border-2 border-black px-6 py-2 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
-        >
-          comprar entradas
-        </a>
+          colorIndex={colorIndex}
+        />
       ) : (
         <a
           href={`/eventos/${id}`}
