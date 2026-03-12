@@ -1,4 +1,5 @@
 import { findAllEvents } from "@/adapters/db/event-repository"
+import { EVENTS } from "@/config/events"
 import EventCardFestival from "@/ui/components/EventCardFestival"
 
 export const dynamic = "force-dynamic"
@@ -12,16 +13,30 @@ type EventRow = {
   event_date?: string | null
 }
 
+function configToEventRows(): EventRow[] {
+  return EVENTS.map((e) => ({
+    id: e.id,
+    title: e.title,
+    highlight: e.highlight,
+    ticketUrl: e.ticketUrl,
+    logo: e.logo ?? null,
+    event_date: e.date ?? e.time ?? null,
+  }))
+}
+
 export default async function EventosSection() {
 
   let events: EventRow[] = []
-  let dbError = false
 
   try {
     events = (await findAllEvents()) as EventRow[]
   } catch (err) {
-    dbError = true
-    console.error("[EventosSection] DB fetch failed:", err instanceof Error ? err.message : err)
+    console.error("[EventosSection] DB unavailable, using config fallback:", err instanceof Error ? err.message : err)
+    events = configToEventRows()
+  }
+
+  if (events.length === 0) {
+    events = configToEventRows()
   }
 
   return (
@@ -33,32 +48,22 @@ export default async function EventosSection() {
           Programación
         </h2>
 
-        {dbError ? (
-          <p className="text-center text-neutral-500 py-12">
-            La programación se actualizará próximamente.
-          </p>
-        ) : events.length === 0 ? (
-          <p className="text-center text-neutral-500 py-12">
-            No hay eventos programados en este momento.
-          </p>
-        ) : (
-          <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-3 gap-10">
 
-            {events.map((event, index) => (
-              <EventCardFestival
-                key={event.id}
-                id={event.id}
-                title={event.title}
-                highlight={event.highlight}
-                ticketUrl={event.ticketUrl}
-                logo={event.logo ?? undefined}
-                eventDate={event.event_date ?? undefined}
-                colorIndex={index}
-              />
-            ))}
+          {events.map((event, index) => (
+            <EventCardFestival
+              key={event.id}
+              id={event.id}
+              title={event.title}
+              highlight={event.highlight}
+              ticketUrl={event.ticketUrl}
+              logo={event.logo ?? undefined}
+              eventDate={event.event_date ?? undefined}
+              colorIndex={index}
+            />
+          ))}
 
-          </div>
-        )}
+        </div>
 
       </div>
 
