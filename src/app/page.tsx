@@ -22,7 +22,7 @@ export default function HomePage(){
 
       <PromoFormSection />
 
-      <div className="flex justify-center py-10 bg-[#0A0E1A]">
+      <div className="flex flex-col items-center py-10 bg-[#0A0E1A]">
         <Image
           src="/logo-solaris.png"
           alt="Solaris Nerja"
@@ -31,6 +31,9 @@ export default function HomePage(){
           sizes="120px"
           className="opacity-80 hover:opacity-100 transition-opacity duration-300"
         />
+        <div className="site-credit">
+          <span>Website Code by Clarity Structures Digital S.L.</span>
+        </div>
       </div>
 
     </main>
