@@ -1,5 +1,5 @@
 import Image from "next/image"
-import VinylButton from "@/ui/components/VinylButton"
+import SunriseButton from "@/ui/components/SunriseButton"
 
 type Props = {
   id: string
@@ -47,7 +47,7 @@ export default function EventCardFestival({
 
       {hasRealUrl ? (
         <>
-          <VinylButton artistName={title} href={ticketUrl} colorIndex={colorIndex} />
+          <SunriseButton artistName={title} href={ticketUrl} colorIndex={colorIndex} />
           <a
             href={ticketUrl}
             target="_blank"
