@@ -75,7 +75,7 @@ export default function EventCardFestival({
         </>
       ) : (
         <a
-          href={`/eventos/${id}`}
+          href={`/eventos/${encodeURIComponent(id)}`}
           className="inline-block border-2 border-black/30 px-6 py-2 text-sm font-medium tracking-wide text-black/50 hover:border-black hover:text-black transition"
         >
           más información

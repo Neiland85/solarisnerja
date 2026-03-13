@@ -19,6 +19,7 @@ const securityHeaders = [
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https:",
       "connect-src 'self' https://*.sentry.io https://vercel.live https://*.supabase.co wss://*.supabase.co",
+      "frame-src https://www.google.com https://maps.google.com https://*.ticketmaster.com https://vercel.live",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
