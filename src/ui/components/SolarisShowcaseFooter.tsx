@@ -117,17 +117,11 @@ const STARS = Array.from({ length: 25 }, (_, i) => ({
   left: `${3 + ((i * 7.3) % 94)}%`,
 }))
 
-function useIsTouchDevice() {
-  const ref = useRef(false)
-  useEffect(() => {
-    ref.current = "ontouchstart" in window || navigator.maxTouchPoints > 0
-  }, [])
-  return ref
-}
-
 export default function SolarisShowcaseFooter() {
   const [isVisible, setIsVisible] = useState(false)
-  const isTouchRef = useIsTouchDevice()
+  const [isTouch] = useState(
+    () => typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0),
+  )
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -141,9 +135,9 @@ export default function SolarisShowcaseFooter() {
     return () => observer.disconnect()
   }, [])
 
-  const activeClass = isTouchRef.current && isVisible ? "sn-active" : ""
+  const activeClass = isTouch && isVisible ? "sn-active" : ""
 
-  const burstLogos = isTouchRef.current
+  const burstLogos = isTouch
     ? BURST_LOGOS.slice(0, 8).map(b => ({
         ...b,
         tx: Math.round(b.tx * 0.5),
