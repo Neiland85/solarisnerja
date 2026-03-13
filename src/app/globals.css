@@ -306,17 +306,26 @@ html {
   align-items: center;
   justify-content: center;
   margin-top: 80px;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.25);
+  font-family: var(--font-space-mono), "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
+  opacity: 0.15;
+  transition: opacity 0.4s ease;
+}
+
+footer:hover .site-credit {
+  opacity: 0.6;
 }
 
 .site-credit::before,
 .site-credit::after {
   content: "";
+  flex-shrink: 0;
   height: 1px;
   width: 60px;
-  background: rgba(255, 255, 255, 0.15);
+  background: currentColor;
   margin: 0 12px;
+  opacity: 0.4;
 }
