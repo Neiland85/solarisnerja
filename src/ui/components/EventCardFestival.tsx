@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import SunriseButton from "@/ui/components/SunriseButton"
 
@@ -9,6 +11,8 @@ type Props = {
   logo?: string | null
   eventDate?: string | null
   colorIndex?: number
+  /** When provided, SunriseButton click opens ArtistModal instead of direct URL. */
+  onSelect?: () => void
 }
 
 export default function EventCardFestival({
@@ -19,6 +23,7 @@ export default function EventCardFestival({
   logo,
   eventDate,
   colorIndex = 0,
+  onSelect,
 }: Props) {
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
 
@@ -47,7 +52,12 @@ export default function EventCardFestival({
 
       {hasRealUrl ? (
         <>
-          <SunriseButton artistName={title} href={ticketUrl} colorIndex={colorIndex} />
+          <SunriseButton
+            artistName={title}
+            href={ticketUrl}
+            colorIndex={colorIndex}
+            onSelect={onSelect}
+          />
           <a
             href={ticketUrl}
             target="_blank"

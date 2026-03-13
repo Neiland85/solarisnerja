@@ -16,6 +16,8 @@ export type SunriseButtonProps = {
   artistName: string
   href: string
   colorIndex?: number
+  /** When provided, click triggers onSelect instead of opening href directly. */
+  onSelect?: () => void
 }
 
 /* ── Brand palette ── */
@@ -61,6 +63,7 @@ export default function SunriseButton({
   artistName,
   href,
   colorIndex = 0,
+  onSelect,
 }: SunriseButtonProps) {
   const scheme = SCHEMES[colorIndex % SCHEMES.length] ?? SCHEMES[0]!
   const lines = splitName(artistName)
@@ -78,10 +81,14 @@ export default function SunriseButton({
       if (burst) return
       setBurst(true)
       timer.current = setTimeout(() => {
-        window.open(href, "_blank", "noopener,noreferrer")
+        if (onSelect) {
+          onSelect()
+        } else {
+          window.open(href, "_blank", "noopener,noreferrer")
+        }
       }, 650)
     },
-    [href, burst],
+    [href, burst, onSelect],
   )
 
   /* ── Responsive: 170px base, scales down on mobile ── */
