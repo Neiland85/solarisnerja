@@ -34,7 +34,7 @@ export default function EventCardFestival({
     <div className="group relative overflow-hidden border border-(--sn-border) bg-[var(--sn-bg)] flex flex-col items-center text-center transition-colors duration-700">
       {/* ── Artist portrait zone: face visible, not covered by content ── */}
       {artistImage && (
-        <div className="relative w-full h-56 overflow-hidden">
+        <div className="relative w-full h-72 sm:h-80 overflow-hidden">
           <div
             className="absolute inset-0 transition-all duration-700 ease-out
               opacity-20 scale-105 grayscale
@@ -45,7 +45,7 @@ export default function EventCardFestival({
               alt={title}
               fill
               sizes="(max-width: 768px) 90vw, 420px"
-              className="object-cover object-[center_15%]"
+              className="object-cover object-[center_25%]"
             />
           </div>
           {/* Solar glow on hover — radial burst from behind the face */}
