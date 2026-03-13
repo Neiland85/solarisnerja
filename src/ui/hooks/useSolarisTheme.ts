@@ -105,7 +105,7 @@ export function useSolarisTheme() {
       root.style.setProperty(prop, value)
     }
     // Set data attribute for conditional CSS selectors
-    root.dataset.solarisTheme = t
+    root.dataset["solarisTheme"] = t
   }, [])
 
   useEffect(() => {
