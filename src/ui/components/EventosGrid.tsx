@@ -33,8 +33,6 @@ const ARTIST_IMAGES: Record<string, string> = {
   bresh: "/events/bresh.jpg",
   ohsee: "/events/ohsee.jpg",
   goa: "/events/goa.jpg",
-  tropicalia: "/events/tropicalia.jpg",
-  tecnoflamenco: "/events/tecnoflamenco.jpg",
 }
 
 /** Custom object-position overrides per event (default: "center 25%") */
