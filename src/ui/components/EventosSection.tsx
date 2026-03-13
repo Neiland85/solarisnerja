@@ -1,6 +1,7 @@
 import { findAllEvents } from "@/adapters/db/event-repository"
 import { EVENTS } from "@/config/events"
-import EventCardFestival from "@/ui/components/EventCardFestival"
+import EventosGrid from "@/ui/components/EventosGrid"
+import type { EventGridItem } from "@/ui/components/EventosGrid"
 
 export const dynamic = "force-dynamic"
 
@@ -9,8 +10,10 @@ type EventRow = {
   title: string
   highlight: string
   ticketUrl: string
+  description?: string | null
   logo?: string | null
   event_date?: string | null
+  time?: string | null
 }
 
 function configToEventRows(): EventRow[] {
@@ -19,8 +22,23 @@ function configToEventRows(): EventRow[] {
     title: e.title,
     highlight: e.highlight,
     ticketUrl: e.ticketUrl,
+    description: e.description,
     logo: e.logo ?? null,
-    event_date: e.date ?? e.time ?? null,
+    event_date: e.date ?? null,
+    time: e.time ?? null,
+  }))
+}
+
+function toGridItems(rows: EventRow[]): EventGridItem[] {
+  return rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    highlight: r.highlight,
+    ticketUrl: r.ticketUrl,
+    description: r.description ?? "",
+    logo: r.logo ?? null,
+    eventDate: r.event_date ?? null,
+    time: r.time ?? null,
   }))
 }
 
@@ -39,6 +57,8 @@ export default async function EventosSection() {
     events = configToEventRows()
   }
 
+  const gridItems = toGridItems(events)
+
   return (
     <section id="programacion" className="solaris-horizon-texture py-24 px-6">
 
@@ -48,22 +68,7 @@ export default async function EventosSection() {
           Programación
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-10">
-
-          {events.map((event, index) => (
-            <EventCardFestival
-              key={event.id}
-              id={event.id}
-              title={event.title}
-              highlight={event.highlight}
-              ticketUrl={event.ticketUrl}
-              logo={event.logo ?? undefined}
-              eventDate={event.event_date ?? undefined}
-              colorIndex={index}
-            />
-          ))}
-
-        </div>
+        <EventosGrid events={gridItems} />
 
       </div>
 

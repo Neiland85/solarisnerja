@@ -8,8 +8,8 @@ type Props = {
   title: string
   highlight: string
   ticketUrl: string
-  logo?: string | null
-  eventDate?: string | null
+  logo?: string
+  eventDate?: string
   colorIndex?: number
   /** When provided, SunriseButton click opens ArtistModal instead of direct URL. */
   onSelect?: () => void
@@ -31,7 +31,13 @@ export default function EventCardFestival({
     <div className="border border-(--sn-border) bg-white p-6 space-y-6 flex flex-col items-center text-center">
       {logo && (
         <div className="h-20 w-full relative">
-          <Image src={logo} alt={title} fill className="object-contain" />
+          <Image
+            src={logo}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 90vw, 320px"
+            className="object-contain"
+          />
         </div>
       )}
 
