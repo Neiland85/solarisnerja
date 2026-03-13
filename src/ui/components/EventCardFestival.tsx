@@ -48,11 +48,9 @@ export default function EventCardFestival({
           style={artistImageBg ? { backgroundColor: artistImageBg } : undefined}
         >
           <div
-            className={`absolute inset-0 transition-all duration-700 ease-out ${
-              artistImageFit === "contain"
-                ? "opacity-80 group-hover:opacity-100"
-                : "opacity-20 scale-105 grayscale group-hover:opacity-50 group-hover:scale-110 group-hover:grayscale-0"
-            }`}
+            className="absolute inset-0 transition-all duration-700 ease-out
+              opacity-20 scale-105 grayscale
+              group-hover:opacity-50 group-hover:scale-110 group-hover:grayscale-0"
           >
             <Image
               src={artistImage}
