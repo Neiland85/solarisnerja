@@ -30,6 +30,7 @@ type Props = {
 /** Artist background images keyed by event ID */
 const ARTIST_IMAGES: Record<string, string> = {
   chambao: "/events/chambao.jpg",
+  bresh: "/events/bresh.jpg",
 }
 
 export default function EventosGrid({ events }: Props) {

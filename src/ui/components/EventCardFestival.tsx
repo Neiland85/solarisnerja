@@ -31,37 +31,44 @@ export default function EventCardFestival({
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
 
   return (
-    <div className="group relative overflow-hidden border border-(--sn-border) bg-[var(--sn-bg)] p-6 space-y-6 flex flex-col items-center text-center transition-colors duration-700">
-      {/* ── Artist background image with hover reveal ── */}
+    <div className="group relative overflow-hidden border border-(--sn-border) bg-[var(--sn-bg)] flex flex-col items-center text-center transition-colors duration-700">
+      {/* ── Artist portrait zone: face visible, not covered by content ── */}
       {artistImage && (
-        <>
+        <div className="relative w-full h-56 overflow-hidden">
           <div
-            className="absolute inset-0 z-0 transition-all duration-700 ease-out
-              opacity-10 scale-105 grayscale
-              group-hover:opacity-30 group-hover:scale-110 group-hover:grayscale-0"
+            className="absolute inset-0 transition-all duration-700 ease-out
+              opacity-20 scale-105 grayscale
+              group-hover:opacity-50 group-hover:scale-110 group-hover:grayscale-0"
           >
             <Image
               src={artistImage}
-              alt=""
+              alt={title}
               fill
               sizes="(max-width: 768px) 90vw, 420px"
-              className="object-cover object-top"
+              className="object-cover object-[center_15%]"
             />
           </div>
-          {/* Golden hour glow overlay on hover */}
+          {/* Solar glow on hover — radial burst from behind the face */}
           <div
-            className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-700
+            className="absolute inset-0 pointer-events-none transition-opacity duration-700
               opacity-0 group-hover:opacity-100"
             style={{
               background:
-                "radial-gradient(ellipse at 50% 20%, rgba(255,51,0,0.15) 0%, transparent 70%)",
+                "radial-gradient(ellipse at 50% 30%, rgba(255,51,0,0.25) 0%, rgba(65,65,198,0.08) 50%, transparent 80%)",
             }}
           />
-        </>
+          {/* Bottom fade into card content */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+            style={{
+              background: "linear-gradient(to top, var(--sn-bg), transparent)",
+            }}
+          />
+        </div>
       )}
 
-      {/* ── Card content (above background) ── */}
-      <div className="relative z-10 flex flex-col items-center text-center space-y-6 w-full">
+      {/* ── Card content ── */}
+      <div className="relative z-10 flex flex-col items-center text-center space-y-6 w-full p-6">
         {logo && (
           <div className="h-20 w-full relative">
             <Image

@@ -166,7 +166,7 @@ export default function PromoFormSection() {
               className="px-10 py-4 text-sm font-bold tracking-widest uppercase
                 bg-white text-black hover:bg-neutral-200 transition-colors"
             >
-              Acepto, quiero mis entradas
+              Promociones limitadas
             </button>
 
             <button
