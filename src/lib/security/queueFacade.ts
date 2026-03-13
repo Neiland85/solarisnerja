@@ -1,8 +1,8 @@
 /**
  * Queue Facade — Redis-first con fallback a in-memory.
  *
- * En producción con REDIS_URL: usa Redis (persistente entre cold starts).
- * Sin REDIS_URL o si Redis falla: fallback a burstQueue (in-memory).
+ * En producción con UPSTASH_REDIS_REST_URL: usa Redis (persistente entre cold starts).
+ * Sin Redis o si Redis falla: fallback a burstQueue (in-memory).
  */
 import type { Lead } from "@/domain/leads/types"
 import { enqueueLeadRedis, dequeueLeadRedis } from "./redisQueue"
@@ -10,7 +10,7 @@ import { enqueueLead as enqueueLocal, dequeueLead as dequeueLocal } from "./burs
 import { log } from "@/lib/logger"
 
 function hasRedis(): boolean {
-  return !!process.env["REDIS_URL"]
+  return !!process.env["UPSTASH_REDIS_REST_URL"]
 }
 
 export async function enqueueLead(lead: Lead): Promise<void> {

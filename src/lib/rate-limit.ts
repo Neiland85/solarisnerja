@@ -10,14 +10,14 @@ import {
  * Unified rate limiter.
  *
  * Strategy:
- *   1. If REDIS_URL is set → distributed rate limiting via Redis INCR/EXPIRE
+ *   1. If UPSTASH_REDIS_REST_URL is set → distributed rate limiting via @upstash/ratelimit
  *   2. Fallback → in-memory Map (single-process, existing behavior)
  *
  * The async wrapper is transparent to callers that `await` the result.
  * For sync-only callers the local fallback is always synchronous.
  */
 export async function rateLimit(ip: string): Promise<boolean> {
-  if (process.env["REDIS_URL"]) {
+  if (process.env["UPSTASH_REDIS_REST_URL"]) {
     try {
       const result = await rateLimitRedis(ip)
       return result.allowed

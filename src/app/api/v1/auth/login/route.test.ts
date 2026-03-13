@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 import { NextRequest } from "next/server"
 import { POST } from "./route"
 import { _clearAllSessions } from "@/lib/auth/sessionStore"
+import { _resetLoginAttempts } from "@/lib/auth/loginRateLimit"
 
 const CORRECT_PASSWORD = "test-admin-password-123"
 
@@ -25,6 +26,7 @@ describe("POST /api/v1/auth/login", () => {
   beforeEach(() => {
     vi.stubEnv("ADMIN_PASSWORD", CORRECT_PASSWORD)
     _clearAllSessions()
+    _resetLoginAttempts()
   })
 
   afterEach(() => {
@@ -91,8 +93,6 @@ describe("POST /api/v1/auth/login", () => {
   })
 
   // ── Rate limiting ─────────────────────────────────
-  // Uses a distinct IP via x-forwarded-for to avoid polluting other tests
-  // (loginAttempts is a module-level Map not cleared between runs)
 
   it("returns 429 after 5 failed attempts", async () => {
     const makeRlReq = (body: unknown) =>

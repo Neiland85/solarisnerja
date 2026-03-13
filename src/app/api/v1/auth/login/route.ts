@@ -3,17 +3,12 @@ import { timingSafeEqual } from "node:crypto"
 import { _getClientIp } from "@/lib/ip"
 import { createSessionAsync } from "@/lib/auth/sessionStore"
 import { audit } from "@/lib/observability/auditLog"
-
-const LOGIN_WINDOW_MS = 60_000
-const MAX_ATTEMPTS = 5
-const loginAttempts = new Map<string, { count: number; resetAt: number }>()
+import { isLoginBlocked, recordFailedAttempt, clearAttempts } from "@/lib/auth/loginRateLimit"
 
 export async function POST(req: NextRequest) {
   const ip = _getClientIp(req)
-  const now = Date.now()
 
-  const entry = loginAttempts.get(ip)
-  if (entry && now < entry.resetAt && entry.count >= MAX_ATTEMPTS) {
+  if (await isLoginBlocked(ip)) {
     return NextResponse.json(
       { error: "too many attempts, try again later" },
       { status: 429 }
@@ -41,17 +36,12 @@ export async function POST(req: NextRequest) {
     timingSafeEqual(Buffer.from(input), Buffer.from(adminPassword))
 
   if (!passwordMatch) {
-    const current = loginAttempts.get(ip)
-    if (!current || now >= current.resetAt) {
-      loginAttempts.set(ip, { count: 1, resetAt: now + LOGIN_WINDOW_MS })
-    } else {
-      current.count++
-    }
+    await recordFailedAttempt(ip)
     audit({ action: "admin.login_failed", ip, details: { reason: "bad_password" } })
     return NextResponse.json({ error: "unauthorized" }, { status: 401 })
   }
 
-  loginAttempts.delete(ip)
+  await clearAttempts(ip)
 
   const session = await createSessionAsync()
   audit({ action: "admin.login", ip, actor: "admin" })
