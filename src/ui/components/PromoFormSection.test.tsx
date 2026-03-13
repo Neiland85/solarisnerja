@@ -77,7 +77,7 @@ describe("PromoFormSection", () => {
     await user.type(screen.getByLabelText(/teléfono/i), "+34600000000")
 
     // Submit
-    await user.click(screen.getByRole("button", { name: /conseguir entradas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     await waitFor(() => {
       expect(screen.getByText(/estás dentro/i)).toBeInTheDocument()
@@ -100,7 +100,7 @@ describe("PromoFormSection", () => {
     await user.type(screen.getByLabelText(/teléfono/i), "+34600000000")
 
     // Submit
-    await user.click(screen.getByRole("button", { name: /conseguir entradas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     await waitFor(() => {
       expect(screen.getByText(/ha ocurrido un error/i)).toBeInTheDocument()
@@ -120,7 +120,7 @@ describe("PromoFormSection", () => {
     await user.type(screen.getByLabelText(/email/i), "t@t.com")
     await user.type(screen.getByLabelText(/teléfono/i), "123")
 
-    await user.click(screen.getByRole("button", { name: /conseguir entradas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /reintentar/i })).toBeInTheDocument()
@@ -141,7 +141,7 @@ describe("PromoFormSection", () => {
     await user.type(screen.getByLabelText(/email/i), "t@t.com")
     await user.type(screen.getByLabelText(/teléfono/i), "123")
 
-    await user.click(screen.getByRole("button", { name: /conseguir entradas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /enviando/i })).toBeDisabled()
