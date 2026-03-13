@@ -9,7 +9,7 @@ import {
 /**
  * These tests exercise the in-memory (local) rate limiter directly.
  * The unified async wrapper in rate-limit.ts delegates to this module
- * when REDIS_URL is not configured.
+ * when UPSTASH_REDIS_REST_URL is not configured.
  */
 describe("rateLimitLocal", () => {
   beforeEach(() => {
@@ -231,7 +231,7 @@ describe("rateLimit (unified facade)", () => {
     vi.useRealTimers()
   })
 
-  it("falls back to local when REDIS_URL is not set", async () => {
+  it("falls back to local when UPSTASH_REDIS_REST_URL is not set", async () => {
     // Dynamic import to get the facade
     const { rateLimit } = await import("./rate-limit")
 

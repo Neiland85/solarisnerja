@@ -25,19 +25,19 @@ describe("idempotency", () => {
   describe("checkIdempotencyKey", () => {
     const key = "550e8400-e29b-41d4-a716-446655440000"
 
-    it("returns false for first occurrence (not duplicate)", () => {
-      expect(checkIdempotencyKey(key)).toBe(false)
+    it("returns false for first occurrence (not duplicate)", async () => {
+      expect(await checkIdempotencyKey(key)).toBe(false)
     })
 
-    it("returns true for second occurrence (duplicate)", () => {
-      checkIdempotencyKey(key)
-      expect(checkIdempotencyKey(key)).toBe(true)
+    it("returns true for second occurrence (duplicate)", async () => {
+      await checkIdempotencyKey(key)
+      expect(await checkIdempotencyKey(key)).toBe(true)
     })
 
-    it("handles different keys independently", () => {
+    it("handles different keys independently", async () => {
       const key2 = "660e8400-e29b-41d4-a716-446655440001"
-      checkIdempotencyKey(key)
-      expect(checkIdempotencyKey(key2)).toBe(false)
+      await checkIdempotencyKey(key)
+      expect(await checkIdempotencyKey(key2)).toBe(false)
     })
   })
 })

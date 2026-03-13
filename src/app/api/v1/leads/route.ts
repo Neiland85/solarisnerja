@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         )
       }
-      if (checkIdempotencyKey(idempotencyKey)) {
+      if (await checkIdempotencyKey(idempotencyKey)) {
         return NextResponse.json({ success: true, deduplicated: true })
       }
     }

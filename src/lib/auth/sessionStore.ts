@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto"
 import type { Role } from "./rbac"
 import { createSignedToken } from "./signedSession"
+import { getRedis } from "@/lib/redis/client"
 
 export interface Session {
   token: string
@@ -11,25 +12,93 @@ export interface Session {
 }
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // 8 hours
+const SESSION_TTL_SECONDS = 8 * 60 * 60
 const MAX_SESSIONS = 100
+const REDIS_PREFIX = "solaris:sess:"
+
+// ── In-memory fallback ────────────────────────────────
 
 const sessions = new Map<string, Session>()
-
-/** Set of revoked signed tokens (for logout invalidation) */
 const revokedTokens = new Set<string>()
 
 function purgeExpired(): void {
   const now = Date.now()
   for (const [token, session] of sessions) {
-    if (now >= session.expiresAt) {
-      sessions.delete(token)
-    }
+    if (now >= session.expiresAt) sessions.delete(token)
   }
 }
+
+// ── Redis helpers ─────────────────────────────────────
+
+async function redisSet(session: Session): Promise<boolean> {
+  const redis = getRedis()
+  if (!redis) return false
+  try {
+    await redis.set(
+      `${REDIS_PREFIX}${session.token}`,
+      JSON.stringify(session),
+      { ex: SESSION_TTL_SECONDS }
+    )
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function redisGet(token: string): Promise<Session | null> {
+  const redis = getRedis()
+  if (!redis) return null
+  try {
+    const raw = await redis.get<string>(`${REDIS_PREFIX}${token}`)
+    if (!raw) return null
+    return JSON.parse(raw) as Session
+  } catch {
+    return null
+  }
+}
+
+async function redisDel(token: string): Promise<void> {
+  const redis = getRedis()
+  if (!redis) return
+  try {
+    await redis.del(`${REDIS_PREFIX}${token}`)
+  } catch {
+    // swallow
+  }
+}
+
+async function redisRevoke(token: string): Promise<void> {
+  const redis = getRedis()
+  if (!redis) return
+  try {
+    await redis.set(
+      `solaris:revoked:${token}`,
+      "1",
+      { ex: SESSION_TTL_SECONDS }
+    )
+  } catch {
+    // swallow
+  }
+}
+
+async function redisIsRevoked(token: string): Promise<boolean> {
+  const redis = getRedis()
+  if (!redis) return false
+  try {
+    const val = await redis.get(`solaris:revoked:${token}`)
+    return val !== null
+  } catch {
+    return false
+  }
+}
+
+// ── Public API ────────────────────────────────────────
 
 /**
  * Crea sesión. Si SESSION_SECRET está disponible, genera token firmado
  * verificable en edge. Si no, usa UUID (fallback dev).
+ *
+ * Stores in Redis if available, otherwise in-memory.
  */
 export async function createSessionAsync(
   opts: { role?: Role; userId?: string } = {}
@@ -61,7 +130,10 @@ export async function createSessionAsync(
     expiresAt: now + SESSION_TTL_MS,
   }
 
+  // Try Redis first, always keep local copy as cache
+  await redisSet(session)
   sessions.set(session.token, session)
+
   return session
 }
 
@@ -110,6 +182,40 @@ export function validateSession(token: string | undefined): boolean {
   return true
 }
 
+/**
+ * Async validation — checks Redis if local miss.
+ */
+export async function validateSessionAsync(token: string | undefined): Promise<boolean> {
+  if (!token) return false
+  if (revokedTokens.has(token)) return false
+
+  // Check Redis revocation list
+  if (await redisIsRevoked(token)) {
+    revokedTokens.add(token)
+    return false
+  }
+
+  purgeExpired()
+
+  // Try local first
+  let session = sessions.get(token)
+  if (!session) {
+    // Try Redis
+    session = await redisGet(token) ?? undefined
+    if (session) sessions.set(token, session) // cache locally
+  }
+
+  if (!session) return false
+
+  if (Date.now() >= session.expiresAt) {
+    sessions.delete(token)
+    await redisDel(token)
+    return false
+  }
+
+  return true
+}
+
 export function getSessionRole(token: string | undefined): Role | null {
   if (!token) return null
   if (revokedTokens.has(token)) return null
@@ -121,8 +227,18 @@ export function getSessionRole(token: string | undefined): Role | null {
 export function destroySession(token: string | undefined): void {
   if (!token) return
   sessions.delete(token)
-  // Also revoke signed tokens so proxy rejects them
   revokedTokens.add(token)
+}
+
+/**
+ * Async destroy — removes from Redis too.
+ */
+export async function destroySessionAsync(token: string | undefined): Promise<void> {
+  if (!token) return
+  sessions.delete(token)
+  revokedTokens.add(token)
+  await redisDel(token)
+  await redisRevoke(token)
 }
 
 export function isRevoked(token: string): boolean {
