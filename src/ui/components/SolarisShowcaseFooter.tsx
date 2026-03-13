@@ -183,6 +183,17 @@ export default function SolarisShowcaseFooter() {
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col items-center py-20 md:py-28 px-6">
 
+        {/* Subtitle */}
+        <p
+          className="text-xs font-medium tracking-[0.3em] uppercase mb-8"
+          style={{
+            fontFamily: "var(--font-space-mono, 'Space Mono', monospace)",
+            color: "rgba(255,255,255,0.4)",
+          }}
+        >
+          Anfitri&oacute;n del festival
+        </p>
+
         {/* ── Burst container ── */}
         <div
           className="relative mx-auto"
