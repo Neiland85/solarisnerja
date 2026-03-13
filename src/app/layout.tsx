@@ -1,6 +1,14 @@
 import type { Metadata } from "next"
+import { Space_Mono } from "next/font/google"
 import MetaPixel from "@/ui/components/MetaPixel"
 import "./globals.css"
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  display: "swap",
+})
 
 const SITE_URL = process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://www.solarisnerja.com"
 
@@ -47,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={spaceMono.variable}>
       <body>
 
         <MetaPixel />

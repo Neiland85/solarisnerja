@@ -13,6 +13,12 @@
   --sn-text: #0a0a0a;
   --sn-muted: #717171;
 
+  /* Brand — Solaris palette */
+  --sn-solar: #FF3300;
+  --sn-solar-glow: #FF5C33;
+  --sn-deep-blue: #4141C6;
+  --sn-deep-blue-light: #5C5CD6;
+
   /* Borders */
   --sn-border: rgba(0, 0, 0, 0.08);
   --sn-border-2: rgba(0, 0, 0, 0.16);
@@ -98,7 +104,7 @@ html {
 
 .solaris-horizon-texture {
   position: relative;
-  background-color: #fefcf8;
+  background-color: var(--sn-bg);
 }
 
 .solaris-horizon-texture::before {
@@ -107,16 +113,16 @@ html {
   inset: 0;
   background:
     radial-gradient(
-      ellipse at 50% 65%,
-      rgba(251, 191, 36, 0.06),
-      rgba(251, 191, 36, 0.02) 40%,
+      ellipse at 50% 60%,
+      rgba(255, 51, 0, 0.04),
+      rgba(255, 51, 0, 0.015) 40%,
       transparent 70%
     ),
     linear-gradient(
       180deg,
-      rgba(255, 250, 240, 0) 0%,
-      rgba(255, 200, 100, 0.03) 60%,
-      rgba(255, 180, 80, 0.05) 100%
+      transparent 0%,
+      rgba(65, 65, 198, 0.02) 70%,
+      rgba(65, 65, 198, 0.04) 100%
     );
   pointer-events: none;
 }
@@ -131,9 +137,9 @@ html {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(245, 158, 11, 0.12),
-    rgba(245, 158, 11, 0.2),
-    rgba(245, 158, 11, 0.12),
+    rgba(65, 65, 198, 0.1),
+    rgba(255, 51, 0, 0.15),
+    rgba(65, 65, 198, 0.1),
     transparent
   );
   pointer-events: none;
