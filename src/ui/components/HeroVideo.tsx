@@ -25,7 +25,7 @@ export default function HeroVideo(){
           </h1>
 
           <p className="text-xl opacity-90">
-            18 — 28 Junio · El Playazo
+            18 — 28 Junio
           </p>
 
           <a

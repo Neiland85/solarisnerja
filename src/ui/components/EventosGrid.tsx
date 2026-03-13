@@ -27,6 +27,35 @@ type Props = {
   events: EventGridItem[]
 }
 
+/** Artist background images keyed by event ID */
+const ARTIST_IMAGES: Record<string, string> = {
+  chambao: "/events/chambao.jpg",
+  bresh: "/events/bresh.jpg",
+  ohsee: "/events/ohsee.jpg",
+  goa: "/events/goa.jpg",
+  tropicalia: "/events/tropicalia.png",
+  tecnoflamenco: "/events/tecnoflamenco.png",
+}
+
+/** Custom object-position overrides per event (default: "center 25%") */
+const ARTIST_IMAGE_POSITIONS: Record<string, string> = {
+  bresh: "center 50%",
+  tropicalia: "center center",
+  tecnoflamenco: "center center",
+}
+
+/** Events that use poster/logo images instead of photos */
+const ARTIST_IMAGE_FITS: Record<string, "cover" | "contain"> = {
+  tropicalia: "contain",
+  tecnoflamenco: "contain",
+}
+
+/** Background colors for contain-fit images */
+const ARTIST_IMAGE_BGS: Record<string, string> = {
+  tropicalia: "#FFF0E8",
+  tecnoflamenco: "#ffffff",
+}
+
 export default function EventosGrid({ events }: Props) {
   const [selectedArtist, setSelectedArtist] = useState<EventGridItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -65,6 +94,10 @@ export default function EventosGrid({ events }: Props) {
             logo={event.logo ?? undefined}
             eventDate={event.eventDate ?? undefined}
             colorIndex={index}
+            artistImage={ARTIST_IMAGES[event.id]}
+            artistImagePosition={ARTIST_IMAGE_POSITIONS[event.id]}
+            artistImageFit={ARTIST_IMAGE_FITS[event.id]}
+            artistImageBg={ARTIST_IMAGE_BGS[event.id]}
             onSelect={() => handleSelect(event)}
           />
         ))}
@@ -86,6 +119,8 @@ export default function EventosGrid({ events }: Props) {
               }
             : null
         }
+        artistImage={selectedArtist ? ARTIST_IMAGES[selectedArtist.id] : undefined}
+        artistImagePosition={selectedArtist ? ARTIST_IMAGE_POSITIONS[selectedArtist.id] : undefined}
       />
 
       {/* Sticky floating CTA — mobile only, visible when #programacion is in viewport */}

@@ -91,6 +91,7 @@ export function useSolarisTheme() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
     ) {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) {
       return "night"
     }
     const hour = new Date().getHours()
@@ -115,6 +116,12 @@ export function useSolarisTheme() {
     const rafId = requestAnimationFrame(() => {
       setTheme(initial)
     })
+    // Apply tokens immediately (DOM mutation — safe in effects)
+    const initial = detectTheme()
+    applyTokens(initial)
+
+    // Defer state sync to avoid synchronous setState in effect body
+    const initTimer = setTimeout(() => setTheme(initial), 0)
 
     // Re-check every 60 seconds
     intervalRef.current = setInterval(() => {
@@ -139,6 +146,7 @@ export function useSolarisTheme() {
 
     return () => {
       cancelAnimationFrame(rafId)
+      clearTimeout(initTimer)
       if (intervalRef.current) clearInterval(intervalRef.current)
       mq.removeEventListener("change", onMediaChange)
     }

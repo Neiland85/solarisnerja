@@ -320,7 +320,7 @@ Variables de entorno requeridas (ver `.env.example`):
 
 **Neil Muñoz Lago** — Senior Backend Architect · Distributed Systems
 
-Contacto: bookingnadarecords@gmail.com
+Contacto: admin@claritystructures.com
 
 ---
 
