@@ -27,13 +27,13 @@ export default function PromoFormSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          eventId: "promo-entradas-2x1",
+          eventId: "promo-limitada",
           consentGiven: true,
           name,
           surname,
           phone,
           profession: profession || undefined,
-          source: "promo-entradas-2x1",
+          source: "promo-limitada",
         }),
       })
 
@@ -66,7 +66,7 @@ export default function PromoFormSection() {
               transition-all duration-300
               shadow-[0_0_40px_rgba(255,255,255,0.15)]"
           >
-            Entradas gratis + 2x1
+            Promociones limitadas
           </button>
 
           <p className="text-sm opacity-50 max-w-md mx-auto leading-relaxed">
@@ -84,7 +84,7 @@ export default function PromoFormSection() {
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="text-center space-y-3">
             <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
-              Consigue entradas gratuitas y 2x1 en nuestras promociones de verano
+              Accede a promociones limitadas del festival
             </h3>
           </div>
 
@@ -135,7 +135,7 @@ export default function PromoFormSection() {
                   <strong className="text-white opacity-100">
                     Usaremos tu email y teléfono únicamente
                   </strong>{" "}
-                  para enviarte las promociones de entradas gratis y 2x1 del festival
+                  para enviarte las promociones limitadas del festival
                   Solaris Nerja 2026.
                 </span>
               </li>
@@ -166,7 +166,7 @@ export default function PromoFormSection() {
               className="px-10 py-4 text-sm font-bold tracking-widest uppercase
                 bg-white text-black hover:bg-neutral-200 transition-colors"
             >
-              Acepto, quiero mis entradas
+              Promociones limitadas
             </button>
 
             <button
@@ -190,7 +190,7 @@ export default function PromoFormSection() {
         <div className="max-w-xl mx-auto space-y-8">
           <div className="text-center space-y-3">
             <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
-              Consigue entradas gratuitas y 2x1
+              Promociones limitadas
             </h3>
             <p className="text-sm opacity-50">
               Rellena tus datos y recibirás las promociones en tu email
@@ -346,7 +346,7 @@ export default function PromoFormSection() {
             ¡Estás dentro!
           </h3>
           <p className="text-sm opacity-60 max-w-md mx-auto leading-relaxed">
-            Recibirás en tu email las promociones de entradas gratis y 2x1 para Solaris
+            Recibirás en tu email las promociones limitadas para Solaris
             Nerja 2026. Revisa tu bandeja de entrada.
           </p>
         </div>

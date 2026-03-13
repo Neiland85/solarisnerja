@@ -11,6 +11,8 @@ type Props = {
   logo?: string
   eventDate?: string
   colorIndex?: number
+  /** Background artist photo shown with opacity; reveals on hover. */
+  artistImage?: string
   /** When provided, SunriseButton click opens ArtistModal instead of direct URL. */
   onSelect?: () => void
 }
@@ -23,64 +25,103 @@ export default function EventCardFestival({
   logo,
   eventDate,
   colorIndex = 0,
+  artistImage,
   onSelect,
 }: Props) {
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
 
   return (
-    <div className="border border-(--sn-border) bg-white p-6 space-y-6 flex flex-col items-center text-center">
-      {logo && (
-        <div className="h-20 w-full relative">
-          <Image
-            src={logo}
-            alt={title}
-            fill
-            sizes="(max-width: 768px) 90vw, 320px"
-            className="object-contain"
+    <div className="group relative overflow-hidden border border-(--sn-border) bg-[var(--sn-bg)] flex flex-col items-center text-center transition-colors duration-700">
+      {/* ── Artist portrait zone: face visible, not covered by content ── */}
+      {artistImage && (
+        <div className="relative w-full h-72 sm:h-80 overflow-hidden">
+          <div
+            className="absolute inset-0 transition-all duration-700 ease-out
+              opacity-20 scale-105 grayscale
+              group-hover:opacity-50 group-hover:scale-110 group-hover:grayscale-0"
+          >
+            <Image
+              src={artistImage}
+              alt={title}
+              fill
+              sizes="(max-width: 768px) 90vw, 420px"
+              className="object-cover object-[center_25%]"
+            />
+          </div>
+          {/* Solar glow on hover — radial burst from behind the face */}
+          <div
+            className="absolute inset-0 pointer-events-none transition-opacity duration-700
+              opacity-0 group-hover:opacity-100"
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 30%, rgba(255,51,0,0.25) 0%, rgba(65,65,198,0.08) 50%, transparent 80%)",
+            }}
+          />
+          {/* Bottom fade into card content */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+            style={{
+              background: "linear-gradient(to top, var(--sn-bg), transparent)",
+            }}
           />
         </div>
       )}
 
-      {eventDate && (
-        <p className="text-sm text-(--sn-muted) tracking-wide">
-          {new Date(eventDate).toLocaleDateString("es-ES", {
-            day: "2-digit",
-            month: "long",
-          })}
-        </p>
-      )}
+      {/* ── Card content ── */}
+      <div className="relative z-10 flex flex-col items-center text-center space-y-6 w-full p-6">
+        {logo && (
+          <div className="h-20 w-full relative">
+            <Image
+              src={logo}
+              alt={title}
+              fill
+              sizes="(max-width: 768px) 90vw, 320px"
+              className="object-contain"
+            />
+          </div>
+        )}
 
-      <div>
-        <p className="text-lg font-medium tracking-wide">{title}</p>
+        {eventDate && (
+          <p className="text-sm text-(--sn-muted) tracking-wide">
+            {new Date(eventDate).toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "long",
+            })}
+          </p>
+        )}
 
-        <p className="text-sm text-(--sn-muted)">{highlight}</p>
-      </div>
+        <div>
+          <p className="text-lg font-medium tracking-wide">{title}</p>
 
-      {hasRealUrl ? (
-        <>
-          <SunriseButton
-            artistName={title}
-            href={ticketUrl}
-            colorIndex={colorIndex}
-            onSelect={onSelect}
-          />
+          <p className="text-sm text-(--sn-muted)">{highlight}</p>
+        </div>
+
+        {hasRealUrl ? (
+          <>
+            <SunriseButton
+              artistName={title}
+              href={ticketUrl}
+              colorIndex={colorIndex}
+              onSelect={onSelect}
+            />
+            <a
+              href={ticketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block border-2 border-[var(--sn-text)] px-6 py-2 text-sm font-medium tracking-wide hover:bg-[var(--sn-text)] hover:text-[var(--sn-bg)] transition"
+            >
+              comprar entradas
+            </a>
+          </>
+        ) : (
           <a
-            href={ticketUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block border-2 border-black px-6 py-2 text-sm font-medium tracking-wide hover:bg-black hover:text-white transition"
+            href={`/eventos/${encodeURIComponent(id)}`}
+            className="inline-block border-2 border-[var(--sn-border-2)] px-6 py-2 text-sm font-medium tracking-wide text-(--sn-muted) hover:border-[var(--sn-text)] hover:text-[var(--sn-text)] transition"
           >
-            comprar entradas
+            más información
           </a>
-        </>
-      ) : (
-        <a
-          href={`/eventos/${encodeURIComponent(id)}`}
-          className="inline-block border-2 border-black/30 px-6 py-2 text-sm font-medium tracking-wide text-black/50 hover:border-black hover:text-black transition"
-        >
-          más información
-        </a>
-      )}
+        )}
+      </div>
     </div>
   )
 }

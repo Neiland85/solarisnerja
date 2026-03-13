@@ -23,17 +23,17 @@ describe("PromoFormSection", () => {
 
   it("renders CTA state by default", () => {
     render(<PromoFormSection />)
-    expect(screen.getByRole("button", { name: /entradas gratis/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /promociones limitadas/i })).toBeInTheDocument()
   })
 
   it("transitions from CTA to RGPD on button click", async () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     expect(screen.getByText(/protección de tus datos/i)).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /acepto/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /promociones limitadas/i })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: /volver/i })).toBeInTheDocument()
   })
 
@@ -42,9 +42,9 @@ describe("PromoFormSection", () => {
     const user = userEvent.setup()
 
     // CTA → RGPD
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     // RGPD → Form
-    await user.click(screen.getByRole("button", { name: /acepto/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     expect(screen.getByLabelText(/nombre/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
@@ -55,10 +55,10 @@ describe("PromoFormSection", () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     await user.click(screen.getByRole("button", { name: /volver/i }))
 
-    expect(screen.getByRole("button", { name: /entradas gratis/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /promociones limitadas/i })).toBeInTheDocument()
   })
 
   it("shows success state after successful submission", async () => {
@@ -67,8 +67,8 @@ describe("PromoFormSection", () => {
     const user = userEvent.setup()
 
     // Navigate to form
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
-    await user.click(screen.getByRole("button", { name: /acepto/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     // Fill form
     await user.type(screen.getByLabelText(/nombre \*/i), "Ana")
@@ -90,8 +90,8 @@ describe("PromoFormSection", () => {
     const user = userEvent.setup()
 
     // Navigate to form
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
-    await user.click(screen.getByRole("button", { name: /acepto/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     // Fill form
     await user.type(screen.getByLabelText(/nombre \*/i), "Ana")
@@ -112,8 +112,8 @@ describe("PromoFormSection", () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
-    await user.click(screen.getByRole("button", { name: /acepto/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     await user.type(screen.getByLabelText(/nombre \*/i), "Test")
     await user.type(screen.getByLabelText(/apellidos/i), "User")
@@ -133,8 +133,8 @@ describe("PromoFormSection", () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
-    await user.click(screen.getByRole("button", { name: /acepto/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     await user.type(screen.getByLabelText(/nombre \*/i), "Test")
     await user.type(screen.getByLabelText(/apellidos/i), "User")
