@@ -33,11 +33,27 @@ const ARTIST_IMAGES: Record<string, string> = {
   bresh: "/events/bresh.jpg",
   ohsee: "/events/ohsee.jpg",
   goa: "/events/goa.jpg",
+  tropicalia: "/events/tropicalia.png",
+  tecnoflamenco: "/events/tecnoflamenco.png",
 }
 
 /** Custom object-position overrides per event (default: "center 25%") */
 const ARTIST_IMAGE_POSITIONS: Record<string, string> = {
   bresh: "center 50%",
+  tropicalia: "center center",
+  tecnoflamenco: "center center",
+}
+
+/** Events that use poster/logo images instead of photos */
+const ARTIST_IMAGE_FITS: Record<string, "cover" | "contain"> = {
+  tropicalia: "contain",
+  tecnoflamenco: "contain",
+}
+
+/** Background colors for contain-fit images */
+const ARTIST_IMAGE_BGS: Record<string, string> = {
+  tropicalia: "#000000",
+  tecnoflamenco: "#ffffff",
 }
 
 export default function EventosGrid({ events }: Props) {
@@ -80,6 +96,8 @@ export default function EventosGrid({ events }: Props) {
             colorIndex={index}
             artistImage={ARTIST_IMAGES[event.id]}
             artistImagePosition={ARTIST_IMAGE_POSITIONS[event.id]}
+            artistImageFit={ARTIST_IMAGE_FITS[event.id]}
+            artistImageBg={ARTIST_IMAGE_BGS[event.id]}
             onSelect={() => handleSelect(event)}
           />
         ))}
