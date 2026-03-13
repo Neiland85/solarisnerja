@@ -139,7 +139,13 @@ html {
 
 .solaris-horizon-texture {
   position: relative;
-  background-color: var(--sn-bg);
+  background-color: #ffffff;
+  color: #1a1a1a;
+  --sn-bg: #ffffff;
+  --sn-text: #1a1a1a;
+  --sn-muted: #6b6b6b;
+  --sn-border: #e5e5e5;
+  --sn-border-2: #d4d4d4;
 }
 
 .solaris-horizon-texture::before {
@@ -263,13 +269,9 @@ html {
 /* ─── ArtistModal sheet — desktop overrides ─── */
 
 @media (min-width: 640px) {
-  .artist-modal-overlay {
-    --artist-sheet-hidden: translateY(40px);
-  }
   .artist-modal-sheet {
-    border-radius: 0 !important;
-    max-height: none !important;
-    padding-bottom: 0 !important;
+    border-radius: 12px !important;
+    max-height: 90dvh !important;
   }
 }
 
@@ -295,4 +297,39 @@ html {
     transition-delay: 0ms !important;
     animation-delay: 0ms !important;
   }
+}
+
+/* ─── Site credit ─── */
+
+.site-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80px;
+  font-family: var(--font-space-mono), "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  opacity: 0.15;
+  transition: opacity 0.4s ease;
+}
+
+footer:hover .site-credit {
+  opacity: 0.6;
+}
+
+.site-credit::before,
+.site-credit::after {
+  content: "";
+  flex-shrink: 0;
+  height: 1px;
+  width: 60px;
+  background: currentColor;
+  margin: 0 12px;
+  opacity: 0.4;
+}
+
+.site-credit::after {
+  background: linear-gradient(90deg, currentColor 30%, #FF3300, transparent);
 }
