@@ -13,6 +13,8 @@ type Props = {
   colorIndex?: number
   /** Background artist photo shown with opacity; reveals on hover. */
   artistImage?: string
+  /** CSS object-position for the artist image (default: "center 25%"). */
+  artistImagePosition?: string
   /** When provided, SunriseButton click opens ArtistModal instead of direct URL. */
   onSelect?: () => void
 }
@@ -26,6 +28,7 @@ export default function EventCardFestival({
   eventDate,
   colorIndex = 0,
   artistImage,
+  artistImagePosition,
   onSelect,
 }: Props) {
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
@@ -45,7 +48,8 @@ export default function EventCardFestival({
               alt={title}
               fill
               sizes="(max-width: 768px) 90vw, 420px"
-              className="object-cover object-[center_25%]"
+              className="object-cover"
+              style={{ objectPosition: artistImagePosition ?? "center 25%" }}
             />
           </div>
           {/* Solar glow on hover — radial burst from behind the face */}
