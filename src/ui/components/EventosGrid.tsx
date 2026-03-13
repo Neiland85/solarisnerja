@@ -33,6 +33,13 @@ const ARTIST_IMAGES: Record<string, string> = {
   bresh: "/events/bresh.jpg",
   ohsee: "/events/ohsee.jpg",
   goa: "/events/goa.jpg",
+  tropicalia: "/events/tropicalia.jpg",
+  tecnoflamenco: "/events/tecnoflamenco.jpg",
+}
+
+/** Custom object-position overrides per event (default: "center 25%") */
+const ARTIST_IMAGE_POSITIONS: Record<string, string> = {
+  bresh: "center 50%",
 }
 
 export default function EventosGrid({ events }: Props) {
@@ -74,6 +81,7 @@ export default function EventosGrid({ events }: Props) {
             eventDate={event.eventDate ?? undefined}
             colorIndex={index}
             artistImage={ARTIST_IMAGES[event.id]}
+            artistImagePosition={ARTIST_IMAGE_POSITIONS[event.id]}
             onSelect={() => handleSelect(event)}
           />
         ))}
@@ -95,6 +103,8 @@ export default function EventosGrid({ events }: Props) {
               }
             : null
         }
+        artistImage={selectedArtist ? ARTIST_IMAGES[selectedArtist.id] : undefined}
+        artistImagePosition={selectedArtist ? ARTIST_IMAGE_POSITIONS[selectedArtist.id] : undefined}
       />
 
       {/* Sticky floating CTA — mobile only, visible when #programacion is in viewport */}

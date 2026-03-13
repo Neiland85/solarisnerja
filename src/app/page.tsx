@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+import Image from "next/image"
 import HeroVideo from "@/ui/components/HeroVideo"
 import EventosSection from "@/ui/components/EventosSection"
 import CarouselSection from "@/ui/components/CarouselSection"
@@ -20,6 +21,17 @@ export default function HomePage(){
       <LocationSection />
 
       <PromoFormSection />
+
+      <div className="flex justify-center py-10 bg-[#0A0E1A]">
+        <Image
+          src="/logo-solaris.png"
+          alt="Solaris Nerja"
+          width={120}
+          height={120}
+          sizes="120px"
+          className="opacity-80 hover:opacity-100 transition-opacity duration-300"
+        />
+      </div>
 
     </main>
 
