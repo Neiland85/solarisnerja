@@ -106,10 +106,12 @@ export function useSolarisTheme() {
   }, [])
 
   useEffect(() => {
-    // Initial detection
+    // Apply tokens immediately (DOM mutation — safe in effects)
     const initial = detectTheme()
-    setTheme(initial)
     applyTokens(initial)
+
+    // Defer state sync to avoid synchronous setState in effect body
+    const initTimer = setTimeout(() => setTheme(initial), 0)
 
     // Re-check every 60 seconds
     intervalRef.current = setInterval(() => {
@@ -133,6 +135,7 @@ export function useSolarisTheme() {
     mq.addEventListener("change", onMediaChange)
 
     return () => {
+      clearTimeout(initTimer)
       if (intervalRef.current) clearInterval(intervalRef.current)
       mq.removeEventListener("change", onMediaChange)
     }
