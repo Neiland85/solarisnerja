@@ -15,6 +15,10 @@ type Props = {
   artistImage?: string
   /** CSS object-position for the artist image (default: "center 25%"). */
   artistImagePosition?: string
+  /** CSS object-fit override (default: "cover"). Use "contain" for logos/posters. */
+  artistImageFit?: "cover" | "contain"
+  /** Background color for the image zone (useful with contain to fill empty space). */
+  artistImageBg?: string
   /** When provided, SunriseButton click opens ArtistModal instead of direct URL. */
   onSelect?: () => void
 }
@@ -29,6 +33,8 @@ export default function EventCardFestival({
   colorIndex = 0,
   artistImage,
   artistImagePosition,
+  artistImageFit = "cover",
+  artistImageBg,
   onSelect,
 }: Props) {
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
@@ -37,7 +43,10 @@ export default function EventCardFestival({
     <div className="group relative overflow-hidden border border-(--sn-border) bg-[var(--sn-bg)] flex flex-col items-center text-center transition-colors duration-700">
       {/* ── Artist portrait zone: face visible, not covered by content ── */}
       {artistImage && (
-        <div className="relative w-full h-72 sm:h-80 overflow-hidden">
+        <div
+          className="relative w-full h-72 sm:h-80 overflow-hidden"
+          style={artistImageBg ? { backgroundColor: artistImageBg } : undefined}
+        >
           <div
             className="absolute inset-0 transition-all duration-700 ease-out
               opacity-20 scale-105 grayscale
@@ -48,7 +57,7 @@ export default function EventCardFestival({
               alt={title}
               fill
               sizes="(max-width: 768px) 90vw, 420px"
-              className="object-cover"
+              className={artistImageFit === "contain" ? "object-contain p-6" : "object-cover"}
               style={{ objectPosition: artistImagePosition ?? "center 25%" }}
             />
           </div>
