@@ -310,7 +310,7 @@ export default function PromoFormSection() {
                   bg-white text-black hover:bg-neutral-200
                   disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {sending ? "Enviando…" : "Conseguir entradas"}
+                {sending ? "Enviando…" : "Promociones limitadas"}
               </button>
 
               <button
