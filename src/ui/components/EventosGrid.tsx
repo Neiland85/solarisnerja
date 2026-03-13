@@ -52,7 +52,7 @@ const ARTIST_IMAGE_FITS: Record<string, "cover" | "contain"> = {
 
 /** Background colors for contain-fit images */
 const ARTIST_IMAGE_BGS: Record<string, string> = {
-  tropicalia: "#000000",
+  tropicalia: "#FFF0E8",
   tecnoflamenco: "#ffffff",
 }
 
