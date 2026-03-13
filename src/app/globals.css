@@ -298,3 +298,25 @@ html {
     animation-delay: 0ms !important;
   }
 }
+
+/* ─── Site credit ─── */
+
+.site-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+}
+
+.site-credit::before,
+.site-credit::after {
+  content: "";
+  height: 1px;
+  width: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 12px;
+}
