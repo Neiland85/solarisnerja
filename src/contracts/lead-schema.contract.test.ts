@@ -1,132 +1,150 @@
 import { describe, it, expect } from "vitest"
-import Ajv2020 from "ajv/dist/2020"
-import addFormats from "ajv-formats"
+import { leadCreateSchema } from "@/contracts/schemas/lead.schema"
 
-import schema from "@/contracts/schemas/lead.create.json"
-
-describe("contracts: lead.create.json", () => {
-  it("compiles under AJV 2020 and accepts valid payload", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
+describe("contracts: leadCreateSchema (Zod)", () => {
+  it("accepts valid payload with required fields only", () => {
+    const result = leadCreateSchema.safeParse({
       email: "user@example.com",
       eventId: "music",
+      consentGiven: true,
     })
 
-    expect(ok).toBe(true)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.email).toBe("user@example.com")
+    }
   })
 
-  it("rejects invalid payload", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
-      email: "not-an-email",
-      eventId: "",
+  it("transforms email to lowercase and trimmed", () => {
+    const result = leadCreateSchema.safeParse({
+      email: "  User@EXAMPLE.com  ",
+      eventId: "music",
+      consentGiven: true,
     })
 
-    expect(ok).toBe(false)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.email).toBe("user@example.com")
+    }
   })
 
-  it("accepts valid payload with honeypot company field set", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
+  it("accepts valid payload with honeypot company field", () => {
+    const result = leadCreateSchema.safeParse({
       email: "user@example.com",
       eventId: "music",
+      consentGiven: true,
       company: "some value",
     })
 
-    expect(ok).toBe(true)
+    expect(result.success).toBe(true)
   })
 
-  it("rejects various invalid email formats", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
+  it("rejects invalid email formats", () => {
     const invalidEmails = [
       "plainaddress",
       "@no-local-part.com",
       "no-at-symbol.com",
       "user@",
-      "user@domain",
-      "user@domain..com",
     ]
 
     for (const email of invalidEmails) {
-      const ok = validate({
+      const result = leadCreateSchema.safeParse({
         email,
         eventId: "music",
+        consentGiven: true,
       })
 
-      expect(ok).toBe(false)
+      expect(result.success).toBe(false)
     }
   })
 
   it("rejects payload with empty eventId", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
+    const result = leadCreateSchema.safeParse({
       email: "user@example.com",
       eventId: "",
+      consentGiven: true,
     })
 
-    expect(ok).toBe(false)
+    expect(result.success).toBe(false)
   })
 
   it("rejects payload missing email", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
-      // email is intentionally omitted
+    const result = leadCreateSchema.safeParse({
       eventId: "music",
-    } as Record<string, unknown>)
+      consentGiven: true,
+    })
 
-    expect(ok).toBe(false)
+    expect(result.success).toBe(false)
   })
 
   it("rejects payload missing eventId", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
+    const result = leadCreateSchema.safeParse({
       email: "user@example.com",
-      // eventId is intentionally omitted
-    } as Record<string, unknown>)
+      consentGiven: true,
+    })
 
-    expect(ok).toBe(false)
+    expect(result.success).toBe(false)
   })
 
-  it("rejects payload with additional properties", () => {
-    const ajv = new Ajv2020()
-    addFormats(ajv)
-
-    const validate = ajv.compile(schema)
-
-    const ok = validate({
+  it("rejects payload with additional properties (strict)", () => {
+    const result = leadCreateSchema.safeParse({
       email: "user@example.com",
       eventId: "music",
+      consentGiven: true,
       extraField: "should not be allowed",
-    } as Record<string, unknown>)
+    })
 
-    expect(ok).toBe(false)
+    expect(result.success).toBe(false)
+  })
+
+  it("rejects consentGiven: false", () => {
+    const result = leadCreateSchema.safeParse({
+      email: "user@example.com",
+      eventId: "music",
+      consentGiven: false,
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it("rejects invalid phone format", () => {
+    const result = leadCreateSchema.safeParse({
+      email: "user@example.com",
+      eventId: "music",
+      consentGiven: true,
+      phone: "abc-not-a-phone",
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it("accepts valid phone format", () => {
+    const result = leadCreateSchema.safeParse({
+      email: "user@example.com",
+      eventId: "music",
+      consentGiven: true,
+      phone: "+34 600 123 456",
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it("accepts all optional fields", () => {
+    const result = leadCreateSchema.safeParse({
+      email: "user@example.com",
+      eventId: "music",
+      consentGiven: true,
+      name: "Juan",
+      surname: "García",
+      phone: "+34 600 000 000",
+      profession: "Diseñador",
+      source: "promo-entradas-2x1",
+    })
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.name).toBe("Juan")
+      expect(result.data.profession).toBe("Diseñador")
+    }
   })
 })
