@@ -62,18 +62,37 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // Validate email format
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (typeof body.email !== "string" || !EMAIL_RE.test(body.email) || body.email.length > 320) {
+      return NextResponse.json({ error: "invalid email format" }, { status: 400 })
+    }
+
+    // Sanitize optional string fields: type + max length
+    const optStr = (v: unknown, max: number): string | undefined => {
+      if (v == null || v === "") return undefined
+      if (typeof v !== "string") return undefined
+      return v.trim().slice(0, max)
+    }
+
+    const PHONE_RE = /^[+\d\s()-]{6,20}$/
+    const rawPhone = optStr(body.phone, 20)
+    if (rawPhone && !PHONE_RE.test(rawPhone)) {
+      return NextResponse.json({ error: "invalid phone format" }, { status: 400 })
+    }
+
     const rawIp = _getClientIp(req)
 
     const lead = createLead({
-      email: body.email,
+      email: body.email.trim().toLowerCase(),
       eventId: body.eventId,
       ipAddress: hashIp(rawIp),
       consentGiven: body.consentGiven,
-      name: body.name,
-      surname: body.surname,
-      phone: body.phone,
-      profession: body.profession,
-      source: body.source,
+      name: optStr(body.name, 100),
+      surname: optStr(body.surname, 100),
+      phone: rawPhone,
+      profession: optStr(body.profession, 100),
+      source: optStr(body.source, 50),
     })
 
     await enqueueLead(lead)

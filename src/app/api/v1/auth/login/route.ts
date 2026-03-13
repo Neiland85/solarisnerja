@@ -20,10 +20,21 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const body = await req.json()
+  let body: unknown
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "invalid json" }, { status: 400 })
+  }
+
+  const password = (body as Record<string, unknown>)?.["password"]
+  if (typeof password !== "string" || password.length === 0 || password.length > 256) {
+    return NextResponse.json({ error: "invalid credentials format" }, { status: 400 })
+  }
+
   const adminPassword = process.env["ADMIN_PASSWORD"]
 
-  const input = String(body.password ?? "")
+  const input = password
   const passwordMatch =
     adminPassword &&
     input.length === adminPassword.length &&
