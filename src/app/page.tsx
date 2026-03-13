@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
-import Image from "next/image"
 import HeroVideo from "@/ui/components/HeroVideo"
 import EventosSection from "@/ui/components/EventosSection"
 import CarouselSection from "@/ui/components/CarouselSection"
 import LocationSection from "@/ui/components/LocationSection"
 import PromoFormSection from "@/ui/components/PromoFormSection"
+import SolarisShowcaseFooter from "@/ui/components/SolarisShowcaseFooter"
 
 export default function HomePage(){
 
@@ -35,6 +35,7 @@ export default function HomePage(){
           <span>Website Code by Clarity Structures Digital S.L.</span>
         </div>
       </footer>
+      <SolarisShowcaseFooter />
 
     </main>
 
