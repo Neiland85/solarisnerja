@@ -329,3 +329,7 @@ footer:hover .site-credit {
   margin: 0 12px;
   opacity: 0.4;
 }
+
+.site-credit::after {
+  background: linear-gradient(90deg, currentColor 30%, #FF3300, transparent);
+}
