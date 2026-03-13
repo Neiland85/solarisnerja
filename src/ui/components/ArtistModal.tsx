@@ -181,9 +181,10 @@ export default function ArtistModal({ open, onClose, artist }: ArtistModalProps)
         backgroundColor: visible ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0)",
         backdropFilter: visible ? "blur(8px)" : "blur(0px)",
         WebkitBackdropFilter: visible ? "blur(8px)" : "blur(0px)",
-        transition: dragOffset > 0
-          ? "none"
-          : `background-color ${BACKDROP_MS}ms ease, backdrop-filter ${BACKDROP_MS}ms ease, -webkit-backdrop-filter ${BACKDROP_MS}ms ease`,
+        transition:
+          dragOffset > 0
+            ? "none"
+            : `background-color ${BACKDROP_MS}ms ease, backdrop-filter ${BACKDROP_MS}ms ease, -webkit-backdrop-filter ${BACKDROP_MS}ms ease`,
       }}
       onClick={handleOverlayClick}
       onKeyDown={handleKeyDown}
@@ -191,15 +192,16 @@ export default function ArtistModal({ open, onClose, artist }: ArtistModalProps)
       {/* ── Sheet ── */}
       <div
         ref={sheetRef}
-        className="artist-modal-sheet relative bg-[var(--sn-bg)] w-full sm:mx-4 sm:max-w-lg overflow-y-auto overscroll-contain"
+        className="artist-modal-sheet relative bg-(--sn-bg) w-full sm:mx-4 sm:max-w-lg overflow-y-auto overscroll-contain"
         style={{
           fontFamily: "var(--font-space-mono, 'Space Mono', monospace)",
           borderTop: "3px solid var(--sn-solar, #FF3300)",
           opacity: visible ? 1 : 0,
           transform: sheetTransform,
-          transition: dragOffset > 0
-            ? "none"
-            : `opacity ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1), transform ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1)`,
+          transition:
+            dragOffset > 0
+              ? "none"
+              : `opacity ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1), transform ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1)`,
           maxHeight: "85dvh",
           borderRadius: "16px 16px 0 0",
           paddingBottom: "calc(24px + env(safe-area-inset-bottom, 0px))",
@@ -228,7 +230,7 @@ export default function ArtistModal({ open, onClose, artist }: ArtistModalProps)
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 min-w-[48px] min-h-[48px] flex items-center justify-center text-lg hover:opacity-60 transition-opacity"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 min-w-12 min-h-12 flex items-center justify-center text-lg hover:opacity-60 transition-opacity"
             style={{ color: "var(--sn-text, #0a0a0a)" }}
           >
             ✕

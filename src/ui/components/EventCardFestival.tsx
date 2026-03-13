@@ -28,7 +28,7 @@ export default function EventCardFestival({
   const hasRealUrl = ticketUrl && ticketUrl !== "#"
 
   return (
-    <div className="border border-(--sn-border) bg-[var(--sn-bg)] p-6 space-y-6 flex flex-col items-center text-center transition-colors duration-700">
+    <div className="border border-(--sn-border) bg-(--sn-bg) p-6 space-y-6 flex flex-col items-center text-center transition-colors duration-700">
       {logo && (
         <div className="h-20 w-full relative">
           <Image
@@ -68,7 +68,7 @@ export default function EventCardFestival({
             href={ticketUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block border-2 border-[var(--sn-text)] px-6 py-2 text-sm font-medium tracking-wide hover:bg-[var(--sn-text)] hover:text-[var(--sn-bg)] transition"
+            className="inline-block border-2 border-(--sn-text) px-6 py-2 text-sm font-medium tracking-wide hover:bg-(--sn-text) hover:text-(--sn-bg) transition"
           >
             comprar entradas
           </a>
@@ -76,7 +76,7 @@ export default function EventCardFestival({
       ) : (
         <a
           href={`/eventos/${encodeURIComponent(id)}`}
-          className="inline-block border-2 border-[var(--sn-border-2)] px-6 py-2 text-sm font-medium tracking-wide text-(--sn-muted) hover:border-[var(--sn-text)] hover:text-[var(--sn-text)] transition"
+          className="inline-block border-2 border-(--sn-border-2) px-6 py-2 text-sm font-medium tracking-wide text-(--sn-muted) hover:border-(--sn-text) hover:text-(--sn-text) transition"
         >
           más información
         </a>
