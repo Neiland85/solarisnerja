@@ -191,7 +191,7 @@ export default function ArtistModal({ open, onClose, artist }: ArtistModalProps)
       {/* ── Sheet ── */}
       <div
         ref={sheetRef}
-        className="artist-modal-sheet relative bg-white w-full sm:mx-4 sm:max-w-lg overflow-y-auto overscroll-contain"
+        className="artist-modal-sheet relative bg-[var(--sn-bg)] w-full sm:mx-4 sm:max-w-lg overflow-y-auto overscroll-contain"
         style={{
           fontFamily: "var(--font-space-mono, 'Space Mono', monospace)",
           borderTop: "3px solid var(--sn-solar, #FF3300)",
