@@ -224,3 +224,40 @@ html {
 .section-divider {
   border-top: 1px solid rgba(0,0,0,0.05);
 }
+
+/* ─── ArtistModal sheet — desktop overrides ─── */
+
+@media (min-width: 640px) {
+  .artist-modal-overlay {
+    --artist-sheet-hidden: translateY(40px);
+  }
+  .artist-modal-sheet {
+    border-radius: 0 !important;
+    max-height: none !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* Hide sticky CTA when modal is open (avoids z-index stacking) */
+[role="dialog"][aria-modal="true"] ~ .sticky-mobile-cta {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ─── ArtistModal CTA pulse ─── */
+
+@keyframes artistModalPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [role="dialog"][aria-modal="true"],
+  [role="dialog"][aria-modal="true"] * {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    transition-delay: 0ms !important;
+    animation-delay: 0ms !important;
+  }
+}
