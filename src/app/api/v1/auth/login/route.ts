@@ -4,6 +4,7 @@ import { _getClientIp } from "@/lib/ip"
 import { createSessionAsync } from "@/lib/auth/sessionStore"
 import { audit } from "@/lib/observability/auditLog"
 import { isLoginBlocked, recordFailedAttempt, clearAttempts } from "@/lib/auth/loginRateLimit"
+import { loginSchema } from "@/contracts/schemas/login.schema"
 
 export async function POST(req: NextRequest) {
   const ip = _getClientIp(req)
@@ -22,10 +23,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid json" }, { status: 400 })
   }
 
-  const password = (body as Record<string, unknown>)?.["password"]
-  if (typeof password !== "string" || password.length === 0 || password.length > 256) {
+  const parsed = loginSchema.safeParse(body)
+  if (!parsed.success) {
     return NextResponse.json({ error: "invalid credentials format" }, { status: 400 })
   }
+
+  const password = parsed.data.password
 
   const adminPassword = process.env["ADMIN_PASSWORD"]
 

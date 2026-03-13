@@ -28,6 +28,7 @@ export default function PromoFormSection() {
         body: JSON.stringify({
           email,
           eventId: "promo-entradas-2x1",
+          consentGiven: true,
           name,
           surname,
           phone,

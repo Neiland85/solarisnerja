@@ -9,6 +9,7 @@ import { hashIp } from "@/lib/security/hashIp"
 import { rateLimit } from "@/lib/rate-limit"
 import * as Sentry from "@sentry/nextjs"
 import { checkIdempotencyKey, isValidIdempotencyKey } from "@/lib/security/idempotency"
+import { leadCreateSchema } from "@/contracts/schemas/lead.schema"
 
 export { _getClientIp, _isValidIp }
 
@@ -47,52 +48,26 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
+    const parsed = leadCreateSchema.safeParse(body)
 
-    if (!body?.email || !body?.eventId) {
-      return NextResponse.json(
-        { error: "invalid payload" },
-        { status: 400 }
-      )
-    }
-
-    if (typeof body.consentGiven !== "boolean" || !body.consentGiven) {
-      return NextResponse.json(
-        { error: "consent is required" },
-        { status: 400 }
-      )
-    }
-
-    // Validate email format
-    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (typeof body.email !== "string" || !EMAIL_RE.test(body.email) || body.email.length > 320) {
-      return NextResponse.json({ error: "invalid email format" }, { status: 400 })
-    }
-
-    // Sanitize optional string fields: type + max length
-    const optStr = (v: unknown, max: number): string | undefined => {
-      if (v == null || v === "") return undefined
-      if (typeof v !== "string") return undefined
-      return v.trim().slice(0, max)
-    }
-
-    const PHONE_RE = /^[+\d\s()-]{6,20}$/
-    const rawPhone = optStr(body.phone, 20)
-    if (rawPhone && !PHONE_RE.test(rawPhone)) {
-      return NextResponse.json({ error: "invalid phone format" }, { status: 400 })
+    if (!parsed.success) {
+      const firstError = parsed.error.issues[0]
+      const detail = firstError?.message ?? "invalid payload"
+      return NextResponse.json({ error: detail }, { status: 400 })
     }
 
     const rawIp = _getClientIp(req)
 
     const lead = createLead({
-      email: body.email.trim().toLowerCase(),
-      eventId: body.eventId,
+      email: parsed.data.email,
+      eventId: parsed.data.eventId,
       ipAddress: hashIp(rawIp),
-      consentGiven: body.consentGiven,
-      name: optStr(body.name, 100),
-      surname: optStr(body.surname, 100),
-      phone: rawPhone,
-      profession: optStr(body.profession, 100),
-      source: optStr(body.source, 50),
+      consentGiven: parsed.data.consentGiven,
+      name: parsed.data.name,
+      surname: parsed.data.surname,
+      phone: parsed.data.phone,
+      profession: parsed.data.profession,
+      source: parsed.data.source,
     })
 
     await enqueueLead(lead)

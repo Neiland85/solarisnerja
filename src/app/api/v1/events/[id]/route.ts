@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import Ajv2020 from "ajv/dist/2020"
-import addFormats from "ajv-formats"
-import updateSchema from "@/contracts/schemas/event.update.json"
-import { applyEventUpdate, type EventUpdate } from "@/domain/events/update-event"
+import { eventUpdateSchema } from "@/contracts/schemas/event.schema"
+import { applyEventUpdate } from "@/domain/events/update-event"
 import { findEventById, updateEvent, deleteEvent } from "@/adapters/db/event-repository"
 import { requireAdmin } from "@/lib/auth/requireAdmin"
 import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
 import * as Sentry from "@sentry/nextjs"
 import { audit } from "@/lib/observability/auditLog"
-
-const ajv = new Ajv2020()
-addFormats(ajv)
-const validateUpdate = ajv.compile<EventUpdate>(updateSchema)
 
 type RouteContext = { params: Promise<{ id: string }> }
 
@@ -61,9 +55,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
   try {
     const body: unknown = await req.json()
+    const parsed = eventUpdateSchema.safeParse(body)
 
-    if (!validateUpdate(body)) {
-      log("warn", "event_update_validation_failed", { requestId, errors: validateUpdate.errors })
+    if (!parsed.success) {
+      log("warn", "event_update_validation_failed", { requestId, errors: parsed.error.issues })
       return problem({
         type: "https://www.solarisnerja.com/problems/validation",
         title: "Validation error",
@@ -84,7 +79,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       })
     }
 
-    const updated = applyEventUpdate(existing, body)
+    const updated = applyEventUpdate(existing, parsed.data)
     await updateEvent(updated)
 
     log("info", "event_updated", { requestId, eventId: id })

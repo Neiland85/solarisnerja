@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import Ajv2020 from "ajv/dist/2020"
-import addFormats from "ajv-formats"
-import createSchema from "@/contracts/schemas/event.create.json"
+import { eventCreateSchema } from "@/contracts/schemas/event.schema"
 import { createEvent } from "@/domain/events/create-event"
 import { findAllEvents, saveEvent } from "@/adapters/db/event-repository"
 import { requireAdmin } from "@/lib/auth/requireAdmin"
@@ -9,17 +7,6 @@ import { problem } from "@/lib/problem"
 import { log } from "@/lib/logger"
 import * as Sentry from "@sentry/nextjs"
 import { audit } from "@/lib/observability/auditLog"
-
-type CreateInput = {
-  title: string
-  description: string
-  highlight: string
-  ticketUrl: string
-}
-
-const ajv = new Ajv2020()
-addFormats(ajv)
-const validateCreate = ajv.compile<CreateInput>(createSchema)
 
 export async function GET(req: NextRequest) {
   const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID()
@@ -55,9 +42,10 @@ export async function POST(req: NextRequest) {
 
   try {
     const body: unknown = await req.json()
+    const parsed = eventCreateSchema.safeParse(body)
 
-    if (!validateCreate(body)) {
-      log("warn", "event_validation_failed", { requestId, errors: validateCreate.errors })
+    if (!parsed.success) {
+      log("warn", "event_validation_failed", { requestId, errors: parsed.error.issues })
       return problem({
         type: "https://www.solarisnerja.com/problems/validation",
         title: "Validation error",
@@ -68,16 +56,16 @@ export async function POST(req: NextRequest) {
     }
 
     const event = createEvent({
-      title: body.title,
-      description: body.description,
-      highlight: body.highlight,
-      ticketUrl: body.ticketUrl,
+      title: parsed.data.title,
+      description: parsed.data.description,
+      highlight: parsed.data.highlight,
+      ticketUrl: parsed.data.ticketUrl,
     })
 
     await saveEvent(event)
 
     log("info", "event_created", { requestId, eventId: event.id })
-    audit({ action: "event.create", req, resource: event.id, details: { title: body.title } })
+    audit({ action: "event.create", req, resource: event.id, details: { title: parsed.data.title } })
 
     return NextResponse.json({ data: event }, { status: 201 })
   } catch (error: unknown) {
