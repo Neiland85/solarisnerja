@@ -87,10 +87,6 @@ export function useSolarisTheme() {
 
   const detectTheme = useCallback((): SolarisTheme => {
     // prefers-color-scheme: dark overrides time-based detection
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) {
       return "night"
     }
@@ -110,12 +106,6 @@ export function useSolarisTheme() {
   }, [])
 
   useEffect(() => {
-    // Initial detection
-    const initial = detectTheme()
-    applyTokens(initial)
-    const rafId = requestAnimationFrame(() => {
-      setTheme(initial)
-    })
     // Apply tokens immediately (DOM mutation — safe in effects)
     const initial = detectTheme()
     applyTokens(initial)
@@ -145,7 +135,6 @@ export function useSolarisTheme() {
     mq.addEventListener("change", onMediaChange)
 
     return () => {
-      cancelAnimationFrame(rafId)
       clearTimeout(initTimer)
       if (intervalRef.current) clearInterval(intervalRef.current)
       mq.removeEventListener("change", onMediaChange)

@@ -188,13 +188,6 @@ export default function ArtistModal({
       aria-label={`Información de ${artist.title}`}
       className="artist-modal-overlay fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center"
       style={{
-        backgroundColor: visible ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0)",
-        backdropFilter: visible ? "blur(8px)" : "blur(0px)",
-        WebkitBackdropFilter: visible ? "blur(8px)" : "blur(0px)",
-        transition:
-          dragOffset > 0
-            ? "none"
-            : `background-color ${BACKDROP_MS}ms ease, backdrop-filter ${BACKDROP_MS}ms ease, -webkit-backdrop-filter ${BACKDROP_MS}ms ease`,
         backgroundColor: visible ? "rgba(0,0,0,0.7)" : "rgba(0,0,0,0)",
         backdropFilter: visible ? "blur(12px)" : "blur(0px)",
         WebkitBackdropFilter: visible ? "blur(12px)" : "blur(0px)",
@@ -208,7 +201,6 @@ export default function ArtistModal({
       {/* -- Sheet -- */}
       <div
         ref={sheetRef}
-        className="artist-modal-sheet relative bg-(--sn-bg) w-full sm:mx-4 sm:max-w-lg overflow-y-auto overscroll-contain"
         className="artist-modal-sheet relative w-full sm:max-w-2xl overflow-y-auto overscroll-contain"
         style={{
           fontFamily: "var(--font-space-mono, 'Space Mono', monospace)",
@@ -216,11 +208,6 @@ export default function ArtistModal({
           color: "#ffffff",
           opacity: visible ? 1 : 0,
           transform: sheetTransform,
-          transition:
-            dragOffset > 0
-              ? "none"
-              : `opacity ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1), transform ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1)`,
-          maxHeight: "85dvh",
           transition: dragOffset > 0
             ? "none"
             : `opacity ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1), transform ${SLIDE_MS}ms cubic-bezier(.16,1,.3,1)`,
@@ -239,19 +226,6 @@ export default function ArtistModal({
           />
         </div>
 
-        {/* ── Content wrapper ── */}
-        <div className="px-6 pt-4 pb-2 sm:p-8 space-y-5">
-          {/* Close button — min 48px touch target */}
-          <button
-            ref={closeRef}
-            type="button"
-            onClick={onClose}
-            aria-label="Cerrar"
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 min-w-12 min-h-12 flex items-center justify-center text-lg hover:opacity-60 transition-opacity"
-            style={{ color: "var(--sn-text, #0a0a0a)" }}
-          >
-            ✕
-          </button>
         {/* -- Close button -- */}
         <button
           ref={closeRef}
