@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Space_Mono } from "next/font/google"
 import MetaPixel from "@/ui/components/MetaPixel"
+import SolarisThemeProvider from "@/ui/components/SolarisThemeProvider"
 import "./globals.css"
 
 const spaceMono = Space_Mono({
@@ -65,6 +66,7 @@ export default function RootLayout({
       <body>
 
         <MetaPixel />
+        <SolarisThemeProvider />
 
         {children}
 

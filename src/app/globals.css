@@ -24,6 +24,40 @@
   --sn-border-2: rgba(0, 0, 0, 0.16);
 }
 
+/* ─── Golden Hour theme transition ─── */
+/* Smooth 800ms crossfade when useSolarisTheme swaps CSS variables */
+:root {
+  transition:
+    --sn-bg 800ms ease,
+    --sn-surface 800ms ease,
+    --sn-surface-2 800ms ease,
+    --sn-text 800ms ease,
+    --sn-muted 800ms ease,
+    --sn-solar 800ms ease,
+    --sn-solar-glow 800ms ease,
+    --sn-deep-blue 800ms ease,
+    --sn-deep-blue-light 800ms ease,
+    --sn-border 800ms ease,
+    --sn-border-2 800ms ease;
+}
+
+/* Register custom properties so they can transition (Chrome 111+) */
+@property --sn-bg          { syntax: "<color>"; inherits: true; initial-value: #ffffff }
+@property --sn-surface     { syntax: "<color>"; inherits: true; initial-value: #f5f5f5 }
+@property --sn-surface-2   { syntax: "<color>"; inherits: true; initial-value: #ebebeb }
+@property --sn-text        { syntax: "<color>"; inherits: true; initial-value: #0a0a0a }
+@property --sn-muted       { syntax: "<color>"; inherits: true; initial-value: #717171 }
+@property --sn-solar       { syntax: "<color>"; inherits: true; initial-value: #FF3300 }
+@property --sn-solar-glow  { syntax: "<color>"; inherits: true; initial-value: #FF5C33 }
+@property --sn-deep-blue   { syntax: "<color>"; inherits: true; initial-value: #4141C6 }
+@property --sn-deep-blue-light { syntax: "<color>"; inherits: true; initial-value: #5C5CD6 }
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+
 /* Base */
 html, body {
   height: 100%;
@@ -32,6 +66,7 @@ html, body {
 body {
   background: var(--sn-bg);
   color: var(--sn-text);
+  transition: background-color 800ms ease, color 800ms ease;
 }
 
 /* Selection */
