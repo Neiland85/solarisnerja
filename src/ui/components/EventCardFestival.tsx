@@ -58,6 +58,7 @@ export default function EventCardFestival({
               fill
               sizes="(max-width: 768px) 90vw, 420px"
               className={artistImageFit === "contain" ? "object-contain p-6" : "object-cover"}
+              className="object-cover"
               style={{ objectPosition: artistImagePosition ?? "center 25%" }}
             />
           </div>
