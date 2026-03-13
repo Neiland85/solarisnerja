@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Space_Mono } from "next/font/google"
 import MetaPixel from "@/ui/components/MetaPixel"
 import "./globals.css"
@@ -11,6 +11,12 @@ const spaceMono = Space_Mono({
 })
 
 const SITE_URL = process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://www.solarisnerja.com"
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+}
 
 export const metadata: Metadata = {
   title: {
