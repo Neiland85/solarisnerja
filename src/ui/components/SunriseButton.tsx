@@ -2,23 +2,35 @@
 
 import { useState, useCallback, useRef, useEffect } from "react"
 
+/**
+ * SunriseButton — Solaris brand ticket button.
+ *
+ * Concept: Minimalist sun rising over a horizon line.
+ * Palette: #FF3300 (solar orange) · #4141C6 (deep blue) · #FFF · #000
+ * Typography: Space Mono (via --font-space-mono CSS variable from layout.tsx)
+ * States: idle → hover (sun rises) → active (radiant burst → opens URL)
+ * A11y: button role, descriptive aria-label, prefers-reduced-motion safe.
+ */
+
 export type SunriseButtonProps = {
   artistName: string
   href: string
   colorIndex?: number
 }
 
+/* ── Brand palette ── */
+const SOLAR  = "#FF3300"
+const SOLAR_GLOW = "#FF5C33"
+const DEEP   = "#4141C6"
+const DEEP_L = "#5C5CD6"
+
 /**
- * Palette: warm Mediterranean tones — each event gets its own horizon.
- * Gradient goes from sun core (bright) to horizon glow (diffuse).
+ * Two brand-derived schemes: solar (orange-dominant) and oceanic (blue-dominant).
+ * colorIndex alternates so adjacent cards never share the same scheme.
  */
-const HORIZON_COLORS = [
-  { sun: "#f59e0b", glow: "#fbbf24", horizon: "#dc8a18" },   // amber
-  { sun: "#ef4444", glow: "#f87171", horizon: "#c2352e" },   // coral
-  { sun: "#f97316", glow: "#fb923c", horizon: "#d4660f" },   // naranja
-  { sun: "#a855f7", glow: "#c084fc", horizon: "#7e3fbd" },   // atardecer
-  { sun: "#ec4899", glow: "#f472b6", horizon: "#c13584" },   // magenta
-  { sun: "#06b6d4", glow: "#22d3ee", horizon: "#0891b2" },   // mediterráneo
+const SCHEMES = [
+  { sun: SOLAR, glow: SOLAR_GLOW, horizon: DEEP,   sea: DEEP_L,  label: "#fff" },
+  { sun: DEEP,  glow: DEEP_L,    horizon: SOLAR,   sea: SOLAR_GLOW, label: "#fff" },
 ]
 
 function splitName(name: string): string[] {
@@ -37,31 +49,28 @@ function splitName(name: string): string[] {
 
 function calcFontSize(lines: string[]): number {
   const longest = Math.max(...lines.map((l) => l.length))
-  if (longest <= 5) return 13
-  if (longest <= 8) return 11
-  if (longest <= 12) return 9
-  return 7.5
+  if (longest <= 5) return 12
+  if (longest <= 8) return 10
+  if (longest <= 12) return 8.5
+  return 7
 }
+
+const FONT = "var(--font-space-mono, 'Space Mono', monospace)"
 
 export default function SunriseButton({
   artistName,
   href,
   colorIndex = 0,
 }: SunriseButtonProps) {
-  const idx = colorIndex % HORIZON_COLORS.length
-  const palette = HORIZON_COLORS[idx] ?? HORIZON_COLORS[0]!
+  const scheme = SCHEMES[colorIndex % SCHEMES.length] ?? SCHEMES[0]!
   const lines = splitName(artistName)
   const fSize = calcFontSize(lines)
-  const uid = `sr-${artistName.replace(/\s+/g, "").toLowerCase()}`
+  const uid = `sb-${artistName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`
 
   const [burst, setBurst] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
-    return () => {
-      if (timer.current) clearTimeout(timer.current)
-    }
-  }, [])
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -70,280 +79,238 @@ export default function SunriseButton({
       setBurst(true)
       timer.current = setTimeout(() => {
         window.open(href, "_blank", "noopener,noreferrer")
-      }, 700)
+      }, 650)
     },
     [href, burst],
   )
+
+  /* ── Responsive: 170px base, scales down on mobile ── */
+  const SIZE = 170
+  const CX = SIZE / 2        // 85
+  const HORIZON_Y = 102
+  const SUN_CY = 70
+  const SUN_R = 32
 
   return (
     <button
       type="button"
       onClick={handleClick}
       aria-label={`Comprar entradas — ${artistName}`}
-      className="inline-block relative cursor-pointer bg-transparent border-none p-0 group"
-      style={{ width: 170, height: 170 }}
+      className="inline-block relative cursor-pointer bg-transparent border-none p-0"
+      style={{ width: SIZE, height: SIZE, maxWidth: "100%" }}
     >
       <style>{`
-        /* ── Breathing glow — el sol respira ── */
+        /* ── Idle: gentle sun breathing ── */
         @keyframes ${uid}-breathe {
-          0%, 100% { r: 52; opacity: 0.25; }
-          50%      { r: 58; opacity: 0.45; }
+          0%, 100% { opacity: 0.18; }
+          50%      { opacity: 0.35; }
         }
         .${uid}-glow {
-          animation: ${uid}-breathe 3.5s ease-in-out infinite;
-        }
-        button:hover .${uid}-glow {
-          animation-duration: 2s;
+          animation: ${uid}-breathe 4s ease-in-out infinite;
         }
 
-        /* ── Hover: sun lifts toward the sky ── */
-        .${uid}-sun-group {
+        /* ── Hover: sun rises above horizon ── */
+        .${uid}-sun {
           transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        button:hover .${uid}-sun-group {
-          transform: translateY(-4px);
+        button:hover .${uid}-sun {
+          transform: translateY(-6px);
+        }
+        button:hover .${uid}-glow {
+          animation-duration: 2.2s;
         }
 
-        /* ── Sunrise burst: rays expand on click ── */
+        /* ── Active: radiant burst ── */
         @keyframes ${uid}-burst {
-          0%   { transform: scale(1); opacity: 1; }
-          40%  { transform: scale(1.6); opacity: 0.9; }
-          100% { transform: scale(2.4); opacity: 0; }
+          0%   { r: ${SUN_R}; opacity: 0.9; }
+          100% { r: ${SUN_R * 2.8}; opacity: 0; }
         }
-        .${uid}-burst-ring {
+        .${uid}-burst {
           opacity: 0;
-          transform-origin: 85px 72px;
         }
-        .${uid}-active .${uid}-burst-ring {
-          animation: ${uid}-burst 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        .${uid}-fired .${uid}-burst {
+          animation: ${uid}-burst 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        /* ── Rays rotate slowly ── */
-        @keyframes ${uid}-rays-spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
+        /* ── Active: body fades ── */
+        .${uid}-body {
+          transition: opacity 0.25s ease 0.3s;
         }
-        .${uid}-rays {
-          transform-origin: 85px 72px;
-          animation: ${uid}-rays-spin 25s linear infinite;
+        .${uid}-fired .${uid}-body {
           opacity: 0.15;
-          transition: opacity 0.4s ease;
-        }
-        button:hover .${uid}-rays {
-          opacity: 0.3;
         }
 
         /* ── Horizon shimmer ── */
         @keyframes ${uid}-shimmer {
-          0%, 100% { opacity: 0.5; }
-          50%      { opacity: 0.8; }
+          0%, 100% { stroke-opacity: 0.6; }
+          50%      { stroke-opacity: 1; }
         }
-        .${uid}-horizon-line {
-          animation: ${uid}-shimmer 4s ease-in-out infinite;
+        .${uid}-horizon {
+          animation: ${uid}-shimmer 3s ease-in-out infinite;
         }
 
-        /* ── "ENTRADAS" pulse ── */
+        /* ── ENTRADAS pulse below horizon ── */
         @keyframes ${uid}-pulse {
-          0%, 100% { opacity: 0.7; }
-          50%      { opacity: 1; }
+          0%, 100% { opacity: 0.55; }
+          50%      { opacity: 0.9; }
         }
         .${uid}-entradas {
-          animation: ${uid}-pulse 2s ease-in-out infinite;
+          animation: ${uid}-pulse 2.5s ease-in-out infinite;
         }
 
-        /* ── Post-burst: body fades to let label shine ── */
-        .${uid}-body {
-          transition: opacity 0.3s ease 0.35s;
-        }
-        .${uid}-active .${uid}-body {
-          opacity: 0.2;
+        /* ── Reduced motion ── */
+        @media (prefers-reduced-motion: reduce) {
+          .${uid}-glow,
+          .${uid}-horizon,
+          .${uid}-entradas { animation: none; }
+          .${uid}-sun { transition: none; }
         }
       `}</style>
 
       <svg
-        width="170"
-        height="170"
-        viewBox="0 0 170 170"
+        width={SIZE}
+        height={SIZE}
+        viewBox={`0 0 ${SIZE} ${SIZE}`}
         xmlns="http://www.w3.org/2000/svg"
-        className={burst ? `${uid}-active` : ""}
-        style={{ filter: "drop-shadow(0 4px 18px rgba(0,0,0,0.06))" }}
+        className={burst ? `${uid}-fired` : ""}
+        role="img"
+        aria-hidden="true"
       >
         <defs>
-          {/* Sun radial gradient */}
-          <radialGradient id={`${uid}-sun-grad`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={palette.sun} stopOpacity="1" />
-            <stop offset="70%" stopColor={palette.glow} stopOpacity="0.85" />
-            <stop offset="100%" stopColor={palette.horizon} stopOpacity="0.6" />
+          {/* Sun gradient */}
+          <radialGradient id={`${uid}-sg`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={scheme.sun} />
+            <stop offset="100%" stopColor={scheme.glow} />
           </radialGradient>
 
           {/* Glow gradient */}
-          <radialGradient id={`${uid}-glow-grad`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={palette.glow} stopOpacity="0.5" />
-            <stop offset="100%" stopColor={palette.glow} stopOpacity="0" />
+          <radialGradient id={`${uid}-gg`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={scheme.glow} stopOpacity="0.5" />
+            <stop offset="100%" stopColor={scheme.glow} stopOpacity="0" />
           </radialGradient>
 
-          {/* Horizon gradient (sea/sky) */}
-          <linearGradient id={`${uid}-horizon-grad`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={palette.glow} stopOpacity="0.08" />
-            <stop offset="40%" stopColor={palette.sun} stopOpacity="0.04" />
-            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          {/* Sea gradient below horizon */}
+          <linearGradient id={`${uid}-sea`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={scheme.horizon} stopOpacity="0.06" />
+            <stop offset="100%" stopColor={scheme.sea} stopOpacity="0.02" />
           </linearGradient>
 
-          {/* Burst ring gradient */}
-          <radialGradient id={`${uid}-burst-grad`} cx="50%" cy="42%" r="50%">
-            <stop offset="0%" stopColor={palette.sun} stopOpacity="0.6" />
-            <stop offset="100%" stopColor={palette.glow} stopOpacity="0" />
-          </radialGradient>
-
-          {/* Text arc around sun */}
-          <path
-            id={`${uid}-arc`}
-            d="M 85,72 m -56,0 a 56,56 0 1,1 112,0 a 56,56 0 1,1 -112,0"
-          />
-
-          {/* Clip for sea reflection */}
-          <clipPath id={`${uid}-sea-clip`}>
-            <rect x="0" y="100" width="170" height="70" />
+          {/* Clip: only below horizon */}
+          <clipPath id={`${uid}-below`}>
+            <rect x="0" y={HORIZON_Y} width={SIZE} height={SIZE - HORIZON_Y} />
           </clipPath>
         </defs>
 
-        {/* ── Background: warm sky gradient ── */}
-        <rect x="0" y="0" width="170" height="170" rx="12" fill="#fefcf8" />
-        <rect x="0" y="0" width="170" height="170" rx="12" fill={`url(#${uid}-horizon-grad)`} />
+        {/* ── Card background ── */}
+        <rect
+          x="0" y="0" width={SIZE} height={SIZE}
+          rx="10"
+          fill="#fff"
+          stroke="rgba(0,0,0,0.06)"
+          strokeWidth="1"
+        />
 
         <g className={`${uid}-body`}>
-          {/* ── Subtle sun rays (slow rotation) ── */}
-          <g className={`${uid}-rays`}>
-            {Array.from({ length: 12 }).map((_, i) => {
-              const angle = (i * 30 * Math.PI) / 180
-              const x1 = 85 + Math.cos(angle) * 42
-              const y1 = 72 + Math.sin(angle) * 42
-              const x2 = 85 + Math.cos(angle) * 68
-              const y2 = 72 + Math.sin(angle) * 68
-              return (
-                <line
-                  key={i}
-                  x1={x1} y1={y1} x2={x2} y2={y2}
-                  stroke={palette.sun}
-                  strokeWidth={i % 2 === 0 ? 1.5 : 0.8}
-                  strokeLinecap="round"
-                />
-              )
-            })}
+          {/* ── Sea zone below horizon ── */}
+          <rect
+            x="0" y={HORIZON_Y} width={SIZE} height={SIZE - HORIZON_Y}
+            rx="0"
+            fill={`url(#${uid}-sea)`}
+          />
+
+          {/* ── Sea reflection ── */}
+          <g clipPath={`url(#${uid}-below)`} opacity="0.08">
+            <ellipse cx={CX} cy={HORIZON_Y} rx={42} ry={18} fill={scheme.glow} />
           </g>
 
           {/* ── Horizon line ── */}
           <line
-            x1="12" y1="100" x2="158" y2="100"
-            stroke={palette.horizon}
-            strokeWidth="1"
-            className={`${uid}-horizon-line`}
+            x1="16" y1={HORIZON_Y} x2={SIZE - 16} y2={HORIZON_Y}
+            stroke={scheme.horizon}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            className={`${uid}-horizon`}
           />
 
-          {/* ── Sea reflection (subtle mirrored glow below horizon) ── */}
-          <g clipPath={`url(#${uid}-sea-clip)`} opacity="0.12">
-            <ellipse cx="85" cy="100" rx="50" ry="25" fill={palette.glow} />
-          </g>
-
-          {/* ── ENTRADAS text along horizon ── */}
+          {/* ── ENTRADAS below horizon ── */}
           <text
-            x="85" y="118"
+            x={CX} y={HORIZON_Y + 22}
             textAnchor="middle"
-            fill={palette.horizon}
-            fontFamily="system-ui, sans-serif"
-            fontSize="7.5"
+            fill={scheme.horizon}
+            fontFamily={FONT}
+            fontSize="7"
             fontWeight="700"
-            letterSpacing="4"
+            letterSpacing="4.5"
             className={`${uid}-entradas`}
           >
             ENTRADAS
           </text>
 
-          {/* ── "COMPRAR ENTRADAS" arc text ── */}
+          {/* ── SOLARIS NERJA micro-label ── */}
           <text
-            fill={palette.horizon}
-            fontFamily="system-ui, sans-serif"
-            fontSize="6"
+            x={CX} y={HORIZON_Y + 36}
+            textAnchor="middle"
+            fill="rgba(0,0,0,0.2)"
+            fontFamily={FONT}
+            fontSize="4.5"
             letterSpacing="3"
-            opacity="0.4"
           >
-            <textPath href={`#${uid}-arc`} startOffset="15%">
-              COMPRAR ENTRADAS
-            </textPath>
+            SOLARIS NERJA
           </text>
         </g>
 
-        {/* ── Sun disc group (lifts on hover) ── */}
-        <g className={`${uid}-sun-group`}>
-          {/* Breathing glow */}
+        {/* ── Sun group (rises on hover) ── */}
+        <g className={`${uid}-sun`}>
+          {/* Breathing glow halo */}
           <circle
-            cx="85" cy="72" r="55"
-            fill={`url(#${uid}-glow-grad)`}
+            cx={CX} cy={SUN_CY} r={SUN_R + 22}
+            fill={`url(#${uid}-gg)`}
             className={`${uid}-glow`}
           />
 
-          {/* Sun body */}
+          {/* Sun disc */}
           <circle
-            cx="85" cy="72" r="35"
-            fill={`url(#${uid}-sun-grad)`}
+            cx={CX} cy={SUN_CY} r={SUN_R}
+            fill={`url(#${uid}-sg)`}
           />
 
-          {/* Inner rim */}
+          {/* Inner ring */}
           <circle
-            cx="85" cy="72" r="33"
+            cx={CX} cy={SUN_CY} r={SUN_R - 2}
             fill="none"
-            stroke="rgba(255,255,255,0.25)"
+            stroke="rgba(255,255,255,0.3)"
             strokeWidth="0.5"
           />
 
           {/* Artist name */}
           {lines.map((line, i) => {
             const totalH = lines.length * (fSize + 2)
-            const startY = 72 - totalH / 2 + fSize / 2 + i * (fSize + 2)
+            const y = SUN_CY - totalH / 2 + fSize / 2 + i * (fSize + 2)
             return (
               <text
                 key={i}
-                x="85"
-                y={startY}
+                x={CX}
+                y={y}
                 textAnchor="middle"
-                fill="white"
-                fontFamily="system-ui, sans-serif"
+                fill={scheme.label}
+                fontFamily={FONT}
                 fontSize={fSize}
                 fontWeight="700"
-                letterSpacing="0.8"
-                style={{ textShadow: "0 1px 3px rgba(0,0,0,0.2)" }}
+                letterSpacing="0.5"
               >
                 {line}
               </text>
             )
           })}
-
-          {/* SOLARIS NERJA label */}
-          <text
-            x="85"
-            y={72 + 16}
-            textAnchor="middle"
-            fill="rgba(255,255,255,0.7)"
-            fontFamily="system-ui, sans-serif"
-            fontSize="5"
-            letterSpacing="2"
-          >
-            SOLARIS NERJA
-          </text>
         </g>
 
-        {/* ── Burst ring (visible only on click) ── */}
+        {/* ── Burst ring (click only) ── */}
         <circle
-          cx="85" cy="72" r="35"
+          cx={CX} cy={SUN_CY} r={SUN_R}
           fill="none"
-          stroke={palette.sun}
+          stroke={scheme.sun}
           strokeWidth="2"
-          className={`${uid}-burst-ring`}
-        />
-        <circle
-          cx="85" cy="72" r="50"
-          fill={`url(#${uid}-burst-grad)`}
-          className={`${uid}-burst-ring`}
+          className={`${uid}-burst`}
         />
       </svg>
     </button>
