@@ -27,6 +27,11 @@ type Props = {
   events: EventGridItem[]
 }
 
+/** Artist background images keyed by event ID */
+const ARTIST_IMAGES: Record<string, string> = {
+  chambao: "/events/chambao.jpg",
+}
+
 export default function EventosGrid({ events }: Props) {
   const [selectedArtist, setSelectedArtist] = useState<EventGridItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -65,6 +70,7 @@ export default function EventosGrid({ events }: Props) {
             logo={event.logo ?? undefined}
             eventDate={event.eventDate ?? undefined}
             colorIndex={index}
+            artistImage={ARTIST_IMAGES[event.id]}
             onSelect={() => handleSelect(event)}
           />
         ))}

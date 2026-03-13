@@ -138,7 +138,7 @@ describe("contracts: leadCreateSchema (Zod)", () => {
       surname: "García",
       phone: "+34 600 000 000",
       profession: "Diseñador",
-      source: "promo-entradas-2x1",
+      source: "promo-limitada",
     })
 
     expect(result.success).toBe(true)

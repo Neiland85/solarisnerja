@@ -22,20 +22,20 @@ describe("createLead", () => {
   it("accepts profile fields and custom source", () => {
     const lead = createLead({
       email: "promo@test.com",
-      eventId: "promo-entradas-2x1",
+      eventId: "promo-limitada",
       ipAddress: "10.0.0.1",
       consentGiven: true,
       name: " Ana ",
       surname: " García López ",
       phone: "+34600111222",
       profession: "Diseñadora",
-      source: "promo-entradas-2x1",
+      source: "promo-limitada",
     })
     expect(lead.name).toBe("Ana")
     expect(lead.surname).toBe("García López")
     expect(lead.phone).toBe("+34600111222")
     expect(lead.profession).toBe("Diseñadora")
-    expect(lead.source).toBe("promo-entradas-2x1")
+    expect(lead.source).toBe("promo-limitada")
   })
 
   it("omits empty optional fields", () => {

@@ -23,14 +23,14 @@ describe("PromoFormSection", () => {
 
   it("renders CTA state by default", () => {
     render(<PromoFormSection />)
-    expect(screen.getByRole("button", { name: /entradas gratis/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /promociones limitadas/i })).toBeInTheDocument()
   })
 
   it("transitions from CTA to RGPD on button click", async () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
 
     expect(screen.getByText(/protección de tus datos/i)).toBeInTheDocument()
     expect(screen.getByRole("button", { name: /acepto/i })).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe("PromoFormSection", () => {
     const user = userEvent.setup()
 
     // CTA → RGPD
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     // RGPD → Form
     await user.click(screen.getByRole("button", { name: /acepto/i }))
 
@@ -55,10 +55,10 @@ describe("PromoFormSection", () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     await user.click(screen.getByRole("button", { name: /volver/i }))
 
-    expect(screen.getByRole("button", { name: /entradas gratis/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /promociones limitadas/i })).toBeInTheDocument()
   })
 
   it("shows success state after successful submission", async () => {
@@ -67,7 +67,7 @@ describe("PromoFormSection", () => {
     const user = userEvent.setup()
 
     // Navigate to form
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     await user.click(screen.getByRole("button", { name: /acepto/i }))
 
     // Fill form
@@ -90,7 +90,7 @@ describe("PromoFormSection", () => {
     const user = userEvent.setup()
 
     // Navigate to form
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     await user.click(screen.getByRole("button", { name: /acepto/i }))
 
     // Fill form
@@ -112,7 +112,7 @@ describe("PromoFormSection", () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     await user.click(screen.getByRole("button", { name: /acepto/i }))
 
     await user.type(screen.getByLabelText(/nombre \*/i), "Test")
@@ -133,7 +133,7 @@ describe("PromoFormSection", () => {
     render(<PromoFormSection />)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole("button", { name: /entradas gratis/i }))
+    await user.click(screen.getByRole("button", { name: /promociones limitadas/i }))
     await user.click(screen.getByRole("button", { name: /acepto/i }))
 
     await user.type(screen.getByLabelText(/nombre \*/i), "Test")
