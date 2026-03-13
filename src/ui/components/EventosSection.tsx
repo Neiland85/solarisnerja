@@ -40,7 +40,7 @@ export default async function EventosSection() {
   }
 
   return (
-    <section id="programacion" className="solaris-vinyl-texture py-24 px-6">
+    <section id="programacion" className="solaris-horizon-texture py-24 px-6">
 
       <div className="max-w-6xl mx-auto space-y-16">
 
