@@ -95,6 +95,8 @@ export default function EventosGrid({ events }: Props) {
               }
             : null
         }
+        artistImage={selectedArtist ? ARTIST_IMAGES[selectedArtist.id] : undefined}
+        artistImagePosition={selectedArtist ? ARTIST_IMAGE_POSITIONS[selectedArtist.id] : undefined}
       />
 
       {/* Sticky floating CTA — mobile only, visible when #programacion is in viewport */}

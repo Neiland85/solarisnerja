@@ -263,13 +263,9 @@ html {
 /* ─── ArtistModal sheet — desktop overrides ─── */
 
 @media (min-width: 640px) {
-  .artist-modal-overlay {
-    --artist-sheet-hidden: translateY(40px);
-  }
   .artist-modal-sheet {
-    border-radius: 0 !important;
-    max-height: none !important;
-    padding-bottom: 0 !important;
+    border-radius: 12px !important;
+    max-height: 90dvh !important;
   }
 }
 
