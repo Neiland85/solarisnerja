@@ -1,7 +1,5 @@
 "use client"
 
-import Logo3DInteractive from "./Logo3DInteractive"
-
 
 export default function HeroVideo(){
 
@@ -31,15 +29,12 @@ export default function HeroVideo(){
             18 — 28 Junio
           </p>
 
-          <div className="flex flex-col items-center gap-4">
-            <Logo3DInteractive />
-            <a
-              href="#programacion"
-              className="inline-block px-10 py-4 bg-white text-black text-lg font-medium rounded-full hover:bg-neutral-200 transition"
-            >
-              ENTRADAS
-            </a>
-          </div>
+          <a
+            href="#programacion"
+            className="inline-block px-10 py-4 bg-white text-black text-lg font-medium rounded-full hover:bg-neutral-200 transition"
+          >
+            ENTRADAS
+          </a>
 
         </div>
 
